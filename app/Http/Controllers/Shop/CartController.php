@@ -40,16 +40,17 @@ class CartController extends Controller
             );
         }
 
-        CartItem::updateOrCreate(
+        $item = CartItem::firstOrNew(
             [
                 'user_id'    => Auth::id(),
                 'product_id' => $request->product_id,
                 'type'       => 'cart',
             ],
-            [
-                'quantity' => \DB::raw('quantity + ' . (int) $request->quantity),
-            ]
+            ['quantity' => 0]
         );
+        $item->quantity += (int) $request->quantity;
+        $item->unit_price = $product->price;
+        $item->save();
 
         return back()->with('success', __('app.add_to_cart') . ' ✅');
     }
@@ -63,7 +64,11 @@ class CartController extends Controller
         $item = CartItem::where('id', $id)
             ->where('user_id', Auth::id())
             ->where('type', 'cart')
-            ->firstOrFail();
+            ->first();
+
+        if (! $item) {
+            return back();
+        }
 
         $item->update(['quantity' => $request->quantity]);
 

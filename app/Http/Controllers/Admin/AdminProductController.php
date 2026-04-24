@@ -237,6 +237,350 @@ class AdminProductController extends Controller
             ->with('success', 'Producte eliminat correctament.');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Bulk CSV Import
+    |--------------------------------------------------------------------------
+    */
+
+    public function bulkUpload()
+    {
+        $columns = $this->csvColumns();
+
+        return view('admin.products.bulk-upload', compact('columns'));
+    }
+
+    public function bulkStore(Request $request)
+    {
+        $request->validate([
+            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
+            'images'   => ['nullable', 'array'],
+            'images.*' => ['file', 'image', 'max:8192'],
+        ]);
+
+        $handle = fopen($request->file('csv_file')->getRealPath(), 'r');
+        if ($handle === false) {
+            return back()->with('error', 'No s\'ha pogut llegir el fitxer CSV.');
+        }
+
+        $header = fgetcsv($handle);
+        if (! $header) {
+            fclose($handle);
+            return back()->with('error', 'El fitxer CSV està buit.');
+        }
+        $header = array_map(fn($h) => trim((string) $h), $header);
+
+        $required = ['sku', 'category_slug', 'brand', 'name_ca', 'name_es', 'price', 'vat_rate', 'stock', 'min_order_quantity', 'unit'];
+        $missing  = array_diff($required, $header);
+        if (! empty($missing)) {
+            fclose($handle);
+            return back()->with('error', 'Falten columnes obligatòries: ' . implode(', ', $missing));
+        }
+
+        $created = 0;
+        $updated = 0;
+        $errors  = [];
+        $row     = 1;
+
+        DB::beginTransaction();
+        try {
+            while (($data = fgetcsv($handle)) !== false) {
+                $row++;
+                if (count(array_filter($data, fn($v) => $v !== '' && $v !== null)) === 0) {
+                    continue;
+                }
+
+                $values = array_combine($header, array_pad($data, count($header), null));
+
+                $category = Category::where('slug', trim((string) $values['category_slug']))->first();
+                if (! $category) {
+                    $errors[] = "Fila $row: categoria «{$values['category_slug']}» no trobada.";
+                    continue;
+                }
+
+                $sku = trim((string) $values['sku']);
+                if ($sku === '') {
+                    $errors[] = "Fila $row: SKU buit.";
+                    continue;
+                }
+
+                $attributes = [
+                    'category_id'         => $category->id,
+                    'brand'               => trim((string) $values['brand']),
+                    'slug'                => Str::slug($values['name_ca']),
+                    'price'               => (float) $values['price'],
+                    'vat_rate'            => (float) $values['vat_rate'],
+                    'stock'               => (int) $values['stock'],
+                    'min_order_quantity'  => (int) $values['min_order_quantity'],
+                    'unit'                => trim((string) $values['unit']),
+                    'is_active'           => $this->csvBool($values['is_active'] ?? '1'),
+                    'is_featured'         => $this->csvBool($values['is_featured'] ?? '0'),
+                    'low_stock_threshold' => $this->csvNullableInt($values['low_stock_threshold'] ?? null),
+                    'name' => [
+                        'ca' => $values['name_ca'],
+                        'es' => $values['name_es'],
+                        'en' => $values['name_en'] ?? $values['name_es'],
+                    ],
+                    'short_description' => [
+                        'ca' => $values['short_description_ca'] ?? null,
+                        'es' => $values['short_description_es'] ?? null,
+                        'en' => $values['short_description_en'] ?? null,
+                    ],
+                    'description' => [
+                        'ca' => $values['description_ca'] ?? null,
+                        'es' => $values['description_es'] ?? null,
+                        'en' => $values['description_en'] ?? null,
+                    ],
+                ];
+
+                $existing = Product::where('sku', $sku)->first();
+                if ($existing) {
+                    $existing->update($attributes);
+                    $updated++;
+                } else {
+                    Product::create(array_merge(['sku' => $sku], $attributes));
+                    $created++;
+                }
+            }
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            fclose($handle);
+            return back()->with('error', 'Error durant la importació: ' . $e->getMessage());
+        }
+
+        fclose($handle);
+
+        $imageReport = $this->matchAndAttachImages($request->file('images') ?? []);
+
+        $summary = "Importació completada: {$created} creats, {$updated} actualitzats.";
+        if ($imageReport['matched'] > 0 || $imageReport['gallery_added'] > 0) {
+            $summary .= " Imatges: {$imageReport['matched']} principals, {$imageReport['gallery_added']} galeria.";
+        }
+        if (! empty($imageReport['unmatched'])) {
+            $summary .= ' Imatges sense coincidència: ' . count($imageReport['unmatched']) . '.';
+        }
+        if (! empty($errors)) {
+            $summary .= ' Errors: ' . count($errors);
+            return back()
+                ->with('warning', $summary)
+                ->with('csv_errors', $errors)
+                ->with('unmatched_images', $imageReport['unmatched']);
+        }
+
+        return redirect()->route('admin.products.index')
+            ->with('success', $summary . ' ✅')
+            ->with('unmatched_images', $imageReport['unmatched']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Standalone Bulk Image Upload — match files to existing products by SKU
+    |--------------------------------------------------------------------------
+    */
+
+    public function bulkImages()
+    {
+        return view('admin.products.bulk-images');
+    }
+
+    public function bulkImagesStore(Request $request)
+    {
+        $request->validate([
+            'images'   => ['required', 'array', 'min:1'],
+            'images.*' => ['file', 'image', 'max:8192'],
+        ]);
+
+        $report = $this->matchAndAttachImages($request->file('images'));
+
+        $msg = "Imatges processades: {$report['matched']} principals, {$report['gallery_added']} galeria.";
+        if (! empty($report['unmatched'])) {
+            $msg .= ' Sense coincidència: ' . count($report['unmatched']) . '.';
+            return back()
+                ->with('warning', $msg)
+                ->with('unmatched_images', $report['unmatched']);
+        }
+
+        return redirect()->route('admin.products.index')->with('success', $msg . ' ✅');
+    }
+
+    public function sampleCsv()
+    {
+        $columns = $this->csvColumns();
+
+        $sampleRows = [
+            [
+                'sku'                  => 'SAMPLE-001',
+                'category_slug'        => 'paper',
+                'brand'                => 'Acme',
+                'name_ca'              => 'Paper A4 80g',
+                'name_es'              => 'Papel A4 80g',
+                'name_en'              => 'A4 paper 80g',
+                'short_description_ca' => 'Paquet de 500 fulls',
+                'short_description_es' => 'Paquete de 500 hojas',
+                'short_description_en' => '500-sheet pack',
+                'description_ca'       => 'Paper blanc d\'alta qualitat per impressió làser i tinta.',
+                'description_es'       => 'Papel blanco de alta calidad para impresión láser y tinta.',
+                'description_en'       => 'High-quality white paper for laser and inkjet printing.',
+                'price'                => '4.50',
+                'vat_rate'             => '21.00',
+                'stock'                => '500',
+                'min_order_quantity'   => '1',
+                'unit'                 => 'unit',
+                'is_active'            => '1',
+                'is_featured'          => '0',
+                'low_stock_threshold'  => '50',
+            ],
+            [
+                'sku'                  => 'SAMPLE-002',
+                'category_slug'        => 'tinta',
+                'brand'                => 'Generic',
+                'name_ca'              => 'Cartutx tinta negra',
+                'name_es'              => 'Cartucho tinta negra',
+                'name_en'              => 'Black ink cartridge',
+                'short_description_ca' => 'Compatible amb impressores estàndard',
+                'short_description_es' => 'Compatible con impresoras estándar',
+                'short_description_en' => 'Compatible with standard printers',
+                'description_ca'       => '',
+                'description_es'       => '',
+                'description_en'       => '',
+                'price'                => '12.99',
+                'vat_rate'             => '21.00',
+                'stock'                => '120',
+                'min_order_quantity'   => '1',
+                'unit'                 => 'unit',
+                'is_active'            => '1',
+                'is_featured'          => '1',
+                'low_stock_threshold'  => '10',
+            ],
+        ];
+
+        $output = fopen('php://temp', 'r+');
+        fputcsv($output, $columns);
+        foreach ($sampleRows as $row) {
+            $line = [];
+            foreach ($columns as $col) {
+                $line[] = $row[$col] ?? '';
+            }
+            fputcsv($output, $line);
+        }
+        rewind($output);
+        $csv = stream_get_contents($output);
+        fclose($output);
+
+        return response($csv, 200, [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="products-sample.csv"',
+        ]);
+    }
+
+    private function csvColumns(): array
+    {
+        return [
+            'sku', 'category_slug', 'brand',
+            'name_ca', 'name_es', 'name_en',
+            'short_description_ca', 'short_description_es', 'short_description_en',
+            'description_ca', 'description_es', 'description_en',
+            'price', 'vat_rate', 'stock', 'min_order_quantity', 'unit',
+            'is_active', 'is_featured', 'low_stock_threshold',
+        ];
+    }
+
+    private function csvBool($v): bool
+    {
+        $v = strtolower(trim((string) $v));
+        return in_array($v, ['1', 'true', 'yes', 'si', 'sí', 'y'], true);
+    }
+
+    private function csvNullableInt($v): ?int
+    {
+        $v = trim((string) $v);
+        return $v === '' ? null : (int) $v;
+    }
+
+    /**
+     * Match uploaded image files to products by SKU embedded in the filename.
+     *
+     *  - {SKU}.{ext}        → main image (replaces existing)
+     *  - {SKU}-N.{ext}      → gallery image (appended; sort_order = N)
+     *
+     * SKU matching is case-insensitive. The full basename is tried first so
+     * SKUs containing dashes still resolve correctly before falling back to
+     * the {SKU}-N pattern.
+     *
+     * @param  \Illuminate\Http\UploadedFile[]  $files
+     * @return array{matched:int, gallery_added:int, unmatched:array<string>}
+     */
+    private function matchAndAttachImages(array $files): array
+    {
+        $matched       = 0;
+        $galleryAdded  = 0;
+        $unmatched     = [];
+
+        if (empty($files)) {
+            return ['matched' => 0, 'gallery_added' => 0, 'unmatched' => []];
+        }
+
+        // Build a case-insensitive SKU → product map once
+        $skuMap = Product::pluck('id', 'sku')
+            ->mapWithKeys(fn($id, $sku) => [strtolower($sku) => ['id' => $id, 'sku' => $sku]]);
+
+        foreach ($files as $file) {
+            if (! $file || ! $file->isValid()) {
+                continue;
+            }
+
+            $original = $file->getClientOriginalName();
+            $basename = pathinfo($original, PATHINFO_FILENAME);
+            $key      = strtolower($basename);
+
+            // 1. Exact SKU match → main image
+            if ($skuMap->has($key)) {
+                $entry   = $skuMap->get($key);
+                $product = Product::find($entry['id']);
+                if ($product) {
+                    if ($product->image) {
+                        Storage::disk('public')->delete($product->image);
+                    }
+                    $product->update([
+                        'image' => $file->store('products', 'public'),
+                    ]);
+                    $matched++;
+                    continue;
+                }
+            }
+
+            // 2. {SKU}-N pattern → gallery image
+            if (preg_match('/^(.+)-(\d+)$/', $basename, $m)) {
+                $skuKey  = strtolower($m[1]);
+                $sortIdx = (int) $m[2];
+                if ($skuMap->has($skuKey)) {
+                    $entry   = $skuMap->get($skuKey);
+                    $product = Product::with('images')->find($entry['id']);
+                    if ($product) {
+                        $path = $file->store('products/gallery', 'public');
+                        $product->images()->create([
+                            'path'       => $path,
+                            'alt'        => $product->getTranslation('name', 'ca', false) ?: $product->sku,
+                            'sort_order' => $sortIdx,
+                        ]);
+                        $galleryAdded++;
+                        continue;
+                    }
+                }
+            }
+
+            $unmatched[] = $original;
+        }
+
+        return [
+            'matched'       => $matched,
+            'gallery_added' => $galleryAdded,
+            'unmatched'     => $unmatched,
+        ];
+    }
+
     public function toggle(int $id)
     {
         $product = Product::findOrFail($id);
@@ -269,7 +613,7 @@ class AdminProductController extends Controller
         return $request->validate([
             'category_id'           => ['required', 'exists:categories,id'],
             'sku'                   => ['required', 'string', 'max:100', "unique:products,sku,{$ignoreId}"],
-            'brand'                 => ['nullable', 'string', 'max:100'],
+            'brand'                 => ['required', 'string', 'max:100'],
             'price'                 => ['required', 'numeric', 'min:0'],
             'vat_rate'              => ['required', 'numeric', 'min:0', 'max:100'],
             'stock'                 => ['required', 'integer', 'min:0'],

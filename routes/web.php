@@ -53,17 +53,17 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 Route::get('/products/{slug}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/categories/{slug}', [ProductController::class, 'category'])->name('products.category');
 
-// Print — PUBLIC (guests browse & configure; prices + add-to-cart require auth)
-Route::prefix('impressio')->name('print.')->group(function () {
-    Route::get('/', [PrintJobController::class, 'index'])->name('index');
-    Route::get('/{template:slug}', [PrintJobController::class, 'builder'])->name('builder');
-    Route::post('/{template:slug}/calculate', [PrintJobController::class, 'calculate'])->name('calculate');
-});
+// Print — calculate endpoint is public so guests can preview pricing pre-auth
+Route::post('/impressio/{template:slug}/calculate', [PrintJobController::class, 'calculate'])
+    ->name('print.calculate');
 
 // Locale switcher
 Route::get('/locale/{locale}', function (string $locale) {
     if (in_array($locale, ['ca', 'es', 'en'])) {
         session(['locale' => $locale]);
+        if (\Illuminate\Support\Facades\Auth::check()) {
+            \Illuminate\Support\Facades\Auth::user()->update(['locale' => $locale]);
+        }
     }
     return redirect()->back();
 })->name('locale.switch');
@@ -173,16 +173,18 @@ Route::middleware(['auth', 'approved'])->group(function () {
     Route::post('/products/{slug}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::delete('/reviews/{id}',          [ReviewController::class, 'destroy'])->name('reviews.destroy');
 
-    // Print builder — auth-only actions
+    // Print — gallery, builder, jobs (auth + approved required)
     Route::prefix('impressio')->name('print.')->group(function () {
+        Route::get('/', [PrintJobController::class, 'index'])->name('index');
         Route::get('/els-meus-treballs', [PrintJobController::class, 'myJobs'])->name('my-jobs');
-        Route::post('/{template:slug}/add-to-cart', [PrintJobController::class, 'addToCart'])->name('add-to-cart');
         Route::post('/jobs/{job}/artwork', [PrintJobController::class, 'uploadArtwork'])->name('jobs.artwork');
         Route::delete('/jobs/{job}/artwork', [PrintJobController::class, 'deleteArtwork'])->name('jobs.artwork.delete');
         Route::delete('/jobs/{job}', [PrintJobController::class, 'cancel'])->name('jobs.cancel');
         Route::patch('/jobs/{job}/notes', [PrintJobController::class, 'updateNotes'])->name('jobs.notes');
         Route::patch('/jobs/{job}/received', [PrintJobController::class, 'confirmReceived'])->name('jobs.received');
         Route::post('/jobs/{job}/reorder', [PrintJobController::class, 'reorder'])->name('jobs.reorder');
+        Route::get('/{template:slug}', [PrintJobController::class, 'builder'])->name('builder');
+        Route::post('/{template:slug}/add-to-cart', [PrintJobController::class, 'addToCart'])->name('add-to-cart');
     });
 
     // Invoices
@@ -246,6 +248,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::prefix('products')->name('products.')->group(function () {
         Route::get('/', [AdminProductController::class, 'index'])->name('index');
         Route::get('/create', [AdminProductController::class, 'create'])->name('create');
+        Route::get('/bulk-upload', [AdminProductController::class, 'bulkUpload'])->name('bulk-upload');
+        Route::post('/bulk-upload', [AdminProductController::class, 'bulkStore'])->name('bulk-upload.store');
+        Route::get('/bulk-upload/sample', [AdminProductController::class, 'sampleCsv'])->name('bulk-upload.sample');
+        Route::get('/bulk-images', [AdminProductController::class, 'bulkImages'])->name('bulk-images');
+        Route::post('/bulk-images', [AdminProductController::class, 'bulkImagesStore'])->name('bulk-images.store');
         Route::post('/', [AdminProductController::class, 'store'])->name('store');
         Route::get('/{id}/edit', [AdminProductController::class, 'edit'])->name('edit');
         Route::put('/{id}', [AdminProductController::class, 'update'])->name('update');

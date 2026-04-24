@@ -41,7 +41,7 @@ class Cart extends Model
     public function getSubtotalAttribute(): float
     {
         return round(
-            $this->items->sum(fn($item) => $item->line_total),
+            $this->items->sum(fn($item) => (float) $item->unit_price * $item->quantity),
             4
         );
     }
@@ -49,7 +49,7 @@ class Cart extends Model
     public function getVatAmountAttribute(): float
     {
         return round(
-            $this->items->sum(fn($item) => $item->vat_amount),
+            $this->items->sum(fn($item) => (float) $item->unit_price * $item->quantity * ($item->effective_vat_rate / 100)),
             4
         );
     }

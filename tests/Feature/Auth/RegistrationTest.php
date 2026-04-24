@@ -42,7 +42,7 @@ class RegistrationTest extends TestCase
             'password'              => 'Password1!',
             'password_confirmation' => 'Password1!',
             'company_name'          => 'Empresa SL',
-            'cif'                   => 'B12345678',
+            'cif'                   => 'B12345674',
             'phone'                 => '612345678',
             'address'               => 'Carrer Major 10',
             'city'                  => 'Barcelona',
@@ -67,7 +67,7 @@ class RegistrationTest extends TestCase
             'password'              => 'Password1!',
             'password_confirmation' => 'Password1!',
             'company_name'          => 'Test SL',
-            'cif'                   => 'B87654321',
+            'cif'                   => 'B87654323',
             'phone'                 => '600000000',
             'address'               => 'Carrer Test 1',
             'city'                  => 'Madrid',
@@ -109,7 +109,7 @@ class RegistrationTest extends TestCase
             'password'              => 'Password1!',
             'password_confirmation' => 'Password1!',
             'company_name'          => 'Another SL',
-            'cif'                   => 'B11111111',
+            'cif'                   => 'B11111119',
             'phone'                 => '600000001',
             'address'               => 'Carrer Test 2',
             'city'                  => 'Valencia',
@@ -126,7 +126,7 @@ class RegistrationTest extends TestCase
             'password'              => 'Password1!',
             'password_confirmation' => 'WrongPassword!',
             'company_name'          => 'Test SL',
-            'cif'                   => 'B22222222',
+            'cif'                   => 'B22222228',
         ])->assertSessionHasErrors(['password']);
     }
 
@@ -138,7 +138,7 @@ class RegistrationTest extends TestCase
             'password'              => 'Password1!',
             'password_confirmation' => 'Password1!',
             'company_name'          => 'Test SL',
-            'cif'                   => 'B33333333',
+            'cif'                   => 'B33333337',
         ])->assertSessionHasErrors(['email']);
     }
 
@@ -150,7 +150,7 @@ class RegistrationTest extends TestCase
             'password'              => '123',
             'password_confirmation' => '123',
             'company_name'          => 'Test SL',
-            'cif'                   => 'B44444444',
+            'cif'                   => 'B44444446',
         ])->assertSessionHasErrors(['password']);
     }
 }

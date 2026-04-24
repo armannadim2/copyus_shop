@@ -123,6 +123,9 @@ class AdminProductTest extends TestCase
 
         public function test_admin_can_upload_product_image(): void
     {
+        if (! function_exists('imagecreatetruecolor')) {
+            $this->markTestSkipped('GD extension not available.');
+        }
         Storage::fake('public');
 
         $admin    = User::factory()->admin()->create();

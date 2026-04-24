@@ -138,7 +138,7 @@ class AdminPrintJobTest extends TestCase
 
         $this->assertDatabaseHas('print_jobs', [
             'id'                   => $job->id,
-            'expected_delivery_at' => '2026-05-01',
+            'expected_delivery_at' => '2026-05-01 00:00:00',
         ]);
     }
 

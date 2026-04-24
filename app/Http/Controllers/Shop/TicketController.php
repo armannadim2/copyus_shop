@@ -77,7 +77,7 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
-        abort_unless($ticket->user_id === Auth::id(), 403);
+        abort_unless($ticket->user_id === Auth::id(), 404);
         $ticket->load(['replies.user', 'order', 'printJob.template']);
 
         return view('shop.tickets.show', compact('ticket'));
@@ -85,7 +85,7 @@ class TicketController extends Controller
 
     public function reply(Request $request, Ticket $ticket)
     {
-        abort_unless($ticket->user_id === Auth::id(), 403);
+        abort_unless($ticket->user_id === Auth::id(), 404);
         abort_if(in_array($ticket->status, ['resolved', 'closed']), 403, 'El tiquet ja està tancat.');
 
         $request->validate(['body' => ['required', 'string', 'max:5000']]);
@@ -112,7 +112,7 @@ class TicketController extends Controller
 
     public function close(Ticket $ticket)
     {
-        abort_unless($ticket->user_id === Auth::id(), 403);
+        abort_unless($ticket->user_id === Auth::id(), 404);
 
         $ticket->update(['status' => 'closed', 'resolved_at' => now()]);
 

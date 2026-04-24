@@ -6,14 +6,34 @@
 
     <div class="flex items-center justify-between mb-8">
         <h1 class="font-alumni text-h1 text-dark">Productes</h1>
-        <a href="{{ route('admin.products.create') }}"
-           class="inline-flex items-center gap-2 bg-primary text-white font-alumni text-sm-header
-                  px-5 py-2.5 rounded-2xl hover:brightness-110 active:scale-95 transition-all">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Nou producte
-        </a>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('admin.products.bulk-images') }}"
+               class="inline-flex items-center gap-2 bg-white text-dark border border-gray-200 font-alumni text-sm-header
+                      px-5 py-2.5 rounded-2xl hover:bg-light active:scale-95 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Imatges per SKU
+            </a>
+            <a href="{{ route('admin.products.bulk-upload') }}"
+               class="inline-flex items-center gap-2 bg-white text-dark border border-gray-200 font-alumni text-sm-header
+                      px-5 py-2.5 rounded-2xl hover:bg-light active:scale-95 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12"/>
+                </svg>
+                Importació CSV
+            </a>
+            <a href="{{ route('admin.products.create') }}"
+               class="inline-flex items-center gap-2 bg-primary text-white font-alumni text-sm-header
+                      px-5 py-2.5 rounded-2xl hover:brightness-110 active:scale-95 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Nou producte
+            </a>
+        </div>
     </div>
 
     @if(session('success'))

@@ -65,7 +65,7 @@ class AuthController extends Controller
         }
 
         if ($user->role === 'approved') {
-            return redirect()->intended(route('products.index'));
+            return redirect()->intended(route('dashboard'));
         }
 
         // Unknown role fallback
@@ -93,22 +93,14 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        // CIF/VAT is required when the user enters a company name
-        // or explicitly requests a business invoice.
         $requiresInvoice = $request->boolean('requires_invoice');
-        $hasCompany      = filled($request->input('company_name'));
-        $cifRequired     = $requiresInvoice || $hasCompany;
-
-        $cifRules = $cifRequired
-            ? ['required', 'string', 'max:30', 'unique:users,cif', new FiscalIdentity]
-            : ['nullable', 'string', 'max:30', 'unique:users,cif', new FiscalIdentity];
 
         $validated = $request->validate([
             'name'             => ['required', 'string', 'max:255'],
             'email'            => ['required', 'email', 'max:255', 'unique:users,email'],
             'password'         => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
-            'company_name'     => ['nullable', 'string', 'max:255'],
-            'cif'              => $cifRules,
+            'company_name'     => ['required', 'string', 'max:255'],
+            'cif'              => ['required', 'string', 'max:30', 'unique:users,cif', new FiscalIdentity],
             'requires_invoice' => ['nullable', 'boolean'],
             'phone'            => ['nullable', 'string', 'max:30'],
             'address'          => ['nullable', 'string', 'max:255'],
@@ -198,7 +190,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home');
-        //->with('success', 'Sessió tancada correctament.');
+        return redirect()->route('login');
     }
 }

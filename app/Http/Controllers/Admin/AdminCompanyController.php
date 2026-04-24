@@ -45,19 +45,24 @@ class AdminCompanyController extends Controller
 
     public function update(Request $request, Company $company)
     {
-        $request->validate([
-            'payment_terms'      => ['required', 'in:immediate,net_15,net_30,net_60,net_90'],
+        $validated = $request->validate([
+            'payment_terms'      => ['nullable', 'in:immediate,net_15,net_30,net_60,net_90'],
             'credit_limit'       => ['nullable', 'numeric', 'min:0'],
             'approval_threshold' => ['nullable', 'numeric', 'min:0'],
             'is_active'          => ['nullable', 'boolean'],
         ]);
 
-        $company->update([
-            'payment_terms'      => $request->payment_terms,
-            'credit_limit'       => $request->credit_limit ?: 0,
-            'approval_threshold' => $request->approval_threshold ?: null,
-            'is_active'          => $request->boolean('is_active', true),
-        ]);
+        $payload = array_filter([
+            'payment_terms'      => $request->input('payment_terms'),
+            'credit_limit'       => $request->input('credit_limit'),
+            'approval_threshold' => $request->input('approval_threshold'),
+        ], fn($v) => $v !== null);
+
+        if ($request->has('is_active')) {
+            $payload['is_active'] = $request->boolean('is_active');
+        }
+
+        $company->update($payload);
 
         return back()->with('success', 'Condicions de l\'empresa actualitzades.');
     }

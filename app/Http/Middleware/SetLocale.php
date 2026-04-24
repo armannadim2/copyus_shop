@@ -32,13 +32,8 @@ class SetLocale
             return $next($request);
         }
 
-        // 4. Browser accept-language
-        $browserLocale = substr($request->getPreferredLanguage(['ca', 'es', 'en']), 0, 2);
-        if (in_array($browserLocale, ['ca', 'es', 'en'])) {
-            App::setLocale($browserLocale);
-        } else {
-            App::setLocale(config('app.locale', 'ca'));
-        }
+        // 4. Default
+        App::setLocale(config('app.locale', 'ca'));
 
         return $next($request);
     }

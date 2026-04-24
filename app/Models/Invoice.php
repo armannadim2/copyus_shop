@@ -66,6 +66,32 @@ class Invoice extends Model
         return $this->belongsTo(Order::class);
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
+
+    public function scopeIssued($query)
+    {
+        return $query->where('status', 'issued');
+    }
+
+    public function scopePaid($query)
+    {
+        return $query->where('status', 'paid');
+    }
+
+    public function scopeOverdue($query)
+    {
+        return $query->where('status', 'overdue');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Accessors

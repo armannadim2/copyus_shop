@@ -151,7 +151,23 @@
       "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && vendor/bin/phpunit --no-coverage 2>&1 > /tmp/phpunit.log; tail -5 /tmp/phpunit.log\")",
       "Bash(wsl -d Ubuntu -e bash -c \"awk '/^[0-9]+\\\\\\\\\\) Tests/{name=\\\\$0; getline nextline; print name \\\\\" | \\\\\" nextline}' /tmp/phpunit.log > /tmp/summary.txt; head -120 /tmp/summary.txt\")",
       "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && vendor/bin/phpunit --no-coverage --filter AdminOrderTest 2>&1 | tail -50\")",
-      "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && vendor/bin/phpunit --no-coverage --filter 'AdminOrderTest::test_admin_can_access_orders_list' 2>&1 | tail -40\")"
+      "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && vendor/bin/phpunit --no-coverage --filter 'AdminOrderTest::test_admin_can_access_orders_list' 2>&1 | tail -40\")",
+      "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && vendor/bin/phpunit --no-coverage 2>&1 > /tmp/phpunit.log; tail -3 /tmp/phpunit.log\")",
+      "Bash(wsl -d Ubuntu -e bash -c \"awk '/^[0-9]+\\\\\\\\\\) Tests/{name=\\\\$0; getline nextline; print name \\\\\" | \\\\\" nextline}' /tmp/phpunit.log > /tmp/summary.txt; wc -l /tmp/summary.txt; head -20 /tmp/summary.txt\")",
+      "Bash(wsl -d Ubuntu -e bash -c \"tail -45 /tmp/summary.txt\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan test 2>&1 | tail -100\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan test 2>&1 | tail -120\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan test 2>&1 | grep -E '^\\(   FAILED|   PASS|Tests:\\)' | head -80\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && grep -rn 'pending\\(\\).*->create\\(\\)' tests/Feature/ -l\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && grep -rn 'pending\\(\\).*->create\\(\\)' tests/Feature/ -A 6 | grep -B 1 -A 5 'assertForbidden'\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && grep -rn 'admin.users.approve\\\\|admin.users.reject' routes/ app/Http/\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && grep -rn 'users.approve\\\\|users.reject\\\\|->approve\\\\|->reject' routes/ app/Http/Controllers/\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan route:list --json 2>/dev/null | head -200\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan route:list 2>&1 | grep -i 'users.approve\\\\|users.reject\\\\|admin.users'\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan route:list 2>&1 | grep -i 'approval\\\\|pending\\\\|rejected'\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan test --filter='AuthenticationTest|LoginTest|RegistrationTest|MiddlewareTest' 2>&1 | tail -100\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan test --filter='AuthenticationTest|LoginTest|RegistrationTest' 2>&1 | tail -200\")",
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan test --filter='RegistrationTest::test_user_can_register_with_valid_data' 2>&1 | tail -60\")"
     ]
   }
 }

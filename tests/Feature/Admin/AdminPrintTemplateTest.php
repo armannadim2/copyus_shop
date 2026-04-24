@@ -26,9 +26,9 @@ class AdminPrintTemplateTest extends TestCase
     private function templatePayload(array $overrides = []): array
     {
         return array_merge([
-            'name_ca'              => 'Fulletons',
-            'name_es'              => 'Folletos',
-            'name_en'              => 'Flyers',
+            'name_ca'              => 'Plantilla de prova ' . uniqid(),
+            'name_es'              => 'Plantilla de prueba',
+            'name_en'              => 'Test template',
             'base_price'           => 12.50,
             'vat_rate'             => 21.00,
             'base_production_days' => 3,

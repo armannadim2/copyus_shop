@@ -335,27 +335,31 @@
                         </div>
                     @endif
 
-                    {{-- ── Price Range ─────────────────────────────── --}}
-                    <div>
-                        <p class="font-outfit text-xs font-semibold tracking-widest text-primary uppercase mb-2">
-                            Preu (€)
-                        </p>
-                        <div class="flex items-center gap-2">
-                            <input type="number" name="price_min" min="0" step="0.01"
-                                   value="{{ request('price_min') }}"
-                                   placeholder="{{ $minPlaceholder }}"
-                                   class="w-full border border-gray-200 rounded-lg px-2 py-1.5
-                                          font-outfit text-xs focus:outline-none focus:ring-1
-                                          focus:ring-primary transition-colors">
-                            <span class="text-gray-300 text-xs flex-shrink-0">–</span>
-                            <input type="number" name="price_max" min="0" step="0.01"
-                                   value="{{ request('price_max') }}"
-                                   placeholder="{{ $maxPlaceholder }}"
-                                   class="w-full border border-gray-200 rounded-lg px-2 py-1.5
-                                          font-outfit text-xs focus:outline-none focus:ring-1
-                                          focus:ring-primary transition-colors">
-                        </div>
-                    </div>
+                    {{-- ── Price Range (B2B-only) ─────────────────────── --}}
+                    @auth
+                        @if(auth()->user()->canSeePrices())
+                            <div>
+                                <p class="font-outfit text-xs font-semibold tracking-widest text-primary uppercase mb-2">
+                                    Preu (€)
+                                </p>
+                                <div class="flex items-center gap-2">
+                                    <input type="number" name="price_min" min="0" step="0.01"
+                                           value="{{ request('price_min') }}"
+                                           placeholder="{{ $minPlaceholder }}"
+                                           class="w-full border border-gray-200 rounded-lg px-2 py-1.5
+                                                  font-outfit text-xs focus:outline-none focus:ring-1
+                                                  focus:ring-primary transition-colors">
+                                    <span class="text-gray-300 text-xs flex-shrink-0">–</span>
+                                    <input type="number" name="price_max" min="0" step="0.01"
+                                           value="{{ request('price_max') }}"
+                                           placeholder="{{ $maxPlaceholder }}"
+                                           class="w-full border border-gray-200 rounded-lg px-2 py-1.5
+                                                  font-outfit text-xs focus:outline-none focus:ring-1
+                                                  focus:ring-primary transition-colors">
+                                </div>
+                            </div>
+                        @endif
+                    @endauth
 
                     <button type="submit"
                             class="w-full bg-primary text-white font-outfit text-xs font-semibold

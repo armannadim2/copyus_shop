@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Invoice;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class InvoiceFactory extends Factory
@@ -18,6 +19,7 @@ class InvoiceFactory extends Factory
 
         return [
             'order_id'        => Order::factory(),
+            'user_id'         => User::factory(),
             'invoice_number'  => 'INV-' . strtoupper(fake()->unique()->bothify('######')),
             'status'          => 'issued',
             'subtotal'        => $subtotal,

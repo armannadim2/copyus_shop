@@ -192,10 +192,8 @@ class OrderController extends Controller
                     ]);
 
                     // Decrement stock (floor at 0)
-                    Product::where('id', $item->product_id)
-                        ->update([
-                            'stock' => DB::raw('GREATEST(0, stock - ' . (int) $item->quantity . ')'),
-                        ]);
+                    $newStock = max(0, (int) $item->product->stock - (int) $item->quantity);
+                    Product::where('id', $item->product_id)->update(['stock' => $newStock]);
                 }
             }
 
@@ -321,16 +319,17 @@ class OrderController extends Controller
                 continue;
             }
 
-            CartItem::updateOrCreate(
+            $cartItem = CartItem::firstOrNew(
                 [
                     'user_id'    => Auth::id(),
                     'product_id' => $item->product_id,
                     'type'       => 'cart',
                 ],
-                [
-                    'quantity' => DB::raw('quantity + ' . (int) $item->quantity),
-                ]
+                ['quantity' => 0]
             );
+            $cartItem->quantity += (int) $item->quantity;
+            $cartItem->unit_price = $item->product->price;
+            $cartItem->save();
             $added++;
         }
 

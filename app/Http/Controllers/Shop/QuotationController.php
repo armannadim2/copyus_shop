@@ -47,16 +47,16 @@ class QuotationController extends Controller
             'quantity'   => ['required', 'integer', 'min:1'],
         ]);
 
-        CartItem::updateOrCreate(
+        $item = CartItem::firstOrNew(
             [
                 'user_id'    => Auth::id(),
                 'product_id' => $request->product_id,
                 'type'       => 'quote',
             ],
-            [
-                'quantity' => DB::raw('quantity + ' . (int) $request->quantity),
-            ]
+            ['quantity' => 0]
         );
+        $item->quantity += (int) $request->quantity;
+        $item->save();
 
         return back()->with('success', __('app.add_to_quote') . ' ✅');
     }
@@ -239,9 +239,9 @@ class QuotationController extends Controller
                 ]);
 
                 // Decrement stock
-                if ($item->product_id) {
-                    Product::where('id', $item->product_id)
-                        ->update(['stock' => DB::raw('GREATEST(0, stock - ' . (int) $item->quantity . ')')]);
+                if ($item->product_id && $item->product) {
+                    $newStock = max(0, (int) $item->product->stock - (int) $item->quantity);
+                    Product::where('id', $item->product_id)->update(['stock' => $newStock]);
                 }
             }
 
@@ -267,9 +267,9 @@ class QuotationController extends Controller
                 'locale'    => $quotation->locale ?? app()->getLocale(),
             ]);
 
-            // Mark quotation as converted
+            // Mark quotation as accepted (linked to the placed order)
             $quotation->update([
-                'status'              => 'converted',
+                'status'                => 'accepted',
                 'converted_to_order_id' => $createdOrder->id,
             ]);
         });

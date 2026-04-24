@@ -15,6 +15,34 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminReportController extends Controller
 {
+    private function yearExpr(string $col): string
+    {
+        return DB::getDriverName() === 'sqlite'
+            ? "CAST(strftime('%Y', $col) AS INTEGER)"
+            : "YEAR($col)";
+    }
+
+    private function monthExpr(string $col): string
+    {
+        return DB::getDriverName() === 'sqlite'
+            ? "CAST(strftime('%m', $col) AS INTEGER)"
+            : "MONTH($col)";
+    }
+
+    private function dateDiffExpr(string $a, string $b): string
+    {
+        return DB::getDriverName() === 'sqlite'
+            ? "julianday($a) - julianday($b)"
+            : "DATEDIFF($a, $b)";
+    }
+
+    private function jsonNameExpr(string $col, string $locale = 'ca'): string
+    {
+        return DB::getDriverName() === 'sqlite'
+            ? "json_extract($col, '\$.\"$locale\"')"
+            : "JSON_UNQUOTE(JSON_EXTRACT($col, '\$.\"$locale\"'))";
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Main Reports Dashboard
@@ -35,8 +63,8 @@ class AdminReportController extends Controller
 
         // Monthly revenue — last 12 months
         $monthlyRevenue = Order::select(
-            DB::raw('YEAR(created_at) as year'),
-            DB::raw('MONTH(created_at) as month'),
+            DB::raw($this->yearExpr('created_at') . ' as year'),
+            DB::raw($this->monthExpr('created_at') . ' as month'),
             DB::raw('SUM(total) as revenue'),
             DB::raw('COUNT(*) as order_count')
         )
@@ -108,7 +136,7 @@ class AdminReportController extends Controller
 
         // Monthly breakdown for selected year
         $monthlyData = Order::select(
-            DB::raw('MONTH(created_at) as month'),
+            DB::raw($this->monthExpr('created_at') . ' as month'),
             DB::raw('SUM(total) as revenue'),
             DB::raw('SUM(subtotal) as subtotal'),
             DB::raw('SUM(vat_amount) as vat'),
@@ -133,7 +161,7 @@ class AdminReportController extends Controller
 
         // Year-over-year comparison
         $yearlyTotals = Order::select(
-            DB::raw('YEAR(created_at) as year'),
+            DB::raw($this->yearExpr('created_at') . ' as year'),
             DB::raw('SUM(total) as revenue'),
             DB::raw('COUNT(*) as orders')
         )
@@ -145,7 +173,7 @@ class AdminReportController extends Controller
             ->get();
 
         // Available years for filter
-        $availableYears = Order::selectRaw('YEAR(created_at) as year')
+        $availableYears = Order::selectRaw($this->yearExpr('created_at') . ' as year')
             ->whereNotNull('created_at')
             ->groupBy('year')
             ->orderByDesc('year')
@@ -190,7 +218,7 @@ class AdminReportController extends Controller
             ->join('products', 'order_items.product_id', '=', 'products.id')
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->addSelect('categories.id as category_id')
-            ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(categories.name, \'$."ca"\')) as category_name')
+            ->selectRaw($this->jsonNameExpr('categories.name') . ' as category_name')
             ->whereHas('order', fn($q) => $q->where('status', '!=', 'cancelled'))
             ->groupBy('categories.id', 'categories.name')
             ->orderByDesc('revenue')
@@ -225,8 +253,8 @@ class AdminReportController extends Controller
 
         // Clients registered per month (last 12)
         $newClientsMonthly = User::select(
-            DB::raw('YEAR(created_at) as year'),
-            DB::raw('MONTH(created_at) as month'),
+            DB::raw($this->yearExpr('created_at') . ' as year'),
+            DB::raw($this->monthExpr('created_at') . ' as month'),
             DB::raw('COUNT(*) as count')
         )
             ->where('role', 'approved')
@@ -310,7 +338,7 @@ class AdminReportController extends Controller
         // Avg production time (days from ordered_at to produced_at for completed jobs)
         $avgProductionDays = PrintJob::where('status', 'completed')
             ->whereNotNull('produced_at')
-            ->selectRaw('AVG(DATEDIFF(produced_at, created_at)) as avg_days')
+            ->selectRaw('AVG(' . $this->dateDiffExpr('produced_at', 'created_at') . ') as avg_days')
             ->value('avg_days');
 
         return view('admin.reports.print_jobs', compact(

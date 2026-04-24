@@ -21,18 +21,12 @@ class B2BApproved
             return $next($request);
         }
 
-        if ($user->role === 'pending') {
-            return redirect()->route('pending');
+        if ($user->role !== 'approved') {
+            abort(403, 'Accés denegat.');
         }
 
-        if ($user->role === 'rejected') {
-            return redirect()->route('rejected');
-        }
-
-        if (!in_array($user->role, ['approved', 'admin'])) {
-            Auth::logout();
-            return redirect()->route('login')
-                ->with('error', 'Compte no autoritzat.');
+        if (! $user->is_active) {
+            abort(403, 'Compte desactivat.');
         }
 
         return $next($request);

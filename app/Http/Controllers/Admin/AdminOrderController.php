@@ -69,7 +69,7 @@ class AdminOrderController extends Controller
     public function updateTracking(Request $request, string $orderNumber)
     {
         $request->validate([
-            'tracking_number' => ['nullable', 'string', 'max:100'],
+            'tracking_number' => ['required', 'string', 'max:100'],
             'tracking_url'    => ['nullable', 'url', 'max:500'],
             'admin_notes'     => ['nullable', 'string', 'max:2000'],
         ]);
