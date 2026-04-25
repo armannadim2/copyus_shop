@@ -529,6 +529,7 @@ function printBuilder() {
         minQuantity: {{ $minQty }},
         artworkNotes: '',
         loading: false,
+        isAuth: {{ Auth::check() ? 'true' : 'false' }},
 
         // Price display
         unitPriceFmt: '{{ number_format($initialPrice->unitPrice, 4, ',', '.') }}',
@@ -553,6 +554,7 @@ function printBuilder() {
 
         onConfigChange() {
             this.checkCompatibility();
+            if (!this.isAuth) return; // guests don't see prices, skip the API roundtrip
             clearTimeout(this._timer);
             this._timer = setTimeout(() => this.fetchPrice(), 350);
         },

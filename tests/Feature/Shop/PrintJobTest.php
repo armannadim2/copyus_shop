@@ -48,22 +48,13 @@ class PrintJobTest extends TestCase
     }
 
     // -------------------------------------------------------
-    // Access Control — Gallery
+    // Access Control — Gallery (public, prices gated in the view)
     // -------------------------------------------------------
 
-        public function test_guest_cannot_access_print_gallery(): void
+        public function test_guest_can_view_print_gallery(): void
     {
         $this->get(route('print.index'))
-             ->assertRedirect(route('login'));
-    }
-
-        public function test_pending_user_cannot_access_print_gallery(): void
-    {
-        $user = User::factory()->pending()->create();
-
-        $this->actingAs($user)
-             ->get(route('print.index'))
-             ->assertForbidden();
+             ->assertOk();
     }
 
         public function test_approved_user_can_view_print_gallery(): void
@@ -76,8 +67,16 @@ class PrintJobTest extends TestCase
     }
 
     // -------------------------------------------------------
-    // Template Builder
+    // Template Builder (public)
     // -------------------------------------------------------
+
+        public function test_guest_can_access_print_builder_for_active_template(): void
+    {
+        $template = $this->makeTemplate(['is_active' => true]);
+
+        $this->get(route('print.builder', $template->slug))
+             ->assertOk();
+    }
 
         public function test_approved_user_can_access_print_builder_for_active_template(): void
     {
@@ -91,17 +90,25 @@ class PrintJobTest extends TestCase
 
         public function test_builder_returns_404_for_inactive_template(): void
     {
-        $user     = User::factory()->approved()->create();
         $template = $this->makeTemplate(['is_active' => false]);
 
-        $this->actingAs($user)
-             ->get(route('print.builder', $template->slug))
+        $this->get(route('print.builder', $template->slug))
              ->assertNotFound();
     }
 
     // -------------------------------------------------------
-    // AJAX Price Calculation
+    // AJAX Price Calculation — gated behind login
     // -------------------------------------------------------
+
+        public function test_guest_cannot_call_calculate_endpoint(): void
+    {
+        $template = $this->makeTemplate();
+
+        $this->postJson(route('print.calculate', $template->slug), [
+                 'quantity'      => 100,
+                 'configuration' => [],
+             ])->assertStatus(401);
+    }
 
         public function test_calculate_endpoint_returns_json_with_price(): void
     {

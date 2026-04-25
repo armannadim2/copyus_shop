@@ -53,9 +53,15 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 Route::get('/products/{slug}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/categories/{slug}', [ProductController::class, 'category'])->name('products.category');
 
-// Print — calculate endpoint is public so guests can preview pricing pre-auth
-Route::post('/impressio/{template:slug}/calculate', [PrintJobController::class, 'calculate'])
-    ->name('print.calculate');
+// Print — gallery and builder are public so guests can browse templates and configure.
+// The {template} slug must exclude reserved paths handled by the auth-only group below
+// (els-meus-treballs, configuracions, jobs).
+Route::prefix('impressio')->name('print.')->group(function () {
+    Route::get('/', [PrintJobController::class, 'index'])->name('index');
+    Route::get('/{template:slug}', [PrintJobController::class, 'builder'])
+        ->where('template', '^(?!els-meus-treballs$|configuracions$|jobs$|configuracions\/|jobs\/).+')
+        ->name('builder');
+});
 
 // Locale switcher
 Route::get('/locale/{locale}', function (string $locale) {
@@ -173,9 +179,8 @@ Route::middleware(['auth', 'approved'])->group(function () {
     Route::post('/products/{slug}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::delete('/reviews/{id}',          [ReviewController::class, 'destroy'])->name('reviews.destroy');
 
-    // Print — gallery, builder, jobs (auth + approved required)
+    // Print — pricing, jobs and add-to-cart (auth + approved required)
     Route::prefix('impressio')->name('print.')->group(function () {
-        Route::get('/', [PrintJobController::class, 'index'])->name('index');
         Route::get('/els-meus-treballs', [PrintJobController::class, 'myJobs'])->name('my-jobs');
         Route::post('/jobs/{job}/artwork', [PrintJobController::class, 'uploadArtwork'])->name('jobs.artwork');
         Route::delete('/jobs/{job}/artwork', [PrintJobController::class, 'deleteArtwork'])->name('jobs.artwork.delete');
@@ -183,7 +188,7 @@ Route::middleware(['auth', 'approved'])->group(function () {
         Route::patch('/jobs/{job}/notes', [PrintJobController::class, 'updateNotes'])->name('jobs.notes');
         Route::patch('/jobs/{job}/received', [PrintJobController::class, 'confirmReceived'])->name('jobs.received');
         Route::post('/jobs/{job}/reorder', [PrintJobController::class, 'reorder'])->name('jobs.reorder');
-        Route::get('/{template:slug}', [PrintJobController::class, 'builder'])->name('builder');
+        Route::post('/{template:slug}/calculate', [PrintJobController::class, 'calculate'])->name('calculate');
         Route::post('/{template:slug}/add-to-cart', [PrintJobController::class, 'addToCart'])->name('add-to-cart');
     });
 
