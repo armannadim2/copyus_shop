@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactMessageReceived;
 use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -23,7 +26,7 @@ class ContactController extends Controller
             'message' => ['required', 'string', 'max:5000'],
         ]);
 
-        ContactMessage::create([
+        $contactMessage = ContactMessage::create([
             'user_id' => Auth::id(),
             'name'    => $data['name'],
             'email'   => $data['email'],
@@ -32,6 +35,16 @@ class ContactController extends Controller
             'message' => $data['message'],
             'status'  => 'new',
         ]);
+
+        try {
+            Mail::to(config('mail.inbox'))
+                ->send(new ContactMessageReceived($contactMessage));
+        } catch (\Throwable $e) {
+            Log::error('Failed to send contact-message email', [
+                'id'    => $contactMessage->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         return redirect()->route('contact')
             ->with('success', 'Missatge enviat. Et respondrem aviat.');

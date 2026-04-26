@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\QuoteRequestReceived;
 use App\Models\QuoteRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class QuoteRequestController extends Controller
 {
@@ -34,7 +37,7 @@ class QuoteRequestController extends Controller
             $attachmentPath = $request->file('attachment')->store('quote-requests', 'public');
         }
 
-        QuoteRequest::create([
+        $quoteRequest = QuoteRequest::create([
             'reference'       => QuoteRequest::generateReference(),
             'user_id'         => Auth::id(),
             'name'            => $data['name'],
@@ -50,6 +53,16 @@ class QuoteRequestController extends Controller
             'attachment_path' => $attachmentPath,
             'status'          => 'new',
         ]);
+
+        try {
+            Mail::to(config('mail.inbox'))
+                ->send(new QuoteRequestReceived($quoteRequest));
+        } catch (\Throwable $e) {
+            Log::error('Failed to send quote-request email', [
+                'reference' => $quoteRequest->reference,
+                'error'     => $e->getMessage(),
+            ]);
+        }
 
         return redirect()->route('request-quote')
             ->with('success', 'Sol·licitud rebuda. Et respondrem en menys de 24 hores laborables.');

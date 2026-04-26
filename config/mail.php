@@ -115,4 +115,16 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Internal Inbox (form submissions)
+    |--------------------------------------------------------------------------
+    |
+    | Address that receives quote-request and contact-form notifications.
+    | Override via the CONTACT_INBOX env variable.
+    |
+    */
+
+    'inbox' => env('CONTACT_INBOX', 'copyus@copyus.es'),
+
 ];

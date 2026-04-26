@@ -28,7 +28,13 @@
       "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan view:clear && php smoke_pages.php && rm smoke_pages.php')",
       "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && npm run build 2>&1 | tail -4 && php artisan view:clear')",
       "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php smoke_pages.php && rm smoke_pages.php')",
-      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan view:clear && php smoke_legal.php && rm smoke_legal.php')"
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan view:clear && php smoke_legal.php && rm smoke_legal.php')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'mkdir -p /home/nadim/copyus/app/Mail /home/nadim/copyus/resources/views/emails && ls /home/nadim/copyus/app/Mail /home/nadim/copyus/resources/views/emails')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && composer dump-autoload -o 2>&1 | tail -2 && php smoke_mail.php; rm -f smoke_mail.php')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php smoke_mail.php; rm -f smoke_mail.php')"
+    ],
+    "additionalDirectories": [
+      "\\\\wsl.localhost\\Ubuntu\\home\\nadim\\copyus\\app"
     ]
   }
 }
