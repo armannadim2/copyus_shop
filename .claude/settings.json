@@ -35,7 +35,10 @@
       "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/storage/**)",
       "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan tinker --execute=\"echo \\\\\"QUEUE_CONNECTION: \\\\\" . config\\(\\\\\"queue.default\\\\\"\\) . PHP_EOL; echo \\\\\"MAIL_MAILER: \\\\\" . config\\(\\\\\"mail.default\\\\\"\\) . PHP_EOL; echo \\\\\"MAIL_INBOX: \\\\\" . config\\(\\\\\"mail.inbox\\\\\"\\) . PHP_EOL;\"')",
       "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php check_mail.php; rm -f check_mail.php')",
-      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan config:clear && php artisan view:clear && composer dump-autoload -o 2>&1 | tail -2')"
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan config:clear && php artisan view:clear && composer dump-autoload -o 2>&1 | tail -2')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && tail -2000 storage/logs/laravel.log | grep -E 'Failed to send|contact-message|quote-request|local.ERROR' | tail -20\")",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan config:clear > /dev/null && php check_recent.php; rm -f check_recent.php')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php smoke_flash.php; rm -f smoke_flash.php')"
     ],
     "additionalDirectories": [
       "\\\\wsl.localhost\\Ubuntu\\home\\nadim\\copyus\\app"
