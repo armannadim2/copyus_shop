@@ -2,7 +2,7 @@ APP_NAME="Copyus"
 APP_ENV=production
 APP_KEY=base64:68vWhdy7nEaVfc0IKI70mPg9d4kn1drfn3qkBLZ2idw=
 APP_DEBUG=false
-APP_URL=http://tienda.copyus.es
+APP_URL=https://copyus.es
 
 APP_LOCALE=ca
 APP_FALLBACK_LOCALE=es
