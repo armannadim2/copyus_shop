@@ -41,8 +41,12 @@ class ContactController extends Controller
                 ->send(new ContactMessageReceived($contactMessage));
         } catch (\Throwable $e) {
             Log::error('Failed to send contact-message email', [
-                'id'    => $contactMessage->id,
-                'error' => $e->getMessage(),
+                'id'        => $contactMessage->id,
+                'inbox'     => config('mail.inbox'),
+                'mailer'    => config('mail.default'),
+                'host'      => config('mail.mailers.smtp.host'),
+                'error'     => $e->getMessage(),
+                'exception' => get_class($e),
             ]);
         }
 

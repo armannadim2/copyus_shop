@@ -31,7 +31,11 @@
       "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan view:clear && php smoke_legal.php && rm smoke_legal.php')",
       "PowerShell(wsl -d Ubuntu -- bash -lc 'mkdir -p /home/nadim/copyus/app/Mail /home/nadim/copyus/resources/views/emails && ls /home/nadim/copyus/app/Mail /home/nadim/copyus/resources/views/emails')",
       "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && composer dump-autoload -o 2>&1 | tail -2 && php smoke_mail.php; rm -f smoke_mail.php')",
-      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php smoke_mail.php; rm -f smoke_mail.php')"
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php smoke_mail.php; rm -f smoke_mail.php')",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/storage/**)",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan tinker --execute=\"echo \\\\\"QUEUE_CONNECTION: \\\\\" . config\\(\\\\\"queue.default\\\\\"\\) . PHP_EOL; echo \\\\\"MAIL_MAILER: \\\\\" . config\\(\\\\\"mail.default\\\\\"\\) . PHP_EOL; echo \\\\\"MAIL_INBOX: \\\\\" . config\\(\\\\\"mail.inbox\\\\\"\\) . PHP_EOL;\"')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php check_mail.php; rm -f check_mail.php')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan config:clear && php artisan view:clear && composer dump-autoload -o 2>&1 | tail -2')"
     ],
     "additionalDirectories": [
       "\\\\wsl.localhost\\Ubuntu\\home\\nadim\\copyus\\app"

@@ -60,7 +60,11 @@ class QuoteRequestController extends Controller
         } catch (\Throwable $e) {
             Log::error('Failed to send quote-request email', [
                 'reference' => $quoteRequest->reference,
+                'inbox'     => config('mail.inbox'),
+                'mailer'    => config('mail.default'),
+                'host'      => config('mail.mailers.smtp.host'),
                 'error'     => $e->getMessage(),
+                'exception' => get_class($e),
             ]);
         }
 
