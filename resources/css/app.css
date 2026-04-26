@@ -4,39 +4,28 @@
 
 /* ─── Custom Theme ──────────────────────────────────────────────────────────── */
 @theme {
-    /* Colors */
-    --color-primary:   #F26052;
-    --color-secondary: #5F75F4;
-    --color-dark:      #24302E;
-    --color-light:     #F0EFEB;
+    /* Colors — design-system tokens */
+    --color-primary:   #F26052;   /* Red-sun        500 */
+    --color-secondary: #5F75F4;   /* Shiny Blue     500 */
+    --color-dark:      #181818;   /* Casual black   500 (neutral) */
+    --color-light:     #efede6;   /* Carrera        500 (accent)  */
 
     /* Font families */
     --font-alumni: "Alumni Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
     --font-outfit: Outfit, ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-    /* Font sizes */
-    --text-h1:              76px;
-    --text-h1--line-height: 1.2;
-    --text-h2:              61px;
-    --text-h2--line-height: 1.2;
-    --text-h3:              49px;
-    --text-h3--line-height: 1.2;
-    --text-h4:              39px;
-    --text-h4--line-height: 1.2;
-    --text-h5:              31px;
-    --text-h5--line-height: 1.2;
-    --text-h6:              25px;
-    --text-h6--line-height: 1.2;
-    --text-sm-header:              20px;
-    --text-sm-header--line-height: 1.2;
-    --text-sm-header2:              13px;
-    --text-sm-header2--line-height: 1.2;
-    --text-body-lg:              16px;
-    --text-body-lg--line-height: 1.5;
-    --text-body-md:              13px;
-    --text-body-md--line-height: 1.5;
-    --text-body-sm:              10px;
-    --text-body-sm--line-height: 1.5;
+    /* Type scale — base 16, ratio 1.25 — line-height 120% across the board */
+    --text-h1:              76px;  --text-h1--line-height: 1.2;
+    --text-h2:              61px;  --text-h2--line-height: 1.2;
+    --text-h3:              49px;  --text-h3--line-height: 1.2;
+    --text-h4:              39px;  --text-h4--line-height: 1.2;
+    --text-h5:              31px;  --text-h5--line-height: 1.2;
+    --text-h6:              25px;  --text-h6--line-height: 1.2;
+    --text-sm-header:       20px;  --text-sm-header--line-height: 1.2;
+    --text-sm-header2:      13px;  --text-sm-header2--line-height: 1.2;
+    --text-body-lg:         16px;  --text-body-lg--line-height: 1.2;
+    --text-body-md:         13px;  --text-body-md--line-height: 1.2;
+    --text-body-sm:         10px;  --text-body-sm--line-height: 1.2;
 
     /* Shadows */
     --shadow-card:  0 2px 12px rgba(36,48,46,0.08);
@@ -54,10 +43,27 @@
     }
 
     body {
-        background-color: #F0EFEB;
-        color: #24302E;
+        /* Secondary typeface — Outfit Light */
+        font-family: 'Outfit', sans-serif;
+        font-weight: 300;
+        background-color: #efede6;
+        color: #181818;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Primary typeface — Alumni Sans Regular by default; H4 is Bold */
+    h1, h2, h3, h5, h6 {
+        font-family: 'Alumni Sans', sans-serif;
+        font-weight: 400;
+        line-height: 1.2;
+        letter-spacing: 0;
+    }
+    h4 {
+        font-family: 'Alumni Sans', sans-serif;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: 0;
     }
 
     /* Custom scrollbar */

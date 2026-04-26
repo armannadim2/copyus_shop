@@ -12,10 +12,10 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary:   '#F26052',   // Coral red — CTAs, accents
-                secondary: '#5F75F4',   // Blue — links, highlights
-                dark:      '#24302E',   // Deep charcoal green — headers, dark sections
-                light:     '#F0EFEB',   // Warm off-white — page background
+                primary:   '#F26052',   // Red-sun       500 — CTAs, accents
+                secondary: '#5F75F4',   // Shiny Blue    500 — links, highlights
+                dark:      '#181818',   // Casual black  500 — headers, dark sections
+                light:     '#efede6',   // Carrera       500 — page background
             },
             fontFamily: {
                 alumni: ['"Alumni Sans"', ...defaultTheme.fontFamily.sans],

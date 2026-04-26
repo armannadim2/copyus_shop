@@ -3,7 +3,10 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuoteRequestController;
 use App\Http\Controllers\Shop\HomeController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\CartController;
@@ -15,7 +18,9 @@ use App\Http\Controllers\Shop\WishlistController;
 use App\Http\Controllers\Shop\SavedAddressController;
 use App\Http\Controllers\Shop\ReviewController;
 use App\Http\Controllers\Shop\SearchController;
+use App\Http\Controllers\Admin\AdminContactMessageController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminQuoteRequestController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminOrderController;
@@ -43,6 +48,23 @@ use Illuminate\Support\Facades\Route;
 
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Static corporate pages
+Route::get('/qui-som',  [PageController::class, 'about'])->name('about');
+Route::get('/serveis',  [PageController::class, 'services'])->name('services');
+
+// Legal pages
+Route::get('/privadesa', [PageController::class, 'privacy'])->name('privacy');
+Route::get('/termes',    [PageController::class, 'terms'])->name('terms');
+Route::get('/cookies',   [PageController::class, 'cookies'])->name('cookies');
+
+// Request a quote (public form)
+Route::get('/demanar-pressupost',  [QuoteRequestController::class, 'create'])->name('request-quote');
+Route::post('/demanar-pressupost', [QuoteRequestController::class, 'store'])->name('request-quote.store');
+
+// Contact (public form)
+Route::get('/contacte',  [ContactController::class, 'show'])->name('contact');
+Route::post('/contacte', [ContactController::class, 'store'])->name('contact.store');
 
 // Search
 Route::get('/search',             SearchController::class)->name('search');
@@ -331,6 +353,22 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/', [AdminCompanyController::class, 'index'])->name('index');
         Route::get('/{company}', [AdminCompanyController::class, 'show'])->name('show');
         Route::patch('/{company}', [AdminCompanyController::class, 'update'])->name('update');
+    });
+
+    // Quote requests (from public «Demanar pressupost» form)
+    Route::prefix('quote-requests')->name('quote-requests.')->group(function () {
+        Route::get('/', [AdminQuoteRequestController::class, 'index'])->name('index');
+        Route::get('/{quoteRequest}', [AdminQuoteRequestController::class, 'show'])->name('show');
+        Route::patch('/{quoteRequest}', [AdminQuoteRequestController::class, 'update'])->name('update');
+        Route::delete('/{quoteRequest}', [AdminQuoteRequestController::class, 'destroy'])->name('destroy');
+    });
+
+    // Contact messages (from public «Contacte» form)
+    Route::prefix('contact-messages')->name('contact-messages.')->group(function () {
+        Route::get('/', [AdminContactMessageController::class, 'index'])->name('index');
+        Route::get('/{contactMessage}', [AdminContactMessageController::class, 'show'])->name('show');
+        Route::patch('/{contactMessage}', [AdminContactMessageController::class, 'update'])->name('update');
+        Route::delete('/{contactMessage}', [AdminContactMessageController::class, 'destroy'])->name('destroy');
     });
 
     // Admin support tickets

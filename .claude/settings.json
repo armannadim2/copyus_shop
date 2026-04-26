@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/resources/views/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/resources/views/admin/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/resources/lang/**)",
+      "PowerShell(wsl -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php -l app/Http/Controllers/PageController.php app/Http/Controllers/QuoteRequestController.php app/Http/Controllers/ContactController.php app/Http/Controllers/Admin/AdminQuoteRequestController.php app/Http/Controllers/Admin/AdminContactMessageController.php app/Models/QuoteRequest.php app/Models/ContactMessage.php 2>&1\")",
+      "PowerShell(wsl -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php smoke_admin.php\")",
+      "PowerShell(wsl -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && composer dump-autoload -o 2>&1 | tail -3 && php smoke_admin.php\")",
+      "PowerShell(wsl -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php smoke_show.php\")",
+      "PowerShell(wsl -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && rm smoke_pages.php smoke_admin.php smoke_show.php && php artisan tinker --execute='App\\\\Models\\\\QuoteRequest::truncate\\(\\); App\\\\Models\\\\ContactMessage::truncate\\(\\); echo \\\\\"cleaned\\\\\";'\")",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php cleanup_test.php && rm cleanup_test.php')",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/public/assets/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/public/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/public/assets/images/**)",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan view:clear && php smoke_home.php')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && rm smoke_home.php && npm run build 2>&1 | tail -15')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'curl -sL https://copyus.es 2>&1 | grep -iE \"font|google|typekit|woff|@font\" | head -30')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc \"curl -sL https://copyus.es | grep -iE 'font|woff' | head -40\")",
+      "PowerShell(wsl -d Ubuntu -- bash -lc \"curl -sL https://copyus.es | grep -iE 'font-size|fontSize|h1|h2|text-' | head -60\")",
+      "PowerShell(wsl -d Ubuntu -- bash -lc \"curl -sL https://copyus.es > /tmp/copyus.html && wc -l /tmp/copyus.html && grep -c 'class=' /tmp/copyus.html\")",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && npm run build 2>&1 | tail -8')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan view:clear && php smoke_home.php && rm smoke_home.php')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && npm run build 2>&1 | tail -6')",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/public/images/**)",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && npm run build 2>&1 | tail -5')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc \"curl -sL https://copyus.es > /tmp/copyus.html && cat /tmp/copyus.html | head -90\")",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan view:clear && php smoke_pages.php && rm smoke_pages.php')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && npm run build 2>&1 | tail -4 && php artisan view:clear')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php smoke_pages.php && rm smoke_pages.php')",
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan view:clear && php smoke_legal.php && rm smoke_legal.php')"
+    ]
+  }
+}

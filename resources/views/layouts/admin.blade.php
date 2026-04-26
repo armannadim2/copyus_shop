@@ -155,6 +155,34 @@
                     @endif
                 </a>
 
+                <a href="{{ route('admin.quote-requests.index') }}"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl
+                          font-outfit text-body-lg transition-colors
+                          {{ request()->routeIs('admin.quote-requests.*')
+                             ? 'bg-primary text-white'
+                             : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
+                    <span>💬</span> Sol·licituds preu
+                    @php $newQuoteRequests = \App\Models\QuoteRequest::where('status', 'new')->count(); @endphp
+                    @if($newQuoteRequests)
+                        <span class="ml-auto bg-blue-500 text-white text-xs font-bold
+                                     px-2 py-0.5 rounded-full">{{ $newQuoteRequests }}</span>
+                    @endif
+                </a>
+
+                <a href="{{ route('admin.contact-messages.index') }}"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl
+                          font-outfit text-body-lg transition-colors
+                          {{ request()->routeIs('admin.contact-messages.*')
+                             ? 'bg-primary text-white'
+                             : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
+                    <span>✉️</span> Missatges
+                    @php $newContactMessages = \App\Models\ContactMessage::where('status', 'new')->count(); @endphp
+                    @if($newContactMessages)
+                        <span class="ml-auto bg-blue-500 text-white text-xs font-bold
+                                     px-2 py-0.5 rounded-full">{{ $newContactMessages }}</span>
+                    @endif
+                </a>
+
                 <a href="{{ route('admin.reports.index') }}"
                 class="sidebar-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
                     📊 Reports

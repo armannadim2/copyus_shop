@@ -1,6 +1,12 @@
 @php
     $currentLocale = app()->getLocale();
     $isHome = request()->routeIs('home');
+    // Pages that render a full-bleed dark/colored hero. The navbar should be
+    // transparent over these (white text) instead of the red card style.
+    $isHeroPage = request()->routeIs(
+        'home', 'about', 'services', 'request-quote', 'contact',
+        'privacy', 'terms', 'cookies'
+    );
     $localeInfo = [
         'ca' => ['label' => 'CA', 'flag' => '<svg viewBox="0 0 20 14" width="20" height="14" style="border-radius:2px;display:inline-block;vertical-align:middle"><rect width="20" height="14" fill="#FCDD09"/><rect y="0"  width="20" height="2.33" fill="#DA121A"/><rect y="4"  width="20" height="2.33" fill="#DA121A"/><rect y="8"  width="20" height="2.33" fill="#DA121A"/><rect y="11.67" width="20" height="2.33" fill="#DA121A"/></svg>'],
         'es' => ['label' => 'ES', 'flag' => '<svg viewBox="0 0 20 14" width="20" height="14" style="border-radius:2px;display:inline-block;vertical-align:middle"><rect width="20" height="14" fill="#AA151B"/><rect y="3.5" width="20" height="7" fill="#F1BF00"/></svg>'],
@@ -16,6 +22,7 @@
          langOpen: false,
          searchOpen: false,
          isHome: {{ $isHome ? 'true' : 'false' }},
+         isHeroPage: {{ $isHeroPage ? 'true' : 'false' }},
          init() {
              this.scrolled = window.scrollY > 50;
              window.addEventListener('scroll', () => {
@@ -31,20 +38,20 @@
      }"
      @keydown.escape.window="closeSearch()"
      class="fixed top-0 inset-x-0 z-50 transition-all duration-300 px-4 sm:px-6"
-     :class="(scrolled || !isHome) ? 'pt-3' : 'pt-0'">
+     :class="(scrolled || !isHeroPage) ? 'pt-3' : 'pt-0'">
 
     {{-- ────────────────────────────────────────────────────────────────────
          Inner container:
-           home  + not scrolled  → transparent (full-bleed hero)
-           home  + scrolled      → cream glass floating card
-           other + not scrolled  → red rounded card
-           other + scrolled      → cream glass floating card
+           hero page  + not scrolled  → transparent (full-bleed dark/coral hero)
+           hero page  + scrolled      → cream glass floating card
+           other page + not scrolled  → red rounded card
+           other page + scrolled      → cream glass floating card
     ──────────────────────────────────────────────────────────────────────── --}}
-    <div class="max-w-6xl mx-auto transition-all duration-300 px-4 sm:px-6"
+    <div class="max-w-7xl mx-auto transition-all duration-300 px-4 sm:px-6 lg:px-8"
          :style="scrolled
              ? 'background:rgba(240,239,235,0.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(50,74,95,0.1);border-radius:1rem;box-shadow:0 2px 24px rgba(0,0,0,0.08)'
-             : (!isHome ? 'background:rgb(242,96,82);border-radius:1rem' : '')"
-         :class="(isHome && !scrolled) ? 'bg-transparent' : ''">
+             : (!isHeroPage ? 'background:rgb(242,96,82);border-radius:1rem' : '')"
+         :class="(isHeroPage && !scrolled) ? 'bg-transparent' : ''">
 
         <div class="flex items-center justify-between" style="height:80px">
 
@@ -60,13 +67,13 @@
             <ul class="hidden lg:flex items-center">
                 @php
                     $navLinks = [
-                        ['label' => 'Inici',       'href' => 'https://copyus.es',               'active' => false],
-                        ['label' => 'Qui som',      'href' => 'https://copyus.es/about',         'active' => false],
-                        ['label' => 'Serveis',      'href' => 'https://copyus.es/services',      'active' => false],
-                        ['label' => 'Botiga',       'href' => route('products.index'),            'active' => request()->routeIs('products.*', 'home')],
-                        ['label' => '🖨️ Impressió', 'href' => route('print.index'),              'active' => request()->routeIs('print.*')],
-                        ['label' => 'Demanar Preu', 'href' => 'https://copyus.es/request-quote', 'active' => false],
-                        ['label' => 'Contacte',     'href' => 'https://copyus.es/contact',       'active' => false],
+                        ['label' => 'Inici',       'href' => route('home'),           'active' => request()->routeIs('home')],
+                        ['label' => 'Qui som',      'href' => route('about'),          'active' => request()->routeIs('about')],
+                        ['label' => 'Serveis',      'href' => route('services'),       'active' => request()->routeIs('services')],
+                        ['label' => 'Botiga',       'href' => route('products.index'), 'active' => request()->routeIs('products.*')],
+                        ['label' => '🖨️ Impressió', 'href' => route('print.index'),    'active' => request()->routeIs('print.*')],
+                        ['label' => 'Demanar Preu', 'href' => route('request-quote'),  'active' => request()->routeIs('request-quote*')],
+                        ['label' => 'Contacte',     'href' => route('contact'),        'active' => request()->routeIs('contact')],
                     ];
                 @endphp
 
@@ -609,15 +616,30 @@
          style="display:none">
         <div class="px-2 py-3">
 
-            <a href="https://copyus.es"       class="mobile-menu-item">Inici</a>
-            <a href="https://copyus.es/about"  class="mobile-menu-item">Qui som</a>
-            <a href="https://copyus.es/services" class="mobile-menu-item">Serveis</a>
+            <a href="{{ route('home') }}"
+               class="mobile-menu-item {{ request()->routeIs('home') ? '!text-primary font-semibold' : '' }}">
+                Inici
+            </a>
+            <a href="{{ route('about') }}"
+               class="mobile-menu-item {{ request()->routeIs('about') ? '!text-primary font-semibold' : '' }}">
+                Qui som
+            </a>
+            <a href="{{ route('services') }}"
+               class="mobile-menu-item {{ request()->routeIs('services') ? '!text-primary font-semibold' : '' }}">
+                Serveis
+            </a>
             <a href="{{ route('products.index') }}"
                class="mobile-menu-item {{ request()->routeIs('products.*') ? '!text-primary font-semibold' : '' }}">
                 Botiga
             </a>
-            <a href="https://copyus.es/request-quote" class="mobile-menu-item">Demanar Preu</a>
-            <a href="https://copyus.es/contact"       class="mobile-menu-item border-b-0">Contacte</a>
+            <a href="{{ route('request-quote') }}"
+               class="mobile-menu-item {{ request()->routeIs('request-quote*') ? '!text-primary font-semibold' : '' }}">
+                Demanar Preu
+            </a>
+            <a href="{{ route('contact') }}"
+               class="mobile-menu-item border-b-0 {{ request()->routeIs('contact') ? '!text-primary font-semibold' : '' }}">
+                Contacte
+            </a>
 
             @auth
                 <div class="mt-3 pt-3 border-t border-gray-100 space-y-0">

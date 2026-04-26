@@ -1,426 +1,651 @@
 @extends('layouts.app')
-@section('title', __('app.welcome'))
+@section('title', 'Impressió digital · Copyus')
 
 @section('content')
 
     {{-- ── Hero ─────────────────────────────────────────────────────────────── --}}
-    <section class="relative bg-dark overflow-hidden -mt-16 lg:-mt-20">
+    <section class="relative bg-primary text-white overflow-hidden -mt-16 lg:-mt-20 pt-16 lg:pt-20">
 
-        {{-- Decorative gradient blobs --}}
+        {{-- Decorative blobs --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden">
-            <div class="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full
-                        bg-secondary opacity-10 blur-3xl"></div>
-            <div class="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full
-                        bg-primary opacity-10 blur-3xl"></div>
+            <div class="absolute -top-32 -right-40 w-[600px] h-[600px] rounded-full
+                        bg-white/10 blur-3xl"></div>
+            <div class="absolute -bottom-20 -left-32 w-[420px] h-[420px] rounded-full
+                        bg-dark/10 blur-3xl"></div>
         </div>
 
-        <div class="section relative py-28 md:py-36">
-            <div class="max-w-3xl">
-                <div class="inline-flex items-center gap-2 bg-white/10 rounded-full
-                            px-4 py-1.5 mb-6 animate-reveal-up">
-                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                    <span class="font-outfit text-body-md text-white/70">
-                        Tecnocampus Mataró · Papereria
-                    </span>
-                </div>
+        <div class="section relative py-20 md:py-28">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
 
-                <h1 class="font-alumni font-black text-h1 text-white leading-tight
-                           animate-reveal-up delay-100">
-                    {{ __('app.hero_title') }}<br>
-                    <span class="text-gradient">Copyus</span>
-                </h1>
+                {{-- Left: copy --}}
+                <div>
+                    <h1 class="font-alumni text-h1 text-white animate-reveal-up"
+                        style="line-height: 1.05; letter-spacing: 0.01em;">
+                        Excel·lència en cada<br>
+                        <em class="italic">Impressió Digital.</em>
+                    </h1>
 
-                <p class="font-outfit text-body-lg text-white/60 mt-6 max-w-xl leading-relaxed
-                          animate-reveal-up delay-200">
-                    {{ __('app.hero_subtitle') }}
-                </p>
+                    <p class="font-outfit font-light text-body-lg text-white/90 mt-6 max-w-xl
+                              animate-reveal-up delay-100">
+                        Oferim solucions de producció d'elit que eleven la presència
+                        de la teva marca mitjançant precisió tècnica i materials de
+                        primera qualitat.
+                    </p>
 
-                <div class="flex flex-wrap gap-4 mt-10 animate-reveal-up delay-300">
-                    <a href="{{ route('products.index') }}" class="btn-primary">
-                        {{ __('app.browse_products') }}
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                        </svg>
-                    </a>
-                    @guest
-                        <a href="{{ route('register') }}" class="btn-outline-white">
-                            {{ __('app.register') }}
+                    <div class="flex flex-wrap gap-3 mt-10 animate-reveal-up delay-200">
+                        <a href="{{ route('print.index') }}"
+                           class="inline-flex items-center justify-center
+                                  bg-dark text-white font-outfit text-body-lg
+                                  px-7 py-3.5 rounded-xl hover:brightness-110
+                                  active:scale-95 transition-all duration-200">
+                            Començar a imprimir
                         </a>
-                    @endguest
+                        <a href="{{ route('products.index') }}"
+                           class="inline-flex items-center justify-center
+                                  bg-dark text-primary font-outfit text-body-lg
+                                  px-7 py-3.5 rounded-xl hover:brightness-110
+                                  active:scale-95 transition-all duration-200">
+                            Veure productes
+                        </a>
+                    </div>
                 </div>
 
-                {{-- Stats --}}
-                <div class="flex flex-wrap gap-8 mt-14 animate-reveal-up delay-400">
-                    <div>
-                        <p class="font-alumni font-black text-h4 text-primary">500+</p>
-                        <p class="font-outfit text-body-md text-white/50">Productes</p>
-                    </div>
-                    <div class="w-px bg-white/10"></div>
-                    <div>
-                        <p class="font-alumni font-black text-h4 text-white">100%</p>
-                        <p class="font-outfit text-body-md text-white/50">Satisfacció</p>
-                    </div>
-                    <div class="w-px bg-white/10"></div>
-                    <div>
-                        <p class="font-alumni font-black text-h4 text-secondary">24h</p>
-                        <p class="font-outfit text-body-md text-white/50">Entrega ràpida</p>
+                {{-- Right: featured card (no white frame) --}}
+                <div class="relative animate-reveal-up delay-300">
+                    <div class="relative rounded-3xl overflow-hidden h-80 md:h-[28rem]
+                                flex items-end p-8 shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
+                        {{-- Hero image --}}
+                        <img src="{{ asset('images/hero_1.png') }}"
+                             alt="Impressió tèxtil"
+                             class="absolute inset-0 w-full h-full object-cover">
+                        {{-- Bottom gradient for legibility --}}
+                        <div class="absolute inset-x-0 bottom-0 h-2/5
+                                    bg-gradient-to-t from-black/70 to-transparent"></div>
+
+                        <div class="relative">
+                            <p class="font-outfit font-bold text-body-md text-white/90
+                                      uppercase tracking-wider mb-1">
+                                Impressió Tèxtil d'Alta Resolució
+                            </p>
+                            <h3 class="font-alumni text-h4 text-white">
+                                Vesteix la Teva Marca
+                            </h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    {{-- ── Register Banner (guests) ─────────────────────────────────────────────── --}}
-    @guest
-        <section class="bg-secondary">
-            <div class="section py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <svg class="w-5 h-5 text-white shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                    </svg>
-                    <p class="font-alumni text-sm-header font-semibold text-white">
-                        {{ __('app.prices_hidden') }}
-                    </p>
-                </div>
-                <a href="{{ route('register') }}"
-                   class="shrink-0 bg-white text-secondary font-alumni text-sm-header font-bold
-                          px-5 py-2 rounded-xl hover:bg-light transition-colors">
-                    {{ __('app.register') }} →
-                </a>
-            </div>
-        </section>
-    @endguest
+    {{-- ── Sobre Nosaltres ──────────────────────────────────────────────────── --}}
+    <section id="qui-som" class="relative">
 
-    {{-- ── Featured Products ───────────────────────────────────────────────── --}}
-    @if($featuredProducts->isNotEmpty())
-        <section class="py-20">
-            <div class="section">
-                <div class="flex items-end justify-between mb-10">
-                    <div>
-                        <p class="font-outfit text-body-md text-primary font-semibold uppercase tracking-widest mb-2">
-                            Catàleg
-                        </p>
-                        <h2 class="font-alumni font-black text-h2 text-dark">
-                            Productes destacats
-                        </h2>
-                    </div>
-                    <a href="{{ route('products.index') }}"
-                       class="hidden md:flex items-center gap-2 font-alumni text-sm-header
-                              font-semibold text-secondary hover:text-primary transition-colors">
-                        Veure tot
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                        </svg>
-                    </a>
-                </div>
+        {{-- Coral top divider --}}
+        <div class="h-3 bg-primary"></div>
 
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                    @foreach($featuredProducts as $product)
-                        <a href="{{ route('products.show', $product->slug) }}"
-                           class="card group overflow-hidden">
-                            {{-- Thumbnail --}}
-                            <div class="aspect-square bg-light flex items-center justify-center overflow-hidden">
-                                @if($product->thumbnail)
-                                    <img src="{{ asset('storage/'.$product->thumbnail) }}"
-                                         alt="{{ $product->name }}"
-                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                @else
-                                    <div class="w-full h-full flex items-center justify-center">
-                                        <svg class="w-12 h-12 text-dark/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                                        </svg>
-                                    </div>
-                                @endif
-                            </div>
-                            {{-- Info --}}
-                            <div class="p-4">
-                                @if($product->brand)
-                                    <p class="font-outfit text-body-sm text-primary font-semibold uppercase
-                                               tracking-wider mb-1">
-                                        {{ $product->brand }}
-                                    </p>
-                                @endif
-                                <h3 class="font-alumni text-sm-header font-bold text-dark leading-tight
-                                           group-hover:text-primary transition-colors line-clamp-2">
-                                    {{ $product->name }}
-                                </h3>
-                                @auth
-                                    @if(auth()->user()->canSeePrices())
-                                        <p class="mt-2 font-alumni text-h6 text-primary font-black">
-                                            {{ number_format($product->price, 2, ',', '.') }} €
-                                            <span class="font-outfit text-body-sm text-dark/40 font-normal">
-                                                / {{ $product->unit }}
-                                            </span>
-                                        </p>
-                                    @endif
-                                @endauth
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
+        <div class="relative bg-dark text-white py-24 md:py-32 overflow-hidden">
 
-                <div class="mt-8 text-center md:hidden">
-                    <a href="{{ route('products.index') }}" class="btn-outline">
-                        Veure tots els productes
-                    </a>
-                </div>
-            </div>
-        </section>
-    @endif
+            {{-- Background image + dark overlay --}}
+            <img src="{{ asset('images/about_us_header.png') }}"
+                 alt="" aria-hidden="true"
+                 class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-dark/70"></div>
 
-    {{-- ── Categories ──────────────────────────────────────────────────────── --}}
-    @if($categories->isNotEmpty())
-        <section class="py-16 bg-white">
-            <div class="section">
-                <div class="text-center mb-10">
-                    <p class="font-outfit text-body-md text-secondary font-semibold uppercase tracking-widest mb-2">
-                        Categories
-                    </p>
-                    <h2 class="font-alumni font-black text-h3 text-dark">
-                        Tot el que necessites
-                    </h2>
-                </div>
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                    @foreach($categories as $category)
-                        <a href="{{ route('products.category', $category->slug) }}"
-                           class="group flex flex-col items-center text-center p-6
-                                  rounded-2xl border-2 border-transparent bg-light
-                                  hover:border-primary hover:bg-primary/5 transition-all duration-200">
-                            <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center
-                                        mb-3 group-hover:bg-primary group-hover:scale-110 transition-all duration-200">
-                                <svg class="w-6 h-6 text-primary group-hover:text-white transition-colors duration-200"
-                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                          d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                                </svg>
-                            </div>
-                            <h3 class="font-alumni text-sm-header font-bold text-dark
-                                       group-hover:text-primary transition-colors">
-                                {{ $category->name }}
-                            </h3>
-                            @if($category->active_products_count > 0)
-                                <p class="font-outfit text-body-sm text-dark/40 mt-1">
-                                    {{ $category->active_products_count }} productes
-                                </p>
-                            @endif
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
-
-    {{-- ── Features ─────────────────────────────────────────────────────────── --}}
-    <section class="py-20">
-        <div class="section">
-            <div class="text-center mb-12">
-                <p class="font-outfit text-body-md text-primary font-semibold uppercase tracking-widest mb-2">
-                    Per què Copyus
-                </p>
-                <h2 class="font-alumni font-black text-h2 text-dark">
-                    {{ __('app.why_copyus') }}
+            <div class="section relative text-center max-w-3xl mx-auto">
+                <h2 class="font-alumni italic text-h2">
+                    Sobre Nosaltres
                 </h2>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                <div class="card p-8 group">
-                    <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5
-                                group-hover:bg-primary transition-colors duration-300">
-                        <svg class="w-7 h-7 text-primary group-hover:text-white transition-colors duration-300"
-                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-alumni font-bold text-h5 text-dark mb-2">
-                        {{ __('app.feature_catalog_title') }}
-                    </h3>
-                    <p class="font-outfit text-body-lg text-dark/60 leading-relaxed">
-                        {{ __('app.feature_catalog_desc') }}
-                    </p>
-                </div>
-
-                <div class="card p-8 group">
-                    <div class="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center mb-5
-                                group-hover:bg-secondary transition-colors duration-300">
-                        <svg class="w-7 h-7 text-secondary group-hover:text-white transition-colors duration-300"
-                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-alumni font-bold text-h5 text-dark mb-2">
-                        {{ __('app.feature_b2b_title') }}
-                    </h3>
-                    <p class="font-outfit text-body-lg text-dark/60 leading-relaxed">
-                        {{ __('app.feature_b2b_desc') }}
-                    </p>
-                </div>
-
-                <div class="card p-8 group">
-                    <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5
-                                group-hover:bg-primary transition-colors duration-300">
-                        <svg class="w-7 h-7 text-primary group-hover:text-white transition-colors duration-300"
-                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-alumni font-bold text-h5 text-dark mb-2">
-                        {{ __('app.feature_invoice_title') }}
-                    </h3>
-                    <p class="font-outfit text-body-lg text-dark/60 leading-relaxed">
-                        {{ __('app.feature_invoice_desc') }}
-                    </p>
-                </div>
-
+                <p class="font-outfit text-body-lg text-white/80 mt-6 leading-relaxed max-w-2xl mx-auto">
+                    Des dels nostres inicis, COPYUS ha unit la creativitat digital amb la
+                    realitat tangible, oferint solucions d'impressió de classe mundial.
+                </p>
             </div>
         </div>
     </section>
 
-    {{-- ── Print Services ─────────────────────────────────────────────────── --}}
-    @if($printTemplates->isNotEmpty())
-        <section class="py-20 bg-dark overflow-hidden relative">
-            {{-- Decorative blobs --}}
-            <div class="absolute inset-0 pointer-events-none overflow-hidden">
-                <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-secondary opacity-10 blur-3xl"></div>
-                <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-primary opacity-10 blur-3xl"></div>
-            </div>
+    {{-- ── Compromesos amb l'Excel·lència ──────────────────────────────────── --}}
+    <section class="bg-light py-24">
+        <div class="section grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-            <div class="section relative">
-                <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
-                    <div>
-                        <p class="font-outfit text-body-md text-secondary font-semibold uppercase tracking-widest mb-2">
-                            Impressió a mida
+            <div>
+                <h2 class="font-alumni text-h2 text-dark mb-10">
+                    Compromesos amb<br>l'Excel·lència
+                </h2>
+
+                <div class="space-y-8">
+                    <div class="border-l-2 border-dark/40 pl-6">
+                        <p class="font-alumni italic text-sm-header text-dark mb-2">
+                            La nostra Missió
                         </p>
-                        <h2 class="font-alumni font-black text-h2 text-white">
-                            Servei d'impressió professional
-                        </h2>
-                        <p class="font-outfit text-body-lg text-white/50 mt-3 max-w-xl leading-relaxed">
-                            Configura el teu encàrrec en temps real, obté el preu a l'instant i rep-ho a l'oficina.
+                        <p class="font-outfit text-body-lg text-primary leading-relaxed">
+                            Empoderar marques i individus oferint serveis d'impressió
+                            digital innovadors que donin vida a les seves idees.
                         </p>
                     </div>
-                    @auth
-                        @if(auth()->user()->canSeePrices())
-                            <a href="{{ route('print.index') }}"
-                               class="shrink-0 btn-primary">
-                                Veure totes les plantilles
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                                </svg>
-                            </a>
-                        @endif
-                    @endauth
-                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    @foreach($printTemplates as $template)
-                        <div class="bg-white/5 border border-white/10 rounded-3xl p-6 hover:bg-white/10 hover:border-white/20 transition-all duration-200 group">
-                            <div class="w-12 h-12 rounded-2xl bg-secondary/20 flex items-center justify-center mb-5 group-hover:bg-secondary transition-colors duration-300">
-                                <svg class="w-6 h-6 text-secondary group-hover:text-white transition-colors duration-300"
-                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                          d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
-                                </svg>
-                            </div>
-
-                            <h3 class="font-alumni font-bold text-h5 text-white mb-2">
-                                {{ $template->getTranslation('name', app()->getLocale()) }}
-                            </h3>
-
-                            @if($template->getTranslation('description', app()->getLocale()))
-                                <p class="font-outfit text-body-md text-white/50 mb-4 leading-relaxed line-clamp-2">
-                                    {{ $template->getTranslation('description', app()->getLocale()) }}
-                                </p>
-                            @endif
-
-                            <div class="flex items-center justify-between mt-4">
-                                @auth
-                                    @if(auth()->user()->canSeePrices())
-                                        @php $tier = $template->quantityTiers->first(); @endphp
-                                        @if($tier)
-                                            <p class="font-outfit text-body-sm text-white/40">
-                                                Des de <span class="text-secondary font-semibold">{{ number_format($tier->unit_price, 2, ',', '.') }} €/u</span>
-                                            </p>
-                                        @endif
-                                        <a href="{{ route('print.builder', $template->slug) }}"
-                                           class="shrink-0 font-alumni text-sm-header bg-secondary text-white px-4 py-2 rounded-xl hover:brightness-110 transition-all">
-                                            Configurar →
-                                        </a>
-                                    @else
-                                        <p class="font-outfit text-body-sm text-white/40">Registra't per veure preus</p>
-                                    @endif
-                                @else
-                                    <p class="font-outfit text-body-sm text-white/40">Registra't per accedir</p>
-                                    <a href="{{ route('register') }}"
-                                       class="shrink-0 font-alumni text-sm-header bg-white/10 text-white px-4 py-2 rounded-xl hover:bg-white/20 transition-all">
-                                        Registrar-se →
-                                    </a>
-                                @endauth
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                {{-- Benefits strip --}}
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    @foreach([
-                        ['icon' => '⚡', 'title' => 'Preu en temps real', 'desc' => 'Veu el cost mentre configures'],
-                        ['icon' => '🎨', 'title' => 'Múltiples acabats', 'desc' => 'Glossat, mat, plastificat...'],
-                        ['icon' => '📦', 'title' => 'Entrega a oficina', 'desc' => 'Recollida al campus'],
-                        ['icon' => '✅', 'title' => 'Qualitat garantida', 'desc' => 'Impressió professional'],
-                    ] as $benefit)
-                        <div class="flex items-start gap-3 bg-white/5 rounded-2xl px-4 py-4">
-                            <span class="text-2xl shrink-0">{{ $benefit['icon'] }}</span>
-                            <div>
-                                <p class="font-alumni text-sm-header text-white">{{ $benefit['title'] }}</p>
-                                <p class="font-outfit text-body-sm text-white/40 mt-0.5">{{ $benefit['desc'] }}</p>
-                            </div>
-                        </div>
-                    @endforeach
+                    <div class="border-l-2 border-dark/40 pl-6">
+                        <p class="font-alumni italic text-sm-header text-dark mb-2">
+                            La nostra Visió
+                        </p>
+                        <p class="font-outfit text-body-lg text-primary leading-relaxed">
+                            Convertir-nos en l'estàndard global d'impressió digital i
+                            marxandatge personalitzat.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </section>
-    @endif
 
-    {{-- ── CTA ──────────────────────────────────────────────────────────────── --}}
-    <section class="py-20">
+            <div class="relative">
+                <div class="bg-white rounded-3xl p-3 shadow-[0_20px_60px_rgba(36,48,46,0.08)]
+                            relative overflow-hidden">
+                    <img src="{{ asset('images/about_us.png') }}"
+                         alt="Productes Copyus"
+                         class="rounded-2xl w-full h-80 md:h-96 object-cover">
+                </div>
+
+                {{-- Floating badge --}}
+                <div class="absolute -bottom-5 -right-5 bg-white rounded-2xl
+                            shadow-[0_10px_30px_rgba(36,48,46,0.15)] px-6 py-4 border border-gray-100">
+                    <p class="font-alumni font-extrabold text-h3 text-secondary leading-none text-center">15+</p>
+                    <p class="font-outfit text-body-sm font-bold text-primary mt-1.5 text-center
+                              uppercase tracking-wider">Years Active</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- ── Els nostres Valors ──────────────────────────────────────────────── --}}
+    <section class="bg-light py-24">
         <div class="section">
-            <div class="relative bg-dark rounded-3xl overflow-hidden px-8 py-16 text-center">
-                {{-- Blobs --}}
-                <div class="absolute inset-0 pointer-events-none overflow-hidden">
-                    <div class="absolute -top-16 -right-16 w-72 h-72 rounded-full
-                                bg-secondary opacity-15 blur-3xl"></div>
-                    <div class="absolute -bottom-16 -left-16 w-72 h-72 rounded-full
-                                bg-primary opacity-15 blur-3xl"></div>
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <h2 class="font-alumni text-h2 text-dark">
+                    Els nostres Valors
+                </h2>
+                <p class="font-outfit text-body-lg text-gray-500 mt-3">
+                    Els principis que guien tot el que fem a COPYUS.
+                </p>
+            </div>
+
+            @php
+                $values = [
+                    ['icon' => '⭐', 'title' => 'Qualitat Primer',  'desc' => 'Mai comprometem el resultat final. Cada píxel i cada gota de tinta importa.'],
+                    ['icon' => '💡', 'title' => 'Innovació',         'desc' => 'Invertim en les últimes tecnologies d\'impressió per oferir solucions d\'avantguarda.'],
+                    ['icon' => '🌱', 'title' => 'Sostenibilitat',    'desc' => 'Prioritzem tintes ecològiques i materials reciclables per minimitzar la petjada.'],
+                    ['icon' => '🤝', 'title' => 'Integritat',        'desc' => 'Preus transparents i comunicació honesta són la base de les nostres relacions.'],
+                    ['icon' => '⚡', 'title' => 'Velocitat',         'desc' => 'En l\'era digital, el temps és or. Ens encarreguem dels nostres terminis ràpids.'],
+                    ['icon' => '🏆', 'title' => 'Èxit del Client',   'desc' => 'El nostre èxit es mesura per l\'impacte que les nostres impressions tenen en tu.'],
+                ];
+            @endphp
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($values as $value)
+                    <div class="bg-white rounded-3xl p-7 border border-gray-100
+                                hover:border-primary/40 hover:shadow-[0_10px_30px_rgba(242,96,82,0.10)]
+                                transition-all duration-300">
+                        <div class="w-14 h-14 rounded-2xl bg-light flex items-center
+                                    justify-center text-3xl mb-5">
+                            {{ $value['icon'] }}
+                        </div>
+                        <h3 class="font-alumni text-h5 text-dark mb-2">
+                            {{ $value['title'] }}
+                        </h3>
+                        <p class="font-outfit text-body-md text-gray-500 leading-relaxed">
+                            {{ $value['desc'] }}
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    {{-- ── Serveis ─────────────────────────────────────────────────────────── --}}
+    <section id="serveis" class="bg-light py-24">
+        <div class="section">
+            <div class="text-center max-w-2xl mx-auto mb-4">
+                <h2 class="font-alumni text-h2 text-dark">
+                    Serveis
+                </h2>
+                <p class="font-outfit text-body-lg text-gray-500 mt-3">
+                    Impulsem la teva marca amb un conjunt estratègic que connecta,
+                    convenç i converteix.
+                </p>
+            </div>
+
+            <div class="text-left max-w-3xl mx-auto mt-12 mb-10">
+                <h3 class="font-alumni text-h3 text-secondary">
+                    Enginyeria d'<em class="italic">Impressió d'Èlit.</em>
+                </h3>
+                <p class="font-outfit text-body-md text-gray-500 mt-3">
+                    Des de sistemes d'identitat corporativa fins a actius de
+                    màrqueting físics massius, oferim un espectre complet de
+                    serveis de producció.
+                </p>
+                <div class="mt-4 h-0.5 bg-gradient-to-r from-secondary via-primary to-transparent w-32"></div>
+            </div>
+
+            @php
+                $homeServices = [
+                    [
+                        'title' => 'Empreses i Corporatiu',
+                        'desc'  => 'Impressió professional per a la teva marca.',
+                        'image' => 'images/corporate_business.png',
+                        'href'  => 'request-quote',
+                    ],
+                    [
+                        'title' => 'Gran Format',
+                        'desc'  => 'Causa un gran impacte amb impressions massives.',
+                        'image' => 'images/gran_format.png',
+                        'href'  => 'request-quote',
+                    ],
+                    [
+                        'title' => 'Marxandatge',
+                        'desc'  => 'Marca\'t el que puguis imaginar.',
+                        'image' => 'images/merchandising.png',
+                        'href'  => 'request-quote',
+                    ],
+                    [
+                        'title' => 'Editorial i Llibres',
+                        'desc'  => 'Servei complet d\'enquadernació i impressió.',
+                        'image' => 'images/editorial.png',
+                        'href'  => 'request-quote',
+                    ],
+                ];
+            @endphp
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                @foreach($homeServices as $svc)
+                    <div class="group bg-white rounded-3xl p-3 border border-gray-100
+                                hover:border-primary/40 hover:-translate-y-1
+                                hover:shadow-[0_12px_30px_rgba(36,48,46,0.08)]
+                                transition-all duration-300 flex flex-col">
+                        <div class="relative rounded-2xl h-48 overflow-hidden mb-4">
+                            <img src="{{ asset($svc['image']) }}"
+                                 alt="{{ $svc['title'] }}"
+                                 class="absolute inset-0 w-full h-full object-cover
+                                        group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="px-3 pb-4 flex-1 flex flex-col">
+                            <h3 class="font-alumni text-h6 text-dark mb-1.5">
+                                {{ $svc['title'] }}
+                            </h3>
+                            <p class="font-outfit text-body-md text-gray-500 leading-relaxed mb-4 flex-1">
+                                {{ $svc['desc'] }}
+                            </p>
+                            <a href="{{ route($svc['href']) }}"
+                               class="inline-flex items-center gap-1.5 font-outfit text-body-md
+                                      font-semibold text-primary group-hover:gap-2.5 transition-all">
+                                Saber-ne més →
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    {{-- ── Confiat per Marques Líders ──────────────────────────────────────── --}}
+    <section class="bg-white py-16 border-y border-gray-100 overflow-hidden">
+        <div class="section mb-10">
+            <p class="text-center font-outfit text-xs font-semibold text-gray-400
+                      uppercase tracking-[0.3em]">
+                Confiat per Marques Líders
+            </p>
+        </div>
+
+        @php
+            $brands = [
+                ['name' => "El moli d'en Puigvert", 'image' => 'images/clients-logo/logo-moli.png'],
+                ['name' => 'EDMAFOOD',              'image' => 'images/clients-logo/edmafood-logo.png'],
+                ['name' => 'FVNDARES',              'image' => 'images/clients-logo/fundares-logo.png'],
+                ['name' => 'CPL Aromas',            'image' => 'images/clients-logo/cpl-logo.png'],
+                ['name' => 'Imagina Sounds',        'image' => 'images/clients-logo/imagina_logo.png'],
+                ['name' => 'TecnoCampus',           'image' => 'images/clients-logo/tecnocampus.png'],
+                ['name' => 'SolarTradex',           'image' => 'images/clients-logo/solartradex.svg'],
+            ];
+        @endphp
+
+        <div class="relative w-full overflow-hidden">
+
+            {{-- Edge fade masks --}}
+            <div class="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none
+                        bg-gradient-to-r from-white to-transparent"></div>
+            <div class="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none
+                        bg-gradient-to-l from-white to-transparent"></div>
+
+            <div class="flex w-max items-center marquee-track">
+                @foreach(array_merge($brands, $brands) as $brand)
+                    <div class="flex items-center justify-center px-10 lg:px-14 shrink-0">
+                        <img src="{{ asset($brand['image']) }}"
+                             alt="{{ $brand['name'] }}"
+                             loading="lazy"
+                             class="h-10 md:h-12 w-auto max-w-[180px] object-contain
+                                    grayscale opacity-60 hover:grayscale-0 hover:opacity-100
+                                    transition duration-300">
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        @push('styles')
+        <style>
+            @keyframes marquee-scroll {
+                0%   { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+            .marquee-track {
+                animation: marquee-scroll 40s linear infinite;
+            }
+            .marquee-track:hover {
+                animation-play-state: paused;
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .marquee-track { animation: none; }
+            }
+        </style>
+        @endpush
+    </section>
+
+    {{-- ── Contacta amb Nosaltres ──────────────────────────────────────────── --}}
+    <section id="contacte" class="bg-light py-24">
+        <div class="section">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <h2 class="font-alumni italic text-h2 text-dark">
+                    Contacta amb Nosaltres
+                </h2>
+                <p class="font-outfit text-body-md text-primary mt-3">
+                    Tant si tens una comanda corporativa com un projecte personal,
+                    el nostre equip t'ajudarà.
+                </p>
+            </div>
+
+            @if(session('success'))
+                <div class="max-w-3xl mx-auto mb-8 px-5 py-4 bg-green-50 border
+                            border-green-200 rounded-2xl font-outfit text-sm text-green-700">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <div class="grid lg:grid-cols-2 gap-6 lg:gap-10 max-w-6xl mx-auto">
+
+                {{-- ─── LEFT: Form card ──────────────────────────────────────── --}}
+                <div class="bg-white rounded-3xl border border-gray-100 p-8 md:p-10
+                            shadow-[0_4px_24px_rgba(36,48,46,0.04)]">
+
+                    @if($errors->any())
+                        <div class="mb-6 bg-red-50 border border-red-200 text-red-600
+                                    font-outfit text-body-sm px-4 py-3 rounded-xl">
+                            <ul class="list-disc list-inside space-y-0.5">
+                                @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @php
+                        $contactLabel = 'block font-outfit text-xs font-semibold uppercase
+                                         tracking-widest text-primary mb-2';
+                        $contactInput = 'w-full border border-gray-200 rounded-xl px-4 py-3
+                                         font-outfit text-sm bg-white focus:outline-none
+                                         focus:ring-2 focus:ring-primary/30 focus:border-primary
+                                         transition placeholder:text-gray-300';
+                    @endphp
+
+                    <form method="POST" action="{{ route('contact.store') }}" class="space-y-5">
+                        @csrf
+
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="{{ $contactLabel }}">Nom complet</label>
+                                <input type="text" name="name" required maxlength="120"
+                                       value="{{ old('name', auth()->user()->name ?? '') }}"
+                                       class="{{ $contactInput }}">
+                            </div>
+                            <div>
+                                <label class="{{ $contactLabel }}">Correu electrònic</label>
+                                <div class="relative">
+                                    <input type="email" name="email" required maxlength="160"
+                                           value="{{ old('email', auth()->user()->email ?? '') }}"
+                                           class="{{ $contactInput }} pr-11">
+                                    <svg class="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4
+                                                text-gray-300 pointer-events-none"
+                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="{{ $contactLabel }}">Servei d'interès</label>
+                            <select name="subject" required class="{{ $contactInput }}">
+                                <option value="">Selecciona un servei…</option>
+                                @foreach([
+                                    'Impressió Corporativa',
+                                    'Gran Format',
+                                    'Marxandatge personalitzat',
+                                    'Editorial i Llibres',
+                                    'Papereria d\'oficina',
+                                    'Altres',
+                                ] as $opt)
+                                    <option value="{{ $opt }}" @selected(old('subject') === $opt)>{{ $opt }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="{{ $contactLabel }}">Missatge</label>
+                            <textarea name="message" required rows="5" maxlength="5000"
+                                      placeholder="Explica'ns què necessites…"
+                                      class="{{ $contactInput }}">{{ old('message') }}</textarea>
+                        </div>
+
+                        {{-- Decorative reCAPTCHA-style placeholder --}}
+                        <div class="flex items-center gap-3 bg-gray-50 border border-gray-200
+                                    rounded-xl px-4 py-3">
+                            <input type="checkbox" required
+                                   class="w-5 h-5 rounded border-gray-300 text-primary
+                                          focus:ring-primary cursor-pointer">
+                            <span class="font-outfit text-sm text-gray-600">No sóc un robot</span>
+                            <span class="ml-auto font-outfit text-[10px] text-gray-400 leading-tight text-right">
+                                reCAPTCHA<br>
+                                <span class="text-gray-300">Privacitat · Termes</span>
+                            </span>
+                        </div>
+
+                        <button type="submit"
+                                class="w-full bg-dark text-white font-alumni text-sm-header
+                                       py-4 rounded-full hover:bg-primary
+                                       active:scale-[0.99] transition-all">
+                            Enviar missatge
+                        </button>
+                    </form>
                 </div>
 
-                <div class="relative max-w-2xl mx-auto">
-                    <h2 class="font-alumni font-black text-h2 text-white mb-4">
-                        {{ __('app.cta_title') }}
-                    </h2>
-                    <p class="font-outfit text-body-lg text-white/60 mb-10 leading-relaxed">
-                        {{ __('app.cta_subtitle') }}
-                    </p>
-                    @guest
-                        <a href="{{ route('register') }}" class="btn-primary">
-                            {{ __('app.register_now') }}
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                            </svg>
-                        </a>
-                    @else
-                        <a href="{{ route('products.index') }}" class="btn-primary">
-                            {{ __('app.browse_products') }}
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                            </svg>
-                        </a>
-                    @endauth
+                {{-- ─── RIGHT: stacked info cards ──────────────────────────── --}}
+                <div class="space-y-5">
+
+                    {{-- Card 1: Visita el nostre taller --}}
+                    <div class="bg-white rounded-3xl border border-gray-100 p-7 md:p-8
+                                shadow-[0_4px_24px_rgba(36,48,46,0.04)]">
+
+                        <h3 class="font-alumni italic text-h5 text-dark mb-6">
+                            Visita el nostre taller
+                        </h3>
+
+                        {{-- Address row --}}
+                        <div class="flex items-start gap-4">
+                            <div class="w-11 h-11 rounded-2xl bg-dark flex items-center
+                                        justify-center shrink-0">
+                                <svg class="w-5 h-5 text-secondary" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-outfit text-xs font-semibold uppercase tracking-widest text-primary mb-1">
+                                    Adreça
+                                </p>
+                                <address class="not-italic font-outfit text-body-md text-gray-600 leading-relaxed">
+                                    Parc TecnoCampus Mataró-Maresme, TCM3, Local 2<br>
+                                    Carrer d'Ernest Lluch, 32, 08302<br>
+                                    Mataró, Barcelona
+                                </address>
+                                <a href="https://www.google.com/maps/search/?api=1&query=Parc+TecnoCampus+Mataró"
+                                   target="_blank" rel="noopener"
+                                   class="inline-flex items-center gap-1 mt-3 font-outfit text-body-sm
+                                          font-semibold text-secondary hover:text-primary transition-colors">
+                                    Veure a Google Maps
+                                </a>
+                            </div>
+                        </div>
+
+                        {{-- Hours row --}}
+                        <div class="flex items-start gap-4 mt-7 pt-7 border-t border-gray-100">
+                            <div class="w-11 h-11 rounded-2xl bg-light border border-gray-100
+                                        flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-outfit text-body-md text-gray-500 mb-2">
+                                    Horari laboral
+                                </p>
+                                <ul class="font-outfit text-body-md space-y-1">
+                                    <li class="flex items-center gap-3">
+                                        <span class="text-gray-600">Dl – Dj:</span>
+                                        <span class="text-primary font-semibold">9:00 – 17:00</span>
+                                    </li>
+                                    <li class="flex items-center gap-3">
+                                        <span class="text-gray-600">Dv:</span>
+                                        <span class="text-primary font-semibold">9:00 – 14:00</span>
+                                    </li>
+                                    <li class="flex items-center gap-3">
+                                        <span class="text-gray-600">Ds i Dm:</span>
+                                        <span class="text-gray-400">Tancat</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Card 2: AI assistant — dark --}}
+                    <div x-data="{ origin: '' }"
+                         class="bg-dark rounded-3xl p-7 md:p-8 relative overflow-hidden">
+
+                        <div class="absolute -top-16 -right-16 w-[220px] h-[220px] rounded-full
+                                    bg-secondary/15 blur-3xl pointer-events-none"></div>
+
+                        <div class="relative">
+                            <span class="inline-flex items-center gap-2 font-outfit text-xs
+                                         font-semibold uppercase tracking-[0.25em]
+                                         text-secondary mb-4">
+                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                Expert en Ubicació
+                            </span>
+
+                            <h5 class="font-alumni italic text-h5 text-white">
+                                Necessites ajuda per trobar-nos?
+                            </h5>
+                            <p class="font-outfit text-body-md text-white/60 mt-2 mb-6">
+                                Pregunta a la nostra IA sobre pàrquing o transport públic.
+                            </p>
+
+                            <div class="flex gap-3">
+                                <input type="text" x-model="origin"
+                                       placeholder="On és el pàrquing més proper?"
+                                       @keydown.enter.prevent="if(origin){window.open('https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(origin)+'&destination=Carrer+d%27Ernest+Lluch+32+Matar%C3%B3','_blank')}"
+                                       class="flex-1 bg-white/[0.04] border border-white/10
+                                              rounded-full px-5 py-3 font-outfit text-sm text-white
+                                              placeholder:text-white/40 focus:outline-none
+                                              focus:ring-2 focus:ring-secondary/50
+                                              focus:border-secondary/60 focus:bg-white/[0.06]
+                                              transition">
+                                <button type="button"
+                                        @click="if(origin){window.open('https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(origin)+'&destination=Carrer+d%27Ernest+Lluch+32+Matar%C3%B3','_blank')}"
+                                        class="w-12 h-12 shrink-0 bg-secondary text-white
+                                               rounded-full flex items-center justify-center
+                                               hover:brightness-110 active:scale-95 transition-all">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    {{-- ── Mantén-te al Corrent ────────────────────────────────────────────── --}}
+    <section class="relative bg-dark py-24 md:py-28 overflow-hidden">
+
+        {{-- Subtle background glow --}}
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px]
+                        rounded-full bg-secondary/10 blur-3xl"></div>
+        </div>
+
+        <div class="section relative text-center max-w-2xl mx-auto">
+
+            {{-- Pill badge --}}
+            <span class="inline-flex items-center gap-2 bg-secondary/15
+                         font-outfit text-xs font-semibold tracking-[0.25em] uppercase
+                         text-secondary px-4 py-1.5 rounded-full mb-7
+                         border border-secondary/25">
+                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                Exclusive Intelligence
+            </span>
+
+            <h2 class="font-alumni italic text-h2 text-white">
+                Mantén-te al <span class="text-secondary">Corrent</span>
+            </h2>
+
+            <p class="font-outfit text-body-lg text-white/65 mt-5 max-w-xl mx-auto leading-relaxed">
+                Rep actualitzacions exclusives sobre noves tecnologies d'impressió,
+                ofertes de material d'oficina i inspiració per al teu marxandatge.
+            </p>
+
+            <form x-data="{ email: '', sent: false }"
+                  @submit.prevent="if(email){sent=true; email=''}"
+                  class="mt-10 flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto">
+
+                {{-- Email input — pill, dark, with trailing icon --}}
+                <div class="relative flex-1">
+                    <input type="email" x-model="email" required
+                           :disabled="sent"
+                           placeholder="Introdueix el teu correu electrònic"
+                           class="w-full bg-white/[0.04] border border-primary/30
+                                  rounded-full pl-7 pr-12 py-4 font-outfit text-sm
+                                  text-white placeholder:text-white/40
+                                  focus:outline-none focus:ring-2 focus:ring-secondary/50
+                                  focus:border-secondary/60 focus:bg-white/[0.06]
+                                  transition disabled:opacity-50">
+                    <svg class="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 pointer-events-none"
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </div>
+
+                {{-- Subscribe button — pill, secondary blue --}}
+                <button type="submit" :disabled="sent"
+                        class="bg-secondary text-white font-alumni font-bold italic text-sm-header
+                               px-9 py-4 rounded-full hover:brightness-110
+                               active:scale-95 transition-all whitespace-nowrap
+                               disabled:opacity-50">
+                    <span x-show="!sent">Subscriure's ara</span>
+                    <span x-show="sent" x-cloak>✓ Gràcies!</span>
+                </button>
+            </form>
+
+            <p class="font-outfit text-body-sm text-white/45 mt-6">
+                En subscriure't, acceptes la nostra
+                <a href="{{ route('privacy') }}" class="underline font-semibold text-white/70
+                                   hover:text-white transition-colors">Privadesa</a>.
+            </p>
         </div>
     </section>
 
