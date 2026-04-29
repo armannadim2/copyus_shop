@@ -43,10 +43,23 @@ return [
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', '127.0.0.1'),
             'port' => env('MAIL_PORT', 2525),
+            'encryption' => env('MAIL_ENCRYPTION'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+            // Workaround for hosts whose TLS cert hostname doesn't match the
+            // SMTP host (e.g. shared cPanel providers). Set
+            //   MAIL_VERIFY_PEER=false
+            // in .env only when you've ruled out the proper fixes (using the
+            // correct hostname or SSL on 465).
+            'stream' => env('MAIL_VERIFY_PEER', true) ? null : [
+                'ssl' => [
+                    'verify_peer'       => false,
+                    'verify_peer_name'  => false,
+                    'allow_self_signed' => true,
+                ],
+            ],
         ],
 
         'ses' => [
@@ -125,6 +138,6 @@ return [
     |
     */
 
-    'inbox' => env('CONTACT_INBOX', 'copyus@copyus.es'),
+    'inbox' => env('CONTACT_INBOX', 'info@copyus.es'),
 
 ];
