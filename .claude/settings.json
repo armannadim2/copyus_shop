@@ -38,7 +38,27 @@
       "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan config:clear && php artisan view:clear && composer dump-autoload -o 2>&1 | tail -2')",
       "PowerShell(wsl -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && tail -2000 storage/logs/laravel.log | grep -E 'Failed to send|contact-message|quote-request|local.ERROR' | tail -20\")",
       "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php artisan config:clear > /dev/null && php check_recent.php; rm -f check_recent.php')",
-      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php smoke_flash.php; rm -f smoke_flash.php')"
+      "PowerShell(wsl -d Ubuntu -- bash -lc 'cd /home/nadim/copyus && php smoke_flash.php; rm -f smoke_flash.php')",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/resources/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/resources/lang/ca/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/config/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/app/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/resources/views/pages/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/vendor/laravel/framework/src/Illuminate/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/vendor/laravel/framework/src/Illuminate/Translation/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/vendor/laravel/framework/src/Illuminate/Foundation/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/resources/views/layouts/**)",
+      "Bash(php -l \"resources/lang/ca/app.php\")",
+      "Bash(php -l \"resources/lang/es/app.php\")",
+      "Bash(php -l \"resources/lang/en/app.php\")",
+      "Read(//opt/**)",
+      "Read(//mnt/c/**)",
+      "Read(///wsl.localhost/Ubuntu/usr/**)",
+      "Read(///wsl.localhost/Ubuntu/usr/local/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/app/Http/Controllers/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/app/Http/Controllers/Shop/**)"
     ],
     "additionalDirectories": [
       "\\\\wsl.localhost\\Ubuntu\\home\\nadim\\copyus\\app"

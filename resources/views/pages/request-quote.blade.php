@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Demanar pressupost')
+@section('title', __('app.rq_title'))
 
 @section('content')
 
@@ -16,18 +16,17 @@
  px-4 py-1.5 mb-6">
  <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
  <span class="font-outfit text-body-md text-white/70">
- Demanar pressupost
+ {{ __('app.rq_badge') }}
  </span>
  </div>
 
  <h1 class="font-alumni text-h1 text-white ">
- Explica'ns el<br>
- <span class="text-gradient">teu projecte.</span>
+ {{ __('app.rq_hero_title_1') }}<br>
+ <em class="italic">{{ __('app.rq_hero_title_2') }}</em>
  </h1>
 
  <p class="font-outfit text-body-lg text-white/60 mt-6 max-w-xl leading-relaxed">
- Completa el formulari i et farem arribar una valoració
- personalitzada en menys de 24 hores laborables, sense compromís.
+ {{ __('app.rq_hero_subtitle') }}
  </p>
  </div>
  </div>
@@ -42,16 +41,16 @@
  <div class="bg-white rounded-3xl border border-gray-100 p-8 md:p-10">
 
  <h2 class="font-alumni text-h4 text-dark mb-1">
- Detalls del projecte
+ {{ __('app.rq_section_title') }}
  </h2>
  <p class="font-outfit text-body-sm text-gray-400 mb-8">
- Tots els camps amb * són obligatoris.
+ {{ __('app.rq_section_subtitle') }}
  </p>
 
  @if($errors->any())
  <div class="mb-6 bg-red-50 border border-red-200 text-red-600
  font-outfit text-body-sm px-4 py-3 rounded-xl">
- <p class="font-semibold mb-1">Revisa els camps marcats:</p>
+ <p class="font-semibold mb-1">{{ __('app.rq_errors_review') }}</p>
  <ul class="list-disc list-inside space-y-0.5">
  @foreach($errors->all() as $error)
  <li>{{ $error }}</li>
@@ -67,12 +66,12 @@
  {{-- Section: contact --}}
  <div>
  <p class="font-outfit text-xs font-semibold text-primary uppercase
- tracking-widest mb-4">Contacte</p>
+ tracking-widest mb-4">{{ __('app.rq_section_contact') }}</p>
 
  <div class="grid md:grid-cols-2 gap-4">
  <div>
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Nom complet *
+ {{ __('app.rq_field_full_name') }} *
  </label>
  <input type="text" name="name" required maxlength="120"
  value="{{ old('name', auth()->user()->name ?? '') }}"
@@ -83,7 +82,7 @@
  </div>
  <div>
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Correu electrònic *
+ {{ __('app.rq_field_email') }} *
  </label>
  <input type="email" name="email" required maxlength="160"
  value="{{ old('email', auth()->user()->email ?? '') }}"
@@ -94,7 +93,7 @@
  </div>
  <div>
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Telèfon
+ {{ __('app.rq_field_phone') }}
  </label>
  <input type="text" name="phone" maxlength="40"
  value="{{ old('phone', auth()->user()->phone ?? '') }}"
@@ -105,7 +104,7 @@
  </div>
  <div>
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Empresa
+ {{ __('app.rq_field_company') }}
  </label>
  <input type="text" name="company_name" maxlength="160"
  value="{{ old('company_name', auth()->user()->company_name ?? '') }}"
@@ -116,7 +115,7 @@
  </div>
  <div class="md:col-span-2">
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- CIF / NIF
+ {{ __('app.rq_field_cif') }}
  </label>
  <input type="text" name="cif" maxlength="40"
  value="{{ old('cif', auth()->user()->cif ?? '') }}"
@@ -131,31 +130,31 @@
  {{-- Section: project --}}
  <div class="pt-4 border-t border-gray-100">
  <p class="font-outfit text-xs font-semibold text-primary uppercase
- tracking-widest mb-4">Projecte</p>
+ tracking-widest mb-4">{{ __('app.rq_section_project') }}</p>
 
  <div class="grid md:grid-cols-2 gap-4">
  <div class="md:col-span-2">
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Tipus de servei *
+ {{ __('app.rq_field_service_type') }} *
  </label>
  <select name="service_type" required
  class="w-full border border-gray-200 rounded-xl px-4 py-2.5
  font-outfit text-sm focus:outline-none
  focus:ring-2 focus:ring-primary/40 focus:border-primary
  transition bg-white">
- <option value="">Selecciona una opció…</option>
+ <option value="">{{ __('app.rq_select_placeholder') }}</option>
  @foreach([
- 'Impressió digital',
- 'Gran format',
- 'Marxandatge personalitzat',
- 'Papereria d\'oficina',
- 'Enquadernació i acabats',
- 'Disseny gràfic',
- 'Altres',
- ] as $option)
- <option value="{{ $option }}"
- @selected(old('service_type') === $option)>
- {{ $option }}
+ 'print'       => __('app.rq_service_print'),
+ 'largeformat' => __('app.rq_service_largeformat'),
+ 'merch'       => __('app.rq_service_merch'),
+ 'stationery'  => __('app.rq_service_stationery'),
+ 'binding'     => __('app.rq_service_binding'),
+ 'design'      => __('app.rq_service_design'),
+ 'other'       => __('app.rq_service_other'),
+ ] as $value => $label)
+ <option value="{{ $value }}"
+ @selected(old('service_type') === $value)>
+ {{ $label }}
  </option>
  @endforeach
  </select>
@@ -163,10 +162,10 @@
 
  <div>
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Quantitat aproximada
+ {{ __('app.rq_field_quantity') }}
  </label>
  <input type="number" name="quantity" min="1" max="1000000"
- placeholder="Ex. 500"
+ placeholder="{{ __('app.rq_field_quantity_placeholder') }}"
  value="{{ old('quantity') }}"
  class="w-full border border-gray-200 rounded-xl px-4 py-2.5
  font-outfit text-sm focus:outline-none
@@ -175,30 +174,30 @@
  </div>
  <div>
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Termini desitjat
+ {{ __('app.rq_field_deadline') }}
  </label>
  <select name="deadline"
  class="w-full border border-gray-200 rounded-xl px-4 py-2.5
  font-outfit text-sm focus:outline-none
  focus:ring-2 focus:ring-primary/40 focus:border-primary
  transition bg-white">
- <option value="">Sense urgència</option>
- <option value="24-48h" @selected(old('deadline') === '24-48h')>24-48 hores</option>
- <option value="1 setmana" @selected(old('deadline') === '1 setmana')>1 setmana</option>
- <option value="2 setmanes" @selected(old('deadline') === '2 setmanes')>2 setmanes</option>
- <option value="1 mes" @selected(old('deadline') === '1 mes')>1 mes</option>
+ <option value="">{{ __('app.rq_deadline_none') }}</option>
+ <option value="24-48h" @selected(old('deadline') === '24-48h')>{{ __('app.rq_deadline_24_48') }}</option>
+ <option value="1week"  @selected(old('deadline') === '1week')>{{ __('app.rq_deadline_1week') }}</option>
+ <option value="2weeks" @selected(old('deadline') === '2weeks')>{{ __('app.rq_deadline_2weeks') }}</option>
+ <option value="1month" @selected(old('deadline') === '1month')>{{ __('app.rq_deadline_1month') }}</option>
  </select>
  </div>
  <div class="md:col-span-2">
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Pressupost orientatiu
+ {{ __('app.rq_field_budget') }}
  </label>
  <select name="budget_range"
  class="w-full border border-gray-200 rounded-xl px-4 py-2.5
  font-outfit text-sm focus:outline-none
  focus:ring-2 focus:ring-primary/40 focus:border-primary
  transition bg-white">
- <option value="">Prefereixo no indicar</option>
+ <option value="">{{ __('app.rq_budget_none') }}</option>
  @foreach(['< 100 €', '100 - 500 €', '500 - 1.500 €', '1.500 - 5.000 €', '> 5.000 €'] as $range)
  <option value="{{ $range }}" @selected(old('budget_range') === $range)>
  {{ $range }}
@@ -209,10 +208,10 @@
 
  <div class="md:col-span-2">
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Descriu el projecte *
+ {{ __('app.rq_field_description') }} *
  </label>
  <textarea name="description" required rows="6" maxlength="5000"
- placeholder="Mides, materials, colors, acabats, referències, ús previst…"
+ placeholder="{{ __('app.rq_field_description_placeholder') }}"
  class="w-full border border-gray-200 rounded-xl px-4 py-2.5
  font-outfit text-sm focus:outline-none
  focus:ring-2 focus:ring-primary/40 focus:border-primary
@@ -221,7 +220,7 @@
 
  <div class="md:col-span-2">
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Adjunta un fitxer (opcional)
+ {{ __('app.rq_field_attachment') }}
  </label>
  <input type="file" name="attachment"
  accept=".pdf,.jpg,.jpeg,.png,.ai,.eps,.svg,.zip"
@@ -232,7 +231,7 @@
  file:font-semibold hover:file:bg-primary/20
  transition">
  <p class="font-outfit text-xs text-gray-400 mt-1.5">
- PDF, JPG, PNG, AI, EPS, SVG o ZIP. Màxim 8 MB.
+ {{ __('app.rq_field_attachment_hint') }}
  </p>
  </div>
  </div>
@@ -243,10 +242,10 @@
  class="bg-primary text-white font-alumni text-sm-header
  px-7 py-3 rounded-xl hover:brightness-110
  active:scale-95 transition-all">
- Enviar sol·licitud →
+ {{ __('app.rq_submit') }}
  </button>
  <p class="font-outfit text-body-sm text-gray-400">
- Resposta en menys de 24 hores laborables.
+ {{ __('app.rq_response_time') }}
  </p>
  </div>
  </form>
@@ -258,15 +257,15 @@
 
  <div class="bg-light rounded-3xl p-6 border border-gray-100">
  <h3 class="font-alumni text-h5 text-dark mb-4">
- Què inclou el pressupost?
+ {{ __('app.rq_aside_what_title') }}
  </h3>
  <ul class="space-y-3 font-outfit text-body-md text-gray-500">
  @foreach([
- 'Estudi del projecte i viabilitat tècnica',
- 'Recomanacions de materials i acabats',
- 'Preu definitiu sense sorpreses',
- 'Termini de producció i lliurament',
- 'Factura B2B amb IVA desglossat',
+ __('app.rq_aside_what_1'),
+ __('app.rq_aside_what_2'),
+ __('app.rq_aside_what_3'),
+ __('app.rq_aside_what_4'),
+ __('app.rq_aside_what_5'),
  ] as $item)
  <li class="flex gap-3">
  <svg class="w-5 h-5 text-primary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,10 +278,9 @@
  </div>
 
  <div class="bg-dark rounded-3xl p-6 text-white">
- <h3 class="font-alumni text-h5 mb-2">Necessites parlar?</h3>
+ <h3 class="font-alumni text-h5 mb-2">{{ __('app.rq_aside_call_title') }}</h3>
  <p class="font-outfit text-body-md text-white/70 leading-relaxed mb-4">
- Si prefereixes, contacta'ns directament i t'atendrem
- de seguida.
+ {{ __('app.rq_aside_call_subtitle') }}
  </p>
  <ul class="space-y-2 font-outfit text-body-sm">
  <li class="flex items-center gap-3">

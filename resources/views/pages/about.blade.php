@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Qui som')
+@section('title', __('app.about_title'))
 
 @section('content')
 
@@ -19,22 +19,19 @@
  px-4 py-1.5 mb-6 animate-reveal-up">
  <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
  <span class="font-outfit text-body-md text-white/70">
- Qui som · Mataró
+ {{ __('app.about_badge') }}
  </span>
  </div>
 
- <h1 class="font-alumni text-h1 text-white 
+ <h1 class="font-alumni text-h1 text-white
  animate-reveal-up delay-100">
- Som la papereria<br>
- <span class="text-gradient">del Tecnocampus.</span>
+ {{ __('app.about_hero_title_1') }}<br>
+ <em class="italic">{{ __('app.about_hero_title_2') }}</em>
  </h1>
 
  <p class="font-outfit text-body-lg text-white/60 mt-6 max-w-xl leading-relaxed
  animate-reveal-up delay-200">
- A Copyus combinem la proximitat d'una papereria de barri amb la
- tecnologia d'una impremta digital. Servim startups, despatxos i
- centres educatius del Maresme amb material d'oficina, impressió
- professional i marxandatge personalitzat.
+ {{ __('app.about_hero_intro') }}
  </p>
  </div>
  </div>
@@ -46,29 +43,16 @@
  <div>
  <p class="font-outfit text-body-md font-semibold text-primary uppercase
  tracking-widest mb-3">
- La nostra història
+ {{ __('app.about_history_eyebrow') }}
  </p>
  <h2 class="font-alumni text-h2 text-dark mb-6 ">
- Una idea simple:<br>
- fer-ho fàcil.
+ {{ __('app.about_history_title_1') }}<br>
+ {{ __('app.about_history_title_2') }}
  </h2>
  <div class="space-y-4 font-outfit text-body-lg text-gray-600 leading-relaxed">
- <p>
- Vam néixer al cor del Parc TecnoCampus de Mataró amb
- una pregunta concreta: per què la papereria i la
- impressió per a empreses ha de ser un mal de cap?
- </p>
- <p>
- La resposta va ser construir un servei que entengués els
- ritmes de qui treballa amb pressa: catàleg ampli, preus
- clars per a empreses registrades, factura amb IVA
- desglossat, i lliurament directe a l'oficina.
- </p>
- <p>
- Avui imprimim, encartonem, envasem i lliurem cada
- setmana milers d'unitats per a equips que volen menys
- gestió i més temps per al que importa.
- </p>
+ <p>{{ __('app.about_history_p1') }}</p>
+ <p>{{ __('app.about_history_p2') }}</p>
+ <p>{{ __('app.about_history_p3') }}</p>
  </div>
  </div>
 
@@ -79,25 +63,25 @@
  <div class="bg-white rounded-2xl p-5 border border-gray-100">
  <p class="font-alumni text-h3 text-primary">2018</p>
  <p class="font-outfit text-body-sm text-gray-500 mt-1">
- Obrim al TecnoCampus
+ {{ __('app.about_stat_year') }}
  </p>
  </div>
  <div class="bg-white rounded-2xl p-5 border border-gray-100">
  <p class="font-alumni text-h3 text-secondary">+500</p>
  <p class="font-outfit text-body-sm text-gray-500 mt-1">
- Empreses confien en nosaltres
+ {{ __('app.about_stat_clients') }}
  </p>
  </div>
  <div class="bg-white rounded-2xl p-5 border border-gray-100">
  <p class="font-alumni text-h3 text-dark">24h</p>
  <p class="font-outfit text-body-sm text-gray-500 mt-1">
- Resposta a sol·licituds
+ {{ __('app.about_stat_response') }}
  </p>
  </div>
  <div class="bg-white rounded-2xl p-5 border border-gray-100">
  <p class="font-alumni text-h3 text-primary">100%</p>
  <p class="font-outfit text-body-sm text-gray-500 mt-1">
- Producció pròpia a Mataró
+ {{ __('app.about_stat_local') }}
  </p>
  </div>
  </div>
@@ -114,10 +98,10 @@
  <div class="max-w-2xl mb-14">
  <p class="font-outfit text-body-md font-semibold text-primary uppercase
  tracking-widest mb-3">
- Els nostres valors
+ {{ __('app.about_values_eyebrow') }}
  </p>
  <h2 class="font-alumni text-h2 text-dark ">
- Què ens fa diferents.
+ {{ __('app.about_values_title') }}
  </h2>
  </div>
 
@@ -134,10 +118,9 @@
  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
  </svg>
  </div>
- <h3 class="font-alumni text-h5 text-dark mb-2">Proximitat</h3>
+ <h3 class="font-alumni text-h5 text-dark mb-2">{{ __('app.about_value_1_title') }}</h3>
  <p class="font-outfit text-body-md text-gray-500 leading-relaxed">
- Som a 5 minuts del centre de Mataró i parlem amb cada client
- per entendre què necessita realment.
+ {{ __('app.about_value_1_desc') }}
  </p>
  </div>
 
@@ -151,10 +134,9 @@
  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
  </svg>
  </div>
- <h3 class="font-alumni text-h5 text-dark mb-2">Qualitat garantida</h3>
+ <h3 class="font-alumni text-h5 text-dark mb-2">{{ __('app.about_value_2_title') }}</h3>
  <p class="font-outfit text-body-md text-gray-500 leading-relaxed">
- Treballem amb materials certificats i revisem cada producció
- abans que arribi al client.
+ {{ __('app.about_value_2_desc') }}
  </p>
  </div>
 
@@ -168,10 +150,9 @@
  d="M13 10V3L4 14h7v7l9-11h-7z"/>
  </svg>
  </div>
- <h3 class="font-alumni text-h5 text-dark mb-2">Rapidesa</h3>
+ <h3 class="font-alumni text-h5 text-dark mb-2">{{ __('app.about_value_3_title') }}</h3>
  <p class="font-outfit text-body-md text-gray-500 leading-relaxed">
- Tirades exprés en 24-48 hores i lliurament directe a la
- teva oficina de tot el Maresme.
+ {{ __('app.about_value_3_desc') }}
  </p>
  </div>
  </div>
@@ -184,23 +165,22 @@
  <div class="max-w-2xl mb-14">
  <p class="font-outfit text-body-md font-semibold text-primary uppercase
  tracking-widest mb-3">
- L'equip
+ {{ __('app.about_team_eyebrow') }}
  </p>
  <h2 class="font-alumni text-h2 text-dark ">
- Persones, no màquines.
+ {{ __('app.about_team_title') }}
  </h2>
  <p class="font-outfit text-body-lg text-gray-500 mt-4 leading-relaxed">
- Darrere de cada comanda hi ha un equip petit que coneix el teu
- negoci. Sempre la mateixa cara, sempre la mateixa qualitat.
+ {{ __('app.about_team_subtitle') }}
  </p>
  </div>
 
  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
  @foreach([
- ['name' => 'Marc Vila', 'role' => 'Fundador & Producció', 'init' => 'MV'],
- ['name' => 'Laia Roig', 'role' => 'Atenció al client', 'init' => 'LR'],
- ['name' => 'Jordi Puig', 'role' => 'Disseny gràfic', 'init' => 'JP'],
- ['name' => 'Núria Bosch', 'role' => 'Logística', 'init' => 'NB'],
+ ['name' => 'Marc Vila', 'role' => __('app.about_team_role_1'), 'init' => 'MV'],
+ ['name' => 'Laia Roig', 'role' => __('app.about_team_role_2'), 'init' => 'LR'],
+ ['name' => 'Jordi Puig', 'role' => __('app.about_team_role_3'), 'init' => 'JP'],
+ ['name' => 'Núria Bosch', 'role' => __('app.about_team_role_4'), 'init' => 'NB'],
  ] as $member)
  <div class="bg-white rounded-3xl p-6 border border-gray-100 text-center">
  <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary
@@ -224,19 +204,18 @@
  </div>
  <div class="section relative text-center max-w-2xl mx-auto">
  <h2 class="font-alumni text-h2 text-white ">
- Comença a treballar amb<br>
- <span class="text-gradient">Copyus</span>.
+ {{ __('app.about_cta_title_1') }}<br>
+ <em class="italic">{{ __('app.about_cta_title_2') }}</em>.
  </h2>
  <p class="font-outfit text-body-lg text-white/60 mt-5">
- Registra't i tindràs accés al catàleg complet, preus B2B i
- pressupostos personalitzats en menys de 24 hores.
+ {{ __('app.about_cta_subtitle') }}
  </p>
  <div class="flex flex-wrap gap-4 justify-center mt-10">
  <a href="{{ route('products.index') }}" class="btn-primary">
- Veure productes
+ {{ __('app.about_cta_btn_products') }}
  </a>
  <a href="{{ route('contact') }}" class="btn-outline-white">
- Parlar amb nosaltres
+ {{ __('app.about_cta_btn_contact') }}
  </a>
  </div>
  </div>

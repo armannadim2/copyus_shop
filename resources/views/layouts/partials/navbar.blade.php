@@ -67,13 +67,13 @@
             <ul class="hidden lg:flex items-center">
                 @php
                     $navLinks = [
-                        ['label' => 'Inici',       'href' => route('home'),           'active' => request()->routeIs('home')],
-                        ['label' => 'Qui som',      'href' => route('about'),          'active' => request()->routeIs('about')],
-                        ['label' => 'Serveis',      'href' => route('services'),       'active' => request()->routeIs('services')],
-                        ['label' => 'Botiga',       'href' => route('products.index'), 'active' => request()->routeIs('products.*')],
-                        ['label' => '🖨️ Impressió', 'href' => route('print.index'),    'active' => request()->routeIs('print.*')],
-                        ['label' => 'Demanar Preu', 'href' => route('request-quote'),  'active' => request()->routeIs('request-quote*')],
-                        ['label' => 'Contacte',     'href' => route('contact'),        'active' => request()->routeIs('contact')],
+                        ['label' => __('app.menu_home'),          'href' => route('home'),           'active' => request()->routeIs('home')],
+                        ['label' => __('app.menu_about'),         'href' => route('about'),          'active' => request()->routeIs('about')],
+                        ['label' => __('app.menu_services'),      'href' => route('services'),       'active' => request()->routeIs('services')],
+                        ['label' => __('app.menu_shop'),          'href' => route('products.index'), 'active' => request()->routeIs('products.*')],
+                        ['label' => __('app.menu_print'),         'href' => route('print.index'),    'active' => request()->routeIs('print.*')],
+                        ['label' => __('app.menu_request_quote'), 'href' => route('request-quote'),  'active' => request()->routeIs('request-quote*')],
+                        ['label' => __('app.menu_contact'),       'href' => route('contact'),        'active' => request()->routeIs('contact')],
                     ];
                 @endphp
 
@@ -415,7 +415,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                   d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         </svg>
-                                        Admin Panel
+                                        {{ __('app.menu_admin_panel') }}
                                     </a>
                                 </div>
                             @endif
@@ -618,27 +618,27 @@
 
             <a href="{{ route('home') }}"
                class="mobile-menu-item {{ request()->routeIs('home') ? '!text-primary font-semibold' : '' }}">
-                Inici
+                {{ __('app.menu_home') }}
             </a>
             <a href="{{ route('about') }}"
                class="mobile-menu-item {{ request()->routeIs('about') ? '!text-primary font-semibold' : '' }}">
-                Qui som
+                {{ __('app.menu_about') }}
             </a>
             <a href="{{ route('services') }}"
                class="mobile-menu-item {{ request()->routeIs('services') ? '!text-primary font-semibold' : '' }}">
-                Serveis
+                {{ __('app.menu_services') }}
             </a>
             <a href="{{ route('products.index') }}"
                class="mobile-menu-item {{ request()->routeIs('products.*') ? '!text-primary font-semibold' : '' }}">
-                Botiga
+                {{ __('app.menu_shop') }}
             </a>
             <a href="{{ route('request-quote') }}"
                class="mobile-menu-item {{ request()->routeIs('request-quote*') ? '!text-primary font-semibold' : '' }}">
-                Demanar Preu
+                {{ __('app.menu_request_quote') }}
             </a>
             <a href="{{ route('contact') }}"
                class="mobile-menu-item border-b-0 {{ request()->routeIs('contact') ? '!text-primary font-semibold' : '' }}">
-                Contacte
+                {{ __('app.menu_contact') }}
             </a>
 
             @auth
@@ -651,7 +651,7 @@
                         <a href="{{ route('invoices.index') }}"   class="mobile-menu-item">{{ __('app.invoices') }}</a>
                     @endif
                     @if(auth()->user()->isAdmin())
-                        <a href="{{ route('admin.index') }}" class="mobile-menu-item text-secondary font-semibold">Admin Panel</a>
+                        <a href="{{ route('admin.index') }}" class="mobile-menu-item text-secondary font-semibold">{{ __('app.menu_admin_panel') }}</a>
                     @endif
                     <form method="POST" action="{{ route('logout') }}" class="border-t border-gray-100 mt-2 pt-2">
                         @csrf
@@ -738,7 +738,7 @@
                            @keydown.enter.prevent="submitSearch(); $parent.closeSearch()"
                            @keydown.arrow-down.prevent="moveDown()"
                            @keydown.arrow-up.prevent="moveUp()"
-                           placeholder="Cerca per nom, SKU o marca…"
+                           placeholder="{{ __('app.search_placeholder') }}"
                            autocomplete="off"
                            class="w-full pl-12 pr-14 py-4 rounded-2xl border border-gray-200
                                   font-outfit text-base text-dark placeholder-gray-400
@@ -791,7 +791,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
                         </svg>
-                        Veure tots els resultats per "<span x-text="q"></span>"
+                        {{ __('app.search_view_all') }} "<span x-text="q"></span>"
                     </a>
                 </div>
 
@@ -799,12 +799,12 @@
                 <div x-show="q.length >= 2 && results.length === 0"
                      class="mt-2 px-2 py-3 font-outfit text-sm text-gray-400 text-center"
                      style="display:none">
-                    Sense resultats per "<span x-text="q"></span>"
+                    {{ __('app.search_no_results') }} "<span x-text="q"></span>"
                 </div>
 
                 <p class="mt-4 font-outfit text-xs text-gray-400 text-center">
-                    Prem <kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-500 font-mono text-[11px]">ESC</kbd>
-                    per tancar
+                    <kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-500 font-mono text-[11px]">ESC</kbd>
+                    {{ __('app.search_press_esc') }}
                 </p>
             </div>
         </div>

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Contacte')
+@section('title', __('app.contact_title'))
 
 @section('content')
 
@@ -17,17 +17,16 @@
  <div class="inline-flex items-center gap-2 bg-white/10 rounded-full
  px-4 py-1.5 mb-6">
  <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
- <span class="font-outfit text-body-md text-white/70">Contacte</span>
+ <span class="font-outfit text-body-md text-white/70">{{ __('app.contact_badge') }}</span>
  </div>
 
  <h1 class="font-alumni text-h1 text-white ">
- Parlem del<br>
- <span class="text-gradient">teu projecte.</span>
+ {{ __('app.contact_hero_title_1') }}<br>
+ <em class="italic">{{ __('app.contact_hero_title_2') }}</em>
  </h1>
 
  <p class="font-outfit text-body-lg text-white/60 mt-6 max-w-xl leading-relaxed">
- Trobaràs el nostre equip al Parc TecnoCampus de Mataró.
- Truca'ns, escriu-nos un missatge o vine a veure'ns.
+ {{ __('app.contact_hero_subtitle') }}
  </p>
  </div>
  </div>
@@ -46,7 +45,7 @@
  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
  </svg>
  </div>
- <h3 class="font-alumni text-h5 text-dark mb-2">Telèfon</h3>
+ <h3 class="font-alumni text-h5 text-dark mb-2">{{ __('app.contact_phone') }}</h3>
  <p class="font-outfit text-body-md text-gray-500 leading-relaxed">
  <a href="tel:+34937409228" class="block hover:text-primary transition-colors">
  +34 937 409 228
@@ -66,13 +65,13 @@
  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
  </svg>
  </div>
- <h3 class="font-alumni text-h5 text-dark mb-2">Correu</h3>
+ <h3 class="font-alumni text-h5 text-dark mb-2">{{ __('app.contact_email') }}</h3>
  <p class="font-outfit text-body-md text-gray-500 leading-relaxed">
  <a href="mailto:copyus@copyus.es" class="block hover:text-primary transition-colors">
  copyus@copyus.es
  </a>
  <span class="block text-body-sm text-gray-400 mt-1">
- Resposta en 24 hores laborables
+ {{ __('app.contact_email_response') }}
  </span>
  </p>
  </div>
@@ -86,19 +85,19 @@
  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
  </svg>
  </div>
- <h3 class="font-alumni text-h5 text-dark mb-2">Horari</h3>
+ <h3 class="font-alumni text-h5 text-dark mb-2">{{ __('app.contact_hours') }}</h3>
  <ul class="font-outfit text-body-md text-gray-500 space-y-1">
  <li class="flex justify-between">
- <span>Dilluns – Divendres</span>
+ <span>{{ __('app.contact_hours_weekdays') }}</span>
  <span class="font-semibold text-dark">9:00 – 19:00</span>
  </li>
  <li class="flex justify-between">
- <span>Dissabtes</span>
+ <span>{{ __('app.contact_hours_saturday') }}</span>
  <span class="font-semibold text-dark">10:00 – 14:00</span>
  </li>
  <li class="flex justify-between">
- <span>Diumenges</span>
- <span class="text-gray-400">Tancat</span>
+ <span>{{ __('app.contact_hours_sunday') }}</span>
+ <span class="text-gray-400">{{ __('app.contact_hours_closed') }}</span>
  </li>
  </ul>
  </div>
@@ -112,10 +111,10 @@
  {{-- Form --}}
  <div class="bg-white rounded-3xl border border-gray-100 p-8 md:p-10">
  <h2 class="font-alumni text-h4 text-dark mb-1">
- Envia'ns un missatge
+ {{ __('app.contact_form_title') }}
  </h2>
  <p class="font-outfit text-body-sm text-gray-400 mb-8">
- Et respondrem el més aviat possible.
+ {{ __('app.contact_form_subtitle') }}
  </p>
 
  @if($errors->any())
@@ -135,7 +134,7 @@
  <div class="grid md:grid-cols-2 gap-4">
  <div>
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Nom *
+ {{ __('app.contact_form_name') }} *
  </label>
  <input type="text" name="name" required maxlength="120"
  value="{{ old('name', auth()->user()->name ?? '') }}"
@@ -146,7 +145,7 @@
  </div>
  <div>
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Correu *
+ {{ __('app.contact_form_email') }} *
  </label>
  <input type="email" name="email" required maxlength="160"
  value="{{ old('email', auth()->user()->email ?? '') }}"
@@ -160,7 +159,7 @@
  <div class="grid md:grid-cols-2 gap-4">
  <div>
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Telèfon
+ {{ __('app.contact_form_phone') }}
  </label>
  <input type="text" name="phone" maxlength="40"
  value="{{ old('phone', auth()->user()->phone ?? '') }}"
@@ -171,7 +170,7 @@
  </div>
  <div>
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Assumpte *
+ {{ __('app.contact_form_subject') }} *
  </label>
  <input type="text" name="subject" required maxlength="200"
  value="{{ old('subject') }}"
@@ -184,10 +183,10 @@
 
  <div>
  <label class="block font-outfit text-xs font-medium text-dark/70 mb-1.5">
- Missatge *
+ {{ __('app.contact_form_message') }} *
  </label>
  <textarea name="message" required rows="6" maxlength="5000"
- placeholder="Explica'ns què necessites…"
+ placeholder="{{ __('app.contact_form_message_placeholder') }}"
  class="w-full border border-gray-200 rounded-xl px-4 py-2.5
  font-outfit text-sm focus:outline-none
  focus:ring-2 focus:ring-primary/40 focus:border-primary
@@ -198,7 +197,7 @@
  class="bg-primary text-white font-alumni text-sm-header
  px-7 py-3 rounded-xl hover:brightness-110
  active:scale-95 transition-all">
- Enviar missatge →
+ {{ __('app.contact_form_submit') }}
  </button>
  </form>
  </div>
@@ -225,7 +224,7 @@
  </div>
  <div>
  <h3 class="font-alumni text-h5 text-dark mb-2">
- On ens trobaràs
+ {{ __('app.contact_location_title') }}
  </h3>
  <address class="not-italic font-outfit text-body-md text-gray-500 leading-relaxed">
  Parc TecnoCampus Mataró-Maresme<br>
@@ -237,7 +236,7 @@
  target="_blank" rel="noopener"
  class="inline-flex items-center gap-1.5 mt-4 font-outfit text-body-sm
  font-semibold text-primary hover:underline">
- Com arribar
+ {{ __('app.contact_location_directions') }}
  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
  d="M14 5l7 7m0 0l-7 7m7-7H3"/>

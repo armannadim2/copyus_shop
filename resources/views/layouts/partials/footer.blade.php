@@ -10,22 +10,21 @@
                          class="h-9 md:h-10 w-auto">
                 </a>
                 <p class="font-outfit font-light text-body-md text-dark/65 mt-5 max-w-xs leading-relaxed">
-                    Solucions premium d'impressió digital i marxandatge per a startups i grans empreses.
-                    El teu soci en producció creativa.
+                    {{ __('app.footer_brand_desc') }}
                 </p>
             </div>
 
             {{-- ── Enllaços ràpids ──────────────────────────────── --}}
             <div class="md:col-span-3">
                 <h6 class="font-outfit font-bold text-sm-header2 text-dark mb-5">
-                    Enllaços ràpids
+                    {{ __('app.footer_quick_links') }}
                 </h6>
                 <ul class="space-y-3">
                     @foreach([
-                        ['label' => 'Digital Printing', 'href' => route('print.index')],
-                        ['label' => 'Large Formats',    'href' => route('request-quote')],
-                        ['label' => 'Custom Merch',     'href' => route('request-quote')],
-                        ['label' => 'Office Supplies',  'href' => route('products.index')],
+                        ['label' => __('app.footer_link_print'),       'href' => route('print.index')],
+                        ['label' => __('app.footer_link_largeformat'), 'href' => route('request-quote')],
+                        ['label' => __('app.footer_link_merch'),       'href' => route('request-quote')],
+                        ['label' => __('app.footer_link_stationery'),  'href' => route('products.index')],
                     ] as $link)
                         <li>
                             <a href="{{ $link['href'] }}"
@@ -41,21 +40,21 @@
             {{-- ── Suport ────────────────────────────────────────── --}}
             <div class="md:col-span-2">
                 <h6 class="font-outfit font-bold text-sm-header2 text-dark mb-5">
-                    Suport
+                    {{ __('app.footer_support') }}
                 </h6>
                 <ul class="space-y-3">
                     <li>
                         <a href="{{ route('contact') }}"
                            class="font-outfit font-light text-body-md text-dark/65
                                   hover:text-primary transition-colors">
-                            Help Center
+                            {{ __('app.footer_help_center') }}
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('contact') }}"
                            class="font-outfit font-light text-body-md text-dark/65
                                   hover:text-primary transition-colors">
-                            Shipping Policy
+                            {{ __('app.footer_shipping_policy') }}
                         </a>
                     </li>
                     @auth
@@ -63,7 +62,7 @@
                             <a href="{{ route('orders.index') }}"
                                class="font-outfit font-light text-body-md text-dark/65
                                       hover:text-primary transition-colors">
-                                Track Order
+                                {{ __('app.footer_track_order') }}
                             </a>
                         </li>
                     @else
@@ -71,7 +70,7 @@
                             <a href="{{ route('login') }}"
                                class="font-outfit font-light text-body-md text-dark/65
                                       hover:text-primary transition-colors">
-                                Track Order
+                                {{ __('app.footer_track_order') }}
                             </a>
                         </li>
                     @endauth
@@ -80,13 +79,13 @@
                             <a href="{{ route('admin.index') }}"
                                class="font-outfit font-bold text-body-md text-secondary
                                       hover:text-primary transition-colors">
-                                Admin Access
+                                {{ __('app.footer_admin_access') }}
                             </a>
                         </li>
                     @else
                         <li>
                             <span class="font-outfit font-light text-body-md text-dark/30">
-                                Admin Access
+                                {{ __('app.footer_admin_access') }}
                             </span>
                         </li>
                     @endif
@@ -96,7 +95,7 @@
             {{-- ── Contacte ──────────────────────────────────────── --}}
             <div class="md:col-span-3">
                 <h6 class="font-outfit font-bold text-sm-header2 text-dark mb-5">
-                    Contacte
+                    {{ __('app.footer_contact') }}
                 </h6>
                 <ul class="space-y-3.5">
 
@@ -156,12 +155,12 @@
     <div class="border-t border-dark/10">
         <div class="section py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p class="font-outfit font-light text-body-sm text-dark/45">
-                © {{ date('Y') }} COPYUS Impressió Digital. Tots els drets reservats.
+                © {{ date('Y') }} {{ __('app.footer_brand_legal') }}. {{ __('app.footer_rights') }}
             </p>
             <div class="flex items-center gap-6">
-                <a href="{{ route('privacy') }}" class="font-outfit font-light text-body-sm text-dark/45 hover:text-primary transition-colors">Privadesa</a>
-                <a href="{{ route('terms') }}" class="font-outfit font-light text-body-sm text-dark/45 hover:text-primary transition-colors">Termes</a>
-                <a href="{{ route('cookies') }}" class="font-outfit font-light text-body-sm text-dark/45 hover:text-primary transition-colors">Cookies</a>
+                <a href="{{ route('privacy') }}" class="font-outfit font-light text-body-sm text-dark/45 hover:text-primary transition-colors">{{ __('app.footer_privacy') }}</a>
+                <a href="{{ route('terms') }}" class="font-outfit font-light text-body-sm text-dark/45 hover:text-primary transition-colors">{{ __('app.footer_terms') }}</a>
+                <a href="{{ route('cookies') }}" class="font-outfit font-light text-body-sm text-dark/45 hover:text-primary transition-colors">{{ __('app.footer_cookies') }}</a>
             </div>
         </div>
     </div>
