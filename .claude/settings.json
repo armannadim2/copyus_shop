@@ -58,7 +58,9 @@
       "Read(///wsl.localhost/Ubuntu/usr/**)",
       "Read(///wsl.localhost/Ubuntu/usr/local/**)",
       "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/app/Http/Controllers/**)",
-      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/app/Http/Controllers/Shop/**)"
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/app/Http/Controllers/Shop/**)",
+      "Read(///wsl.localhost/Ubuntu/home/nadim/copyus/resources/views/shop/**)",
+      "Bash(sed -i '340,572d' \"//wsl.localhost/Ubuntu/home/nadim/copyus/resources/views/shop/home.blade.php\")"
     ],
     "additionalDirectories": [
       "\\\\wsl.localhost\\Ubuntu\\home\\nadim\\copyus\\app"

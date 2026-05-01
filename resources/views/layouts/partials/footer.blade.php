@@ -12,6 +12,27 @@
                 <p class="font-outfit font-light text-body-md text-dark/65 mt-5 max-w-xs leading-relaxed">
                     {{ __('app.footer_brand_desc') }}
                 </p>
+
+                {{-- Working hours --}}
+                <div class="mt-7 max-w-xs">
+                    <p class="font-outfit text-xs font-semibold uppercase tracking-widest text-primary mb-3">
+                        {{ __('app.home_visit_hours_label') }}
+                    </p>
+                    <ul class="font-outfit text-body-sm space-y-1.5">
+                        <li class="flex items-center justify-between">
+                            <span class="text-dark/65">{{ __('app.home_visit_days_mon_thu') }}</span>
+                            <span class="text-primary font-semibold">9:00 – 17:00</span>
+                        </li>
+                        <li class="flex items-center justify-between">
+                            <span class="text-dark/65">{{ __('app.home_visit_days_fri') }}</span>
+                            <span class="text-primary font-semibold">9:00 – 14:00</span>
+                        </li>
+                        <li class="flex items-center justify-between">
+                            <span class="text-dark/65">{{ __('app.home_visit_days_sat_sun') }}</span>
+                            <span class="text-dark/40">{{ __('app.home_visit_closed') }}</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             {{-- ── Enllaços ràpids ──────────────────────────────── --}}
@@ -138,12 +159,19 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"
                                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
-                        <address class="not-italic font-outfit font-light text-body-md text-dark/65 leading-snug">
-                            Parc TecnoCampus Mataró-Maresme,<br>
-                            TCM3, Local 2<br>
-                            Carrer d'Ernest Lluch, 32, 08302<br>
-                            Mataró, Barcelona
-                        </address>
+                        <div>
+                            <address class="not-italic font-outfit font-light text-body-md text-dark/65 leading-snug">
+                                Parc TecnoCampus Mataró-Maresme, TCM3, Local 2<br>
+                                Carrer d'Ernest Lluch, 32, 08302<br>
+                                Mataró, Barcelona
+                            </address>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Parc+TecnoCampus+Mataró"
+                               target="_blank" rel="noopener"
+                               class="inline-flex items-center gap-1 mt-2 font-outfit text-body-sm
+                                      font-semibold text-secondary hover:text-primary transition-colors">
+                                {{ __('app.home_visit_view_maps') }}
+                            </a>
+                        </div>
                     </li>
                 </ul>
             </div>
