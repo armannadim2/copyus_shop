@@ -138,7 +138,10 @@ class AdminProductController extends Controller
     public function edit(int $id)
     {
         $product = Product::with([
-            'images', 'variants', 'priceTiers.user', 'tags',
+            'images',
+            'variants',
+            'priceTiers.user',
+            'tags',
         ])->findOrFail($id);
 
         $categories = Category::where('is_active', true)->orderBy('sort_order')->get();
@@ -269,9 +272,21 @@ class AdminProductController extends Controller
             return back()->with('error', 'El fitxer CSV està buit.');
         }
         $header = array_map(fn($h) => trim((string) $h), $header);
+        if (count($header) === 1 && str_contains($header[0], ';')) {
+            $header = explode(';', $header[0]);
+        }
+
+        // ✅ Step 1: Strip BOM from the very first header value (common in Excel-exported CSVs)
+        $header[0] = ltrim($header[0], "\xEF\xBB\xBF");
+
+        // ✅ Step 2: Trim all header values
+        $header = array_map('trim', $header);
+
 
         $required = ['sku', 'category_slug', 'brand', 'name_ca', 'name_es', 'price', 'vat_rate', 'stock', 'min_order_quantity', 'unit'];
+
         $missing  = array_diff($required, $header);
+
         if (! empty($missing)) {
             fclose($handle);
             return back()->with('error', 'Falten columnes obligatòries: ' . implode(', ', $missing));
@@ -284,7 +299,7 @@ class AdminProductController extends Controller
 
         DB::beginTransaction();
         try {
-            while (($data = fgetcsv($handle)) !== false) {
+            while (($data = fgetcsv($handle, 0, ';')) !== false) {
                 $row++;
                 if (count(array_filter($data, fn($v) => $v !== '' && $v !== null)) === 0) {
                     continue;
@@ -478,12 +493,26 @@ class AdminProductController extends Controller
     private function csvColumns(): array
     {
         return [
-            'sku', 'category_slug', 'brand',
-            'name_ca', 'name_es', 'name_en',
-            'short_description_ca', 'short_description_es', 'short_description_en',
-            'description_ca', 'description_es', 'description_en',
-            'price', 'vat_rate', 'stock', 'min_order_quantity', 'unit',
-            'is_active', 'is_featured', 'low_stock_threshold',
+            'sku',
+            'category_slug',
+            'brand',
+            'name_ca',
+            'name_es',
+            'name_en',
+            'short_description_ca',
+            'short_description_es',
+            'short_description_en',
+            'description_ca',
+            'description_es',
+            'description_en',
+            'price',
+            'vat_rate',
+            'stock',
+            'min_order_quantity',
+            'unit',
+            'is_active',
+            'is_featured',
+            'low_stock_threshold',
         ];
     }
 
