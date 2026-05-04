@@ -18,7 +18,7 @@
             {{-- Brand --}}
             <div class="px-6 py-6 border-b border-white border-opacity-10">
                 <a href="{{ route('admin.index') }}"
-                   class="font-alumni text-h3 text-white tracking-tight">
+                   class="font-alumni text-h5 text-white tracking-tight">
                     <a href="{{ route('home') }}" class="shrink-0">
                         <img src="{{ asset('assets/images/logo/' . rawurlencode('FULL LOGO (Red Sun).svg')) }}"
                             alt="Copyus"
@@ -37,7 +37,7 @@
 
                 <a href="{{ route('admin.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg transition-colors
+                          font-outfit text-sm transition-colors
                           {{ request()->routeIs('admin.index')
                              ? 'bg-primary text-white'
                              : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
@@ -53,7 +53,7 @@
 
                 <a href="{{ route('admin.users.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg transition-colors
+                          font-outfit text-sm transition-colors
                           {{ request()->routeIs('admin.users.*')
                              ? 'bg-primary text-white'
                              : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
@@ -69,7 +69,7 @@
 
                 <a href="{{ route('admin.products.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg transition-colors
+                          font-outfit text-sm transition-colors
                           {{ request()->routeIs('admin.products.*')
                              ? 'bg-primary text-white'
                              : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
@@ -78,7 +78,7 @@
 
                 <a href="{{ route('admin.orders.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg transition-colors
+                          font-outfit text-sm transition-colors
                           {{ request()->routeIs('admin.orders.*')
                              ? 'bg-primary text-white'
                              : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
@@ -87,7 +87,7 @@
 
                 <a href="{{ route('admin.quotations.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg transition-colors
+                          font-outfit text-sm transition-colors
                           {{ request()->routeIs('admin.quotations.*')
                              ? 'bg-primary text-white'
                              : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
@@ -96,7 +96,7 @@
                 
                 <a href="{{ route('admin.promo-codes.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg transition-colors
+                          font-outfit text-sm transition-colors
                           {{ request()->routeIs('admin.promo-codes.*')
                              ? 'bg-primary text-white'
                              : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
@@ -105,7 +105,7 @@
 
                 <a href="{{ route('admin.reviews.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg transition-colors
+                          font-outfit text-sm transition-colors
                           {{ request()->routeIs('admin.reviews.*')
                              ? 'bg-primary text-white'
                              : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
@@ -121,7 +121,7 @@
 
                 <a href="{{ route('admin.print.templates.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg transition-colors
+                          font-outfit text-sm transition-colors
                           {{ request()->routeIs('admin.print.templates.*')
                              ? 'bg-primary text-white'
                              : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
@@ -129,7 +129,7 @@
                 </a>
                 <a href="{{ route('admin.print.jobs.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg transition-colors
+                          font-outfit text-sm transition-colors
                           {{ request()->routeIs('admin.print.jobs.*')
                              ? 'bg-primary text-white'
                              : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
@@ -143,7 +143,7 @@
 
                 <a href="{{ route('admin.tickets.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg transition-colors
+                          font-outfit text-sm transition-colors
                           {{ request()->routeIs('admin.tickets.*')
                              ? 'bg-primary text-white'
                              : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
@@ -157,7 +157,7 @@
 
                 <a href="{{ route('admin.quote-requests.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg transition-colors
+                          font-outfit text-sm transition-colors
                           {{ request()->routeIs('admin.quote-requests.*')
                              ? 'bg-primary text-white'
                              : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
@@ -171,7 +171,7 @@
 
                 <a href="{{ route('admin.contact-messages.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg transition-colors
+                          font-outfit text-sm transition-colors
                           {{ request()->routeIs('admin.contact-messages.*')
                              ? 'bg-primary text-white'
                              : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
@@ -197,7 +197,7 @@
 
                 <a href="{{ route('home') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
-                          font-outfit text-body-lg text-gray-400
+                          font-outfit text-sm text-gray-400
                           hover:bg-white hover:bg-opacity-10 hover:text-white transition-colors">
                     <span>🌐</span> Veure botiga
                 </a>
@@ -206,7 +206,7 @@
                     @csrf
                     <button type="submit"
                             class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl
-                                   font-outfit text-body-lg text-gray-400
+                                   font-outfit text-sm text-gray-400
                                    hover:bg-primary hover:text-white transition-colors text-left">
                         <span>🚪</span> Tancar sessió
                     </button>
@@ -232,7 +232,7 @@
             {{-- Top Bar --}}
             <div class="bg-white border-b border-gray-100 px-8 py-4
                         flex items-center justify-between sticky top-0 z-30">
-                <h2 class="font-alumni text-h5 text-dark">
+                <h2 class="font-alumni text-h6 text-dark">
                     @yield('title', 'Dashboard')
                 </h2>
                 <div class="flex items-center gap-4">
@@ -347,14 +347,14 @@
             {{-- Flash Messages --}}
             @if(session('success'))
                 <div class="mx-8 mt-6 bg-green-50 border border-green-200 text-green-700
-                            font-outfit text-body-lg px-5 py-4 rounded-xl">
+                            font-outfit text-sm px-5 py-4 rounded-xl">
                     ✅ {{ session('success') }}
                 </div>
             @endif
 
             @if(session('error'))
                 <div class="mx-8 mt-6 bg-red-50 border border-red-200 text-red-600
-                            font-outfit text-body-lg px-5 py-4 rounded-xl">
+                            font-outfit text-sm px-5 py-4 rounded-xl">
                     ❌ {{ session('error') }}
                 </div>
             @endif

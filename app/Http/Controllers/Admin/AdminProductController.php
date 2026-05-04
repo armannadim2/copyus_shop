@@ -266,14 +266,10 @@ class AdminProductController extends Controller
             return back()->with('error', 'No s\'ha pogut llegir el fitxer CSV.');
         }
 
-        $header = fgetcsv($handle);
+        $header = fgetcsv($handle, 0, ';');
         if (! $header) {
             fclose($handle);
             return back()->with('error', 'El fitxer CSV està buit.');
-        }
-        $header = array_map(fn($h) => trim((string) $h), $header);
-        if (count($header) === 1 && str_contains($header[0], ';')) {
-            $header = explode(';', $header[0]);
         }
 
         // ✅ Step 1: Strip BOM from the very first header value (common in Excel-exported CSVs)

@@ -2,10 +2,9 @@
 @section('title', 'Ressenyes')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <div class="flex items-center justify-between mb-8">
-        <h1 class="font-alumni text-h1 text-dark">Ressenyes de productes</h1>
+        <h1 class="font-alumni text-h4 text-dark">Ressenyes de productes</h1>
         <div class="flex gap-2">
             <a href="{{ route('admin.reviews.index') }}"
                class="font-outfit text-sm px-4 py-2 rounded-xl border {{ !request('status') ? 'bg-primary text-white border-primary' : 'border-gray-200 text-gray-600 hover:bg-gray-50' }} transition-colors">

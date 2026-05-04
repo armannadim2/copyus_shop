@@ -2,12 +2,12 @@
 @section('title', 'Reports Dashboard')
 
 @section('content')
-<div class="space-y-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
     {{-- Header --}}
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between mb-6">
         <div>
-            <h1 class="font-alumni text-h2 text-dark">📊 Reports & Analytics</h1>
+            <h1 class="font-alumni text-h4 text-dark">📊 Reports & Analytics</h1>
             <p class="font-outfit text-body-lg text-gray-500 mt-1">
                 Overview of sales, clients and performance
             </p>
@@ -25,7 +25,8 @@
     </div>
 
     {{-- KPI Cards --}}
-    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+
 
         <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 col-span-2 md:col-span-1">
             <p class="font-outfit text-body-sm text-gray-400 mb-1">Total Revenue</p>
@@ -62,13 +63,13 @@
     </div>
 
     {{-- Revenue Chart --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
         <h2 class="font-alumni text-h4 text-dark mb-5">📈 Monthly Revenue (Last 12 Months)</h2>
         <canvas id="revenueChart" height="90"></canvas>
     </div>
 
     {{-- Two Column --}}
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
 
         {{-- Top Products --}}
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">

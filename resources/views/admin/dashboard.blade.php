@@ -5,7 +5,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
     <div class="mb-8">
-        <h1 class="font-alumni text-h1 text-dark">{{ __('app.admin_panel') }}</h1>
+        <h1 class="font-alumni text-h4 text-dark">{{ __('app.admin_panel') }}</h1>
         <p class="font-outfit text-sm text-gray-400 mt-1">{{ now()->translatedFormat('l, d F Y') }}</p>
     </div>
 

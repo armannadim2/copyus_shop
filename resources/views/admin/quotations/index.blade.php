@@ -4,7 +4,7 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-    <h1 class="font-alumni text-h1 text-dark mb-8">Pressupostos</h1>
+    <h1 class="font-alumni text-h4 text-dark mb-8">Pressupostos</h1>
 
     {{-- Filters --}}
     <form method="GET" action="{{ route('admin.quotations.index') }}"

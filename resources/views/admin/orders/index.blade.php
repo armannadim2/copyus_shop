@@ -2,9 +2,8 @@
 @section('title', 'Gestió de Comandes')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-
-    <h1 class="font-alumni text-h1 text-dark mb-8">Comandes</h1>
+<div class="p-8 space-y-6">
+    <h1 class="font-alumni text-h4 text-dark mb-8">Comandes</h1>
 
     {{-- Filters --}}
     <form method="GET" action="{{ route('admin.orders.index') }}"

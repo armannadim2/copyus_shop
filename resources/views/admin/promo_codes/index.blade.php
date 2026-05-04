@@ -2,10 +2,10 @@
 @section('title', 'Codis de descompte')
 
 @section('content')
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
     <div class="flex items-center justify-between mb-8">
-        <h1 class="font-alumni text-h1 text-dark">Codis de descompte</h1>
+        <h1 class="font-alumni text-h4 text-dark">Codis de descompte</h1>
         <a href="{{ route('admin.promo-codes.create') }}"
            class="bg-primary text-white font-alumni text-sm-header px-6 py-2.5
                   rounded-2xl hover:brightness-110 transition-all">

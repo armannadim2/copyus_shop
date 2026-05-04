@@ -5,7 +5,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
     <div class="flex items-center justify-between mb-8">
-        <h1 class="font-alumni text-h1 text-dark">Productes</h1>
+        <h1 class="font-alumni text-h4                        text-dark">Productes</h1>
         <div class="flex items-center gap-2">
             <a href="{{ route('admin.products.bulk-images') }}"
                class="inline-flex items-center gap-2 bg-white text-dark border border-gray-200 font-alumni text-sm-header
