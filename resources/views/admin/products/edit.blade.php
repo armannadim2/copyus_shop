@@ -9,7 +9,7 @@
            class="font-outfit text-sm text-gray-500 hover:text-primary transition-colors">
             ← Productes
         </a>
-        <h1 class="font-alumni text-h1 text-dark">Editar Producte</h1>
+        <h1 class="font-alumni text-h4 text-dark">Editar Producte</h1>
         @if($product->is_low_stock)
             <span class="inline-flex items-center gap-1 bg-orange-50 border border-orange-200
                          text-orange-700 font-outfit text-xs px-3 py-1 rounded-full">

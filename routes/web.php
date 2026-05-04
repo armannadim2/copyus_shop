@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\AdminContactMessageController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminQuoteRequestController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminQuotationController;
@@ -269,6 +270,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::patch('/{id}/approve', [AdminUserController::class, 'approve'])->name('approve');
         Route::patch('/{id}/reject', [AdminUserController::class, 'reject'])->name('reject');
         Route::delete('/{id}', [AdminUserController::class, 'destroy'])->name('destroy');
+    });
+
+    // Categories
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::get('/', [AdminCategoryController::class, 'index'])->name('index');
+        Route::get('/create', [AdminCategoryController::class, 'create'])->name('create');
+        Route::post('/', [AdminCategoryController::class, 'store'])->name('store');
+        Route::get('/{category}/edit', [AdminCategoryController::class, 'edit'])->name('edit');
+        Route::put('/{category}', [AdminCategoryController::class, 'update'])->name('update');
+        Route::delete('/{category}', [AdminCategoryController::class, 'destroy'])->name('destroy');
+        Route::patch('/{category}/toggle', [AdminCategoryController::class, 'toggle'])->name('toggle');
     });
 
     // Products

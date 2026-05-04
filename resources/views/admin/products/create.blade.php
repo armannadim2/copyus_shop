@@ -9,7 +9,7 @@
            class="font-outfit text-sm text-gray-500 hover:text-primary transition-colors">
             ← Productes
         </a>
-        <h1 class="font-alumni text-h1 text-dark">Nou Producte</h1>
+        <h1 class="font-alumni text-h4 text-dark">Nou Producte</h1>
     </div>
 
     @if($errors->any())

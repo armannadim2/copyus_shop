@@ -2,14 +2,14 @@
 @section('title', 'Importació massiva d\'imatges')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
     <div class="flex items-center gap-4 mb-8">
         <a href="{{ route('admin.products.index') }}"
            class="font-outfit text-sm text-gray-500 hover:text-primary transition-colors">
             ← Productes
         </a>
-        <h1 class="font-alumni text-h1 text-dark">Importació massiva d'imatges</h1>
+        <h1 class="font-alumni text-h4 text-dark">Importació massiva d'imatges</h1>
     </div>
 
     @if(session('success'))
