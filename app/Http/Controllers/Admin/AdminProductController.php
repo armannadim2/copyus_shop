@@ -275,9 +275,11 @@ class AdminProductController extends Controller
         // ✅ Step 1: Strip BOM from the very first header value (common in Excel-exported CSVs)
         $header[0] = ltrim($header[0], "\xEF\xBB\xBF");
 
-        // ✅ Step 2: Trim all header values
-        $header = array_map('trim', $header);
-
+        // ✅ Step 2: Trim all header values and ensure UTF-8
+        $header = array_map(function ($value) {
+            $value = trim($value);
+            return mb_check_encoding($value, 'UTF-8') ? $value : mb_convert_encoding($value, 'UTF-8', 'Windows-1252');
+        }, $header);
 
         $required = ['sku', 'category_slug', 'brand', 'name_ca', 'name_es', 'price', 'vat_rate', 'stock', 'min_order_quantity', 'unit'];
 
@@ -296,6 +298,12 @@ class AdminProductController extends Controller
         DB::beginTransaction();
         try {
             while (($data = fgetcsv($handle, 0, ';')) !== false) {
+                // Ensure data is UTF-8 encoded
+                $data = array_map(function ($value) {
+                    if ($value === null) return $value;
+                    return mb_check_encoding($value, 'UTF-8') ? $value : mb_convert_encoding($value, 'UTF-8', 'Windows-1252');
+                }, $data);
+
                 $row++;
                 if (count(array_filter($data, fn($v) => $v !== '' && $v !== null)) === 0) {
                     continue;
@@ -303,9 +311,23 @@ class AdminProductController extends Controller
 
                 $values = array_combine($header, array_pad($data, count($header), null));
 
-                $category = Category::where('slug', trim((string) $values['category_slug']))->first();
-                if (! $category) {
-                    $errors[] = "Fila $row: categoria «{$values['category_slug']}» no trobada.";
+                $categorySlug = trim((string) $values['category_slug']);
+                $category = Category::where('slug', $categorySlug)->first();
+                
+                if (! $category && $categorySlug !== '') {
+                    $categoryName = Str::title(str_replace(['-', '_'], ' ', $categorySlug));
+                    $category = Category::create([
+                        'name' => [
+                            'ca' => $categoryName,
+                            'es' => $categoryName,
+                            'en' => $categoryName,
+                        ],
+                        'slug' => $categorySlug,
+                        'is_active' => true,
+                        'sort_order' => Category::max('sort_order') + 1,
+                    ]);
+                } elseif (! $category) {
+                    $errors[] = "Fila $row: categoria «{$values['category_slug']}» no trobada i slug buit.";
                     continue;
                 }
 
@@ -315,10 +337,18 @@ class AdminProductController extends Controller
                     continue;
                 }
 
+                $baseSlug = Str::slug($values['name_ca']);
+                $slug = $baseSlug;
+                $counter = 1;
+                while (Product::where('slug', $slug)->where('sku', '!=', $sku)->exists()) {
+                    $slug = $baseSlug . '-' . $counter;
+                    $counter++;
+                }
+
                 $attributes = [
                     'category_id'         => $category->id,
                     'brand'               => trim((string) $values['brand']),
-                    'slug'                => Str::slug($values['name_ca']),
+                    'slug'                => $slug,
                     'price'               => (float) $values['price'],
                     'vat_rate'            => (float) $values['vat_rate'],
                     'stock'               => (int) $values['stock'],

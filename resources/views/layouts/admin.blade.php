@@ -192,18 +192,21 @@
                     @endif
                 </a>
 
-                <a href="{{ route('admin.reports.index') }}"
-                class="sidebar-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
-                    📊 Reports
-                </a>
-
+               
                 <div class="pt-4 pb-1">
                     <p class="font-outfit text-body-sm text-gray-600 px-3 uppercase
                                tracking-widest text-xs">
                         Compte
                     </p>
                 </div>
-
+                <a href="{{ route('admin.reports.index') }}"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl
+                          font-outfit text-sm text-gray-400
+                          hover:bg-white hover:bg-opacity-10 hover:text-white transition-colors
+                          sidebar-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+                    <span>📊</span> Reports
+                </a>
+                
                 <a href="{{ route('home') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
                           font-outfit text-sm text-gray-400
