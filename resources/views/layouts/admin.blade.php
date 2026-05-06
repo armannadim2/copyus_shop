@@ -377,6 +377,66 @@
 
     </div>
 
+    <script>
+    function bulkSelect(module) {
+        return {
+            selected: [],
+            allChecked: false,
+            assignParentId: '',
+            assignCategoryId: '',
+            assignTagIds: [],
+            bulkStatus: '',
+
+            toggleAll(ids) {
+                this.selected = this.allChecked ? ids.map(Number) : [];
+            },
+
+            submitBulk(action, payload) {
+                payload = payload || {};
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/admin/bulk-action';
+
+                var csrf = document.createElement('input');
+                csrf.type = 'hidden'; csrf.name = '_token';
+                csrf.value = document.querySelector('meta[name="csrf-token"]').content;
+                form.appendChild(csrf);
+
+                var mod = document.createElement('input');
+                mod.type = 'hidden'; mod.name = 'module'; mod.value = module;
+                form.appendChild(mod);
+
+                var act = document.createElement('input');
+                act.type = 'hidden'; act.name = 'action'; act.value = action;
+                form.appendChild(act);
+
+                this.selected.forEach(function(id) {
+                    var i = document.createElement('input');
+                    i.type = 'hidden'; i.name = 'ids[]'; i.value = id;
+                    form.appendChild(i);
+                });
+
+                Object.keys(payload).forEach(function(key) {
+                    var val = payload[key];
+                    if (Array.isArray(val)) {
+                        val.forEach(function(v) {
+                            var inp = document.createElement('input');
+                            inp.type = 'hidden'; inp.name = 'payload[' + key + '][]'; inp.value = v;
+                            form.appendChild(inp);
+                        });
+                    } else {
+                        var inp = document.createElement('input');
+                        inp.type = 'hidden'; inp.name = 'payload[' + key + ']'; inp.value = val;
+                        form.appendChild(inp);
+                    }
+                });
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        };
+    }
+    </script>
     @stack('scripts')
 </body>
 </html>

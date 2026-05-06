@@ -68,74 +68,86 @@
         @endif
     </form>
 
-    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <table class="w-full">
-            <thead class="bg-gray-50 border-b border-gray-100">
-                <tr>
-                    <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Categoria</th>
-                    <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Slug</th>
-                    <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Categoria Pare</th>
-                    <th class="text-center font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Ordre</th>
-                    <th class="text-center font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Activa</th>
-                    <th class="px-6 py-3"></th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50">
-                @forelse($categories as $category)
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                @if($category->image)
-                                    <img src="{{ asset('storage/'.$category->image) }}"
-                                         class="w-10 h-10 object-cover rounded-xl flex-shrink-0">
-                                @else
-                                    <div class="w-10 h-10 bg-light rounded-xl flex items-center justify-center text-lg flex-shrink-0">📁</div>
-                                @endif
-                                <span class="font-outfit text-sm text-dark">{{ $category->getTranslation('name', 'ca') }}</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 font-outfit text-sm text-gray-500">{{ $category->slug }}</td>
-                        <td class="px-6 py-4 font-outfit text-sm text-gray-500">
-                            {{ $category->parent ? $category->parent->getTranslation('name', 'ca') : '-' }}
-                        </td>
-                        <td class="px-6 py-4 text-center font-outfit text-sm text-gray-500">
-                            {{ $category->sort_order }}
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <form method="POST" action="{{ route('admin.categories.toggle', $category->id) }}">
-                                @csrf @method('PATCH')
-                                <button type="submit" class="text-lg" title="{{ $category->is_active ? 'Desactivar' : 'Activar' }}">
-                                    {{ $category->is_active ? '✅' : '❌' }}
-                                </button>
-                            </form>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <div class="flex justify-end gap-3">
-                                <a href="{{ route('admin.categories.edit', $category->id) }}"
-                                   class="font-outfit text-sm text-secondary hover:text-primary transition-colors">
-                                    Editar →
-                                </a>
-                                <form method="POST" action="{{ route('admin.categories.destroy', $category->id) }}" onsubmit="return confirm('N\'estàs segur de voler eliminar aquesta categoria?');">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="font-outfit text-sm text-red-500 hover:text-red-700 transition-colors">
-                                        Eliminar
+    <div x-data="bulkSelect('categories')">
+        @include('admin.partials._bulk_toolbar', ['module' => 'categories', 'bulkParents' => $parents])
+
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                    <tr>
+                        <th class="px-4 py-3 w-8">
+                            <input type="checkbox" x-model="allChecked"
+                                   @change="toggleAll([{{ $categories->pluck('id')->join(',') }}])"
+                                   class="rounded accent-primary">
+                        </th>
+                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Categoria</th>
+                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Slug</th>
+                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Categoria Pare</th>
+                        <th class="text-center font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Ordre</th>
+                        <th class="text-center font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Activa</th>
+                        <th class="px-6 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($categories as $category)
+                        <tr class="hover:bg-gray-50 transition-colors" :class="selected.includes({{ $category->id }}) ? 'bg-primary/5' : ''">
+                            <td class="px-4 py-4">
+                                <input type="checkbox" :value="{{ $category->id }}" x-model="selected" class="rounded accent-primary">
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    @if($category->image)
+                                        <img src="{{ asset('storage/'.$category->image) }}"
+                                             class="w-10 h-10 object-cover rounded-xl flex-shrink-0">
+                                    @else
+                                        <div class="w-10 h-10 bg-light rounded-xl flex items-center justify-center text-lg flex-shrink-0">📁</div>
+                                    @endif
+                                    <span class="font-outfit text-sm text-dark">{{ $category->getTranslation('name', 'ca') }}</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 font-outfit text-sm text-gray-500">{{ $category->slug }}</td>
+                            <td class="px-6 py-4 font-outfit text-sm text-gray-500">
+                                {{ $category->parent ? $category->parent->getTranslation('name', 'ca') : '-' }}
+                            </td>
+                            <td class="px-6 py-4 text-center font-outfit text-sm text-gray-500">
+                                {{ $category->sort_order }}
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <form method="POST" action="{{ route('admin.categories.toggle', $category->id) }}">
+                                    @csrf @method('PATCH')
+                                    <button type="submit" class="text-lg" title="{{ $category->is_active ? 'Desactivar' : 'Activar' }}">
+                                        {{ $category->is_active ? '✅' : '❌' }}
                                     </button>
                                 </form>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="px-6 py-12 text-center font-outfit text-sm text-gray-400">
-                            No s'han trobat categories.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end gap-3">
+                                    <a href="{{ route('admin.categories.edit', $category->id) }}"
+                                       class="font-outfit text-sm text-secondary hover:text-primary transition-colors">
+                                        Editar →
+                                    </a>
+                                    <form method="POST" action="{{ route('admin.categories.destroy', $category->id) }}" onsubmit="return confirm('N\'estàs segur de voler eliminar aquesta categoria?');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="font-outfit text-sm text-red-500 hover:text-red-700 transition-colors">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center font-outfit text-sm text-gray-400">
+                                No s'han trobat categories.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-    <div class="mt-4">{{ $categories->links() }}</div>
+        <div class="mt-4">{{ $categories->links() }}</div>
+    </div>
 
 </div>
 @endsection

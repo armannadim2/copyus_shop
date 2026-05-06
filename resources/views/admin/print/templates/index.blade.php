@@ -43,116 +43,128 @@
     </form>
 
     {{-- Table --}}
-    <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-        @if($templates->isEmpty())
-            <div class="py-16 text-center">
-                <p class="text-4xl mb-3">🖨️</p>
-                <p class="font-outfit text-sm text-gray-400">
-                    Encara no hi ha plantilles. Crea'n una per començar.
-                </p>
-            </div>
-        @else
-            <table class="w-full">
-                <thead class="bg-gray-50 border-b border-gray-100">
-                    <tr>
-                        <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
-                                   uppercase text-left px-6 py-3">Plantilla</th>
-                        <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
-                                   uppercase text-left px-4 py-3">Preu base</th>
-                        <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
-                                   uppercase text-center px-4 py-3">Opcions</th>
-                        <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
-                                   uppercase text-center px-4 py-3">Treballs</th>
-                        <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
-                                   uppercase text-center px-4 py-3">Dies prod.</th>
-                        <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
-                                   uppercase text-center px-4 py-3">Estat</th>
-                        <th class="px-4 py-3"></th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-50">
-                    @foreach($templates as $template)
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    @if($template->icon)
-                                        <span class="text-2xl">{{ $template->icon }}</span>
-                                    @endif
-                                    <div>
-                                        <p class="font-outfit text-sm font-semibold text-dark">
-                                            {{ $template->getTranslation('name', 'ca') }}
-                                        </p>
-                                        <p class="font-outfit text-xs text-gray-400">
-                                            {{ $template->slug }}
-                                        </p>
+    <div x-data="bulkSelect('print_templates')">
+        @include('admin.partials._bulk_toolbar', ['module' => 'print_templates'])
+
+        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            @if($templates->isEmpty())
+                <div class="py-16 text-center">
+                    <p class="text-4xl mb-3">🖨️</p>
+                    <p class="font-outfit text-sm text-gray-400">
+                        Encara no hi ha plantilles. Crea'n una per començar.
+                    </p>
+                </div>
+            @else
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-100">
+                        <tr>
+                            <th class="px-4 py-3 w-8">
+                                <input type="checkbox" x-model="allChecked"
+                                       @change="toggleAll([{{ $templates->pluck('id')->join(',') }}])"
+                                       class="rounded accent-primary">
+                            </th>
+                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
+                                       uppercase text-left px-6 py-3">Plantilla</th>
+                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
+                                       uppercase text-left px-4 py-3">Preu base</th>
+                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
+                                       uppercase text-center px-4 py-3">Opcions</th>
+                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
+                                       uppercase text-center px-4 py-3">Treballs</th>
+                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
+                                       uppercase text-center px-4 py-3">Dies prod.</th>
+                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
+                                       uppercase text-center px-4 py-3">Estat</th>
+                            <th class="px-4 py-3"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        @foreach($templates as $template)
+                            <tr class="hover:bg-gray-50 transition-colors" :class="selected.includes({{ $template->id }}) ? 'bg-primary/5' : ''">
+                                <td class="px-4 py-4">
+                                    <input type="checkbox" :value="{{ $template->id }}" x-model="selected" class="rounded accent-primary">
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        @if($template->icon)
+                                            <span class="text-2xl">{{ $template->icon }}</span>
+                                        @endif
+                                        <div>
+                                            <p class="font-outfit text-sm font-semibold text-dark">
+                                                {{ $template->getTranslation('name', 'ca') }}
+                                            </p>
+                                            <p class="font-outfit text-xs text-gray-400">
+                                                {{ $template->slug }}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="px-4 py-4">
-                                <span class="font-alumni text-sm-header text-primary">
-                                    {{ number_format($template->base_price, 4, ',', '.') }} €
-                                </span>
-                                <span class="font-outfit text-xs text-gray-400 block">
-                                    + IVA {{ $template->vat_rate }}%
-                                </span>
-                            </td>
-                            <td class="px-4 py-4 text-center">
-                                <span class="font-outfit text-sm text-dark">
-                                    {{ $template->options_count }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-4 text-center">
-                                <span class="font-outfit text-sm text-dark">
-                                    {{ $template->jobs_count }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-4 text-center">
-                                <span class="font-outfit text-sm text-dark">
-                                    {{ $template->base_production_days }}d
-                                </span>
-                            </td>
-                            <td class="px-4 py-4 text-center">
-                                <form method="POST"
-                                      action="{{ route('admin.print.templates.toggle', $template) }}">
-                                    @csrf @method('PATCH')
-                                    <button type="submit"
-                                            class="font-outfit text-xs px-2.5 py-1 rounded-full
-                                                   border transition-colors
-                                                   {{ $template->is_active
-                                                       ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'
-                                                       : 'bg-gray-100 text-gray-500 border-gray-200 hover:bg-gray-200' }}">
-                                        {{ $template->is_active ? 'Actiu' : 'Inactiu' }}
-                                    </button>
-                                </form>
-                            </td>
-                            <td class="px-4 py-4">
-                                <div class="flex items-center gap-2 justify-end">
-                                    <a href="{{ route('admin.print.templates.edit', $template) }}"
-                                       class="font-outfit text-xs text-primary hover:underline">
-                                        Editar
-                                    </a>
+                                </td>
+                                <td class="px-4 py-4">
+                                    <span class="font-alumni text-sm-header text-primary">
+                                        {{ number_format($template->base_price, 4, ',', '.') }} €
+                                    </span>
+                                    <span class="font-outfit text-xs text-gray-400 block">
+                                        + IVA {{ $template->vat_rate }}%
+                                    </span>
+                                </td>
+                                <td class="px-4 py-4 text-center">
+                                    <span class="font-outfit text-sm text-dark">
+                                        {{ $template->options_count }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-4 text-center">
+                                    <span class="font-outfit text-sm text-dark">
+                                        {{ $template->jobs_count }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-4 text-center">
+                                    <span class="font-outfit text-sm text-dark">
+                                        {{ $template->base_production_days }}d
+                                    </span>
+                                </td>
+                                <td class="px-4 py-4 text-center">
                                     <form method="POST"
-                                          action="{{ route('admin.print.templates.destroy', $template) }}"
-                                          onsubmit="return confirm('Eliminar aquesta plantilla i totes les seves opcions?')">
-                                        @csrf @method('DELETE')
+                                          action="{{ route('admin.print.templates.toggle', $template) }}">
+                                        @csrf @method('PATCH')
                                         <button type="submit"
-                                                class="font-outfit text-xs text-red-400 hover:text-red-600 transition-colors">
-                                            Eliminar
+                                                class="font-outfit text-xs px-2.5 py-1 rounded-full
+                                                       border transition-colors
+                                                       {{ $template->is_active
+                                                           ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'
+                                                           : 'bg-gray-100 text-gray-500 border-gray-200 hover:bg-gray-200' }}">
+                                            {{ $template->is_active ? 'Actiu' : 'Inactiu' }}
                                         </button>
                                     </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                </td>
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center gap-2 justify-end">
+                                        <a href="{{ route('admin.print.templates.edit', $template) }}"
+                                           class="font-outfit text-xs text-primary hover:underline">
+                                            Editar
+                                        </a>
+                                        <form method="POST"
+                                              action="{{ route('admin.print.templates.destroy', $template) }}"
+                                              onsubmit="return confirm('Eliminar aquesta plantilla i totes les seves opcions?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit"
+                                                    class="font-outfit text-xs text-red-400 hover:text-red-600 transition-colors">
+                                                Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
-            @if($templates->hasPages())
-                <div class="px-6 py-4 border-t border-gray-100">
-                    {{ $templates->links() }}
-                </div>
+                @if($templates->hasPages())
+                    <div class="px-6 py-4 border-t border-gray-100">
+                        {{ $templates->links() }}
+                    </div>
+                @endif
             @endif
-        @endif
+        </div>
     </div>
 
 </div>

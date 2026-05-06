@@ -35,74 +35,86 @@
         @endif
     </form>
 
-    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <table class="w-full">
-            <thead class="bg-gray-50 border-b border-gray-100">
-                <tr>
-                    <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Número</th>
-                    <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Client</th>
-                    <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Data</th>
-                    <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Estat</th>
-                    <th class="text-right font-outfit text-body-sm text-gray-500 px-6 py-3">Total</th>
-                    <th class="px-6 py-3"></th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50">
-                @php
-                    $statusColors = [
-                        'pending'   => 'bg-yellow-50 text-yellow-700',
-                        'reviewing' => 'bg-blue-50 text-blue-700',
-                        'quoted'    => 'bg-purple-50 text-purple-700',
-                        'accepted'  => 'bg-green-50 text-green-700',
-                        'rejected'  => 'bg-red-50 text-red-600',
-                        'expired'   => 'bg-gray-100 text-gray-500',
-                        'converted' => 'bg-indigo-50 text-indigo-700',
-                    ];
-                @endphp
-                @forelse($quotations as $quotation)
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4 font-alumni text-sm-header text-dark">
-                            {{ $quotation->quote_number }}
-                        </td>
-                        <td class="px-6 py-4 font-outfit text-body-sm text-gray-600">
-                            {{ $quotation->user?->name }}<br>
-                            <span class="text-gray-400 text-xs">{{ $quotation->user?->company_name }}</span>
-                        </td>
-                        <td class="px-6 py-4 font-outfit text-body-sm text-gray-500">
-                            {{ $quotation->created_at->format('d/m/Y') }}
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-block font-outfit text-body-sm px-2 py-0.5 rounded-full
-                                         {{ $statusColors[$quotation->status] ?? 'bg-gray-100 text-gray-500' }}">
-                                {{ $quotation->status }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 font-alumni text-sm-header text-right">
-                            @if($quotation->total_quoted)
-                                {{ number_format($quotation->total_quoted, 2, ',', '.') }} €
-                            @else
-                                —
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="{{ route('admin.quotations.show', $quotation->quote_number) }}"
-                               class="font-outfit text-body-sm text-secondary hover:text-primary transition-colors">
-                                Veure →
-                            </a>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="px-6 py-12 text-center font-outfit text-body-lg text-gray-400">
-                            No s'han trobat pressupostos.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    <div x-data="bulkSelect('quotations')">
+        @include('admin.partials._bulk_toolbar', ['module' => 'quotations'])
 
-    <div class="mt-4">{{ $quotations->links() }}</div>
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                    <tr>
+                        <th class="px-4 py-3 w-8">
+                            <input type="checkbox" x-model="allChecked"
+                                   @change="toggleAll([{{ $quotations->pluck('id')->join(',') }}])"
+                                   class="rounded accent-primary">
+                        </th>
+                        <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Número</th>
+                        <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Client</th>
+                        <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Data</th>
+                        <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Estat</th>
+                        <th class="text-right font-outfit text-body-sm text-gray-500 px-6 py-3">Total</th>
+                        <th class="px-6 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @php
+                        $statusColors = [
+                            'pending'   => 'bg-yellow-50 text-yellow-700',
+                            'reviewing' => 'bg-blue-50 text-blue-700',
+                            'quoted'    => 'bg-purple-50 text-purple-700',
+                            'accepted'  => 'bg-green-50 text-green-700',
+                            'rejected'  => 'bg-red-50 text-red-600',
+                            'expired'   => 'bg-gray-100 text-gray-500',
+                            'converted' => 'bg-indigo-50 text-indigo-700',
+                        ];
+                    @endphp
+                    @forelse($quotations as $quotation)
+                        <tr class="hover:bg-gray-50 transition-colors" :class="selected.includes({{ $quotation->id }}) ? 'bg-primary/5' : ''">
+                            <td class="px-4 py-4">
+                                <input type="checkbox" :value="{{ $quotation->id }}" x-model="selected" class="rounded accent-primary">
+                            </td>
+                            <td class="px-6 py-4 font-alumni text-sm-header text-dark">
+                                {{ $quotation->quote_number }}
+                            </td>
+                            <td class="px-6 py-4 font-outfit text-body-sm text-gray-600">
+                                {{ $quotation->user?->name }}<br>
+                                <span class="text-gray-400 text-xs">{{ $quotation->user?->company_name }}</span>
+                            </td>
+                            <td class="px-6 py-4 font-outfit text-body-sm text-gray-500">
+                                {{ $quotation->created_at->format('d/m/Y') }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-block font-outfit text-body-sm px-2 py-0.5 rounded-full
+                                             {{ $statusColors[$quotation->status] ?? 'bg-gray-100 text-gray-500' }}">
+                                    {{ $quotation->status }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 font-alumni text-sm-header text-right">
+                                @if($quotation->total_quoted)
+                                    {{ number_format($quotation->total_quoted, 2, ',', '.') }} €
+                                @else
+                                    —
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <a href="{{ route('admin.quotations.show', $quotation->quote_number) }}"
+                                   class="font-outfit text-body-sm text-secondary hover:text-primary transition-colors">
+                                    Veure →
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center font-outfit text-body-lg text-gray-400">
+                                No s'han trobat pressupostos.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4">{{ $quotations->links() }}</div>
+    </div>
 
 </div>
 @endsection

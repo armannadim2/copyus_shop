@@ -63,73 +63,85 @@
         @endif
     </form>
 
-    @if($requests->isEmpty())
-        <div class="bg-white rounded-2xl border border-gray-100 px-8 py-12 text-center">
-            <p class="font-outfit text-sm text-gray-400">Cap sol·licitud trobada.</p>
-        </div>
-    @else
-        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="border-b border-gray-100 bg-light">
-                        <th class="text-left font-outfit text-xs text-gray-400 px-6 py-3">Referència</th>
-                        <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Sol·licitant</th>
-                        <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Servei</th>
-                        <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Quantitat</th>
-                        <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Estat</th>
-                        <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Data</th>
-                        <th class="px-4 py-3"></th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-50">
-                    @foreach($requests as $req)
-                    <tr class="hover:bg-light/50 transition-colors">
-                        <td class="px-6 py-4">
-                            <a href="{{ route('admin.quote-requests.show', $req) }}"
-                               class="font-outfit text-xs text-gray-400 hover:text-primary transition-colors block">
-                                {{ $req->reference }}
-                            </a>
-                        </td>
-                        <td class="px-4 py-4">
-                            <p class="font-outfit text-sm font-semibold text-dark">{{ $req->name }}</p>
-                            <p class="font-outfit text-xs text-gray-400">{{ $req->email }}</p>
-                            @if($req->company_name)
-                                <p class="font-outfit text-xs text-gray-400 mt-0.5">{{ $req->company_name }}</p>
-                            @endif
-                        </td>
-                        <td class="px-4 py-4">
-                            <p class="font-outfit text-sm text-dark">{{ $req->service_type }}</p>
-                            @if($req->deadline)
-                                <p class="font-outfit text-xs text-gray-400 mt-0.5">⏱ {{ $req->deadline }}</p>
-                            @endif
-                        </td>
-                        <td class="px-4 py-4">
-                            <span class="font-outfit text-sm text-gray-600">
-                                {{ $req->quantity ? number_format($req->quantity, 0, ',', '.') : '—' }}
-                            </span>
-                        </td>
-                        <td class="px-4 py-4">
-                            <span class="font-outfit text-xs px-2.5 py-1 rounded-full {{ $req->status_color }}">
-                                {{ $req->status_label }}
-                            </span>
-                        </td>
-                        <td class="px-4 py-4">
-                            <p class="font-outfit text-xs text-gray-500">{{ $req->created_at->format('d/m/Y') }}</p>
-                            <p class="font-outfit text-xs text-gray-400">{{ $req->created_at->format('H:i') }}</p>
-                        </td>
-                        <td class="px-4 py-4 text-right">
-                            <a href="{{ route('admin.quote-requests.show', $req) }}"
-                               class="font-outfit text-xs text-primary hover:underline">
-                                Veure →
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+    <div x-data="bulkSelect('quote_requests')">
+        @include('admin.partials._bulk_toolbar', ['module' => 'quote_requests'])
 
-        <div class="mt-4">{{ $requests->links() }}</div>
-    @endif
+        @if($requests->isEmpty())
+            <div class="bg-white rounded-2xl border border-gray-100 px-8 py-12 text-center">
+                <p class="font-outfit text-sm text-gray-400">Cap sol·licitud trobada.</p>
+            </div>
+        @else
+            <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-100 bg-light">
+                            <th class="px-4 py-3 w-8">
+                                <input type="checkbox" x-model="allChecked"
+                                       @change="toggleAll([{{ $requests->pluck('id')->join(',') }}])"
+                                       class="rounded accent-primary">
+                            </th>
+                            <th class="text-left font-outfit text-xs text-gray-400 px-6 py-3">Referència</th>
+                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Sol·licitant</th>
+                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Servei</th>
+                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Quantitat</th>
+                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Estat</th>
+                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Data</th>
+                            <th class="px-4 py-3"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        @foreach($requests as $req)
+                        <tr class="hover:bg-light/50 transition-colors" :class="selected.includes({{ $req->id }}) ? 'bg-primary/5' : ''">
+                            <td class="px-4 py-4">
+                                <input type="checkbox" :value="{{ $req->id }}" x-model="selected" class="rounded accent-primary">
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="{{ route('admin.quote-requests.show', $req) }}"
+                                   class="font-outfit text-xs text-gray-400 hover:text-primary transition-colors block">
+                                    {{ $req->reference }}
+                                </a>
+                            </td>
+                            <td class="px-4 py-4">
+                                <p class="font-outfit text-sm font-semibold text-dark">{{ $req->name }}</p>
+                                <p class="font-outfit text-xs text-gray-400">{{ $req->email }}</p>
+                                @if($req->company_name)
+                                    <p class="font-outfit text-xs text-gray-400 mt-0.5">{{ $req->company_name }}</p>
+                                @endif
+                            </td>
+                            <td class="px-4 py-4">
+                                <p class="font-outfit text-sm text-dark">{{ $req->service_type }}</p>
+                                @if($req->deadline)
+                                    <p class="font-outfit text-xs text-gray-400 mt-0.5">⏱ {{ $req->deadline }}</p>
+                                @endif
+                            </td>
+                            <td class="px-4 py-4">
+                                <span class="font-outfit text-sm text-gray-600">
+                                    {{ $req->quantity ? number_format($req->quantity, 0, ',', '.') : '—' }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-4">
+                                <span class="font-outfit text-xs px-2.5 py-1 rounded-full {{ $req->status_color }}">
+                                    {{ $req->status_label }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-4">
+                                <p class="font-outfit text-xs text-gray-500">{{ $req->created_at->format('d/m/Y') }}</p>
+                                <p class="font-outfit text-xs text-gray-400">{{ $req->created_at->format('H:i') }}</p>
+                            </td>
+                            <td class="px-4 py-4 text-right">
+                                <a href="{{ route('admin.quote-requests.show', $req) }}"
+                                   class="font-outfit text-xs text-primary hover:underline">
+                                    Veure →
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4">{{ $requests->links() }}</div>
+        @endif
+    </div>
 </div>
 @endsection

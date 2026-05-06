@@ -27,12 +27,18 @@
         </div>
     @endif
 
-    <div class="space-y-4">
+    <div x-data="bulkSelect('reviews')" class="space-y-4">
+        @include('admin.partials._bulk_toolbar', ['module' => 'reviews'])
+
         @forelse($reviews as $review)
-            <div class="bg-white rounded-2xl border border-gray-100 p-6">
+            <div class="bg-white rounded-2xl border border-gray-100 p-6"
+                 :class="selected.includes({{ $review->id }}) ? 'border-primary/30 bg-primary/5' : ''">
                 <div class="flex items-start justify-between gap-4">
 
-                    {{-- Left: review content --}}
+                    {{-- Left: checkbox + review content --}}
+                    <div class="flex items-start gap-3 flex-1 min-w-0">
+                    <input type="checkbox" :value="{{ $review->id }}" x-model="selected"
+                           class="rounded accent-primary mt-1 shrink-0">
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center flex-wrap gap-3 mb-2">
                             {{-- Stars --}}
@@ -110,6 +116,7 @@
                             <span>{{ $review->created_at->format('d/m/Y H:i') }}</span>
                         </div>
                     </div>
+                    </div>{{-- end checkbox+content wrapper --}}
 
                     {{-- Right: action buttons --}}
                     <div class="flex flex-col gap-2 shrink-0">

@@ -99,97 +99,113 @@
         @endif
     </form>
 
-    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <table class="w-full">
-            <thead class="bg-gray-50 border-b border-gray-100">
-                <tr>
-                    <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Producte</th>
-                    <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">SKU</th>
-                    <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Categoria</th>
-                    <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Proveïdor</th>
-                    <th class="text-right font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Preu</th>
-                    <th class="text-right font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Stock</th>
-                    <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Etiquetes</th>
-                    <th class="text-center font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Actiu</th>
-                    <th class="px-6 py-3"></th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50">
-                @forelse($products as $product)
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                @if($product->image)
-                                    <img src="{{ asset('storage/'.$product->image) }}"
-                                         class="w-10 h-10 object-cover rounded-xl flex-shrink-0">
-                                @else
-                                    <div class="w-10 h-10 bg-light rounded-xl flex items-center justify-center text-lg flex-shrink-0">📦</div>
-                                @endif
-                                <span class="font-outfit text-sm text-dark">{{ $product->getTranslation('name', 'ca') }}</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 font-outfit text-sm text-gray-500">{{ $product->sku }}</td>
-                        <td class="px-6 py-4 font-outfit text-sm text-gray-500">
-                            {{ $product->category?->getTranslation('name', 'ca') }}
-                        </td>
-                        <td class="px-6 py-4 font-outfit text-sm text-gray-500">
-                            {{ $product->supplier ?? '—' }}
-                        </td>
-                        <td class="px-6 py-4 font-outfit text-sm text-right text-dark">
-                            {{ number_format($product->price, 2, ',', '.') }} €
-                            @if($product->priceTiers->isNotEmpty())
-                                <span class="block font-outfit text-xs text-secondary">{{ $product->priceTiers->count() }} tarif.</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            @if($product->stock === 0)
-                                <span class="inline-block font-outfit text-xs px-2 py-0.5 bg-red-50 text-red-600 rounded-full">
-                                    Sense stock
-                                </span>
-                            @elseif($product->is_low_stock)
-                                <span class="inline-block font-outfit text-xs px-2 py-0.5 bg-orange-50 text-orange-600 rounded-full">
-                                    ⚠️ {{ $product->stock }}
-                                </span>
-                            @else
-                                <span class="font-outfit text-sm text-dark">{{ $product->stock }}</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex flex-wrap gap-1">
-                                @foreach($product->tags as $tag)
-                                    <span class="font-outfit text-xs px-2 py-0.5 bg-light text-gray-600 rounded-full">
-                                        {{ $tag->name }}
-                                    </span>
-                                @endforeach
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <form method="POST" action="{{ route('admin.products.toggle', $product->id) }}">
-                                @csrf @method('PATCH')
-                                <button type="submit" class="text-lg" title="{{ $product->is_active ? 'Desactivar' : 'Activar' }}">
-                                    {{ $product->is_active ? '✅' : '❌' }}
-                                </button>
-                            </form>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="{{ route('admin.products.edit', $product->id) }}"
-                               class="font-outfit text-sm text-secondary hover:text-primary transition-colors">
-                                Editar →
-                            </a>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="9" class="px-6 py-12 text-center font-outfit text-sm text-gray-400">
-                            No s'han trobat productes.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    <div x-data="bulkSelect('products')">
+        @include('admin.partials._bulk_toolbar', [
+            'module'          => 'products',
+            'bulkCategories'  => $categories,
+            'bulkTags'        => $allTags,
+        ])
 
-    <div class="mt-4">{{ $products->links() }}</div>
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                    <tr>
+                        <th class="px-4 py-3 w-8">
+                            <input type="checkbox" x-model="allChecked"
+                                   @change="toggleAll([{{ $products->pluck('id')->join(',') }}])"
+                                   class="rounded accent-primary">
+                        </th>
+                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Producte</th>
+                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">SKU</th>
+                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Categoria</th>
+                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Proveïdor</th>
+                        <th class="text-right font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Preu</th>
+                        <th class="text-right font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Stock</th>
+                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Etiquetes</th>
+                        <th class="text-center font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Actiu</th>
+                        <th class="px-6 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($products as $product)
+                        <tr class="hover:bg-gray-50 transition-colors" :class="selected.includes({{ $product->id }}) ? 'bg-primary/5' : ''">
+                            <td class="px-4 py-4">
+                                <input type="checkbox" :value="{{ $product->id }}" x-model="selected" class="rounded accent-primary">
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    @if($product->image)
+                                        <img src="{{ asset('storage/'.$product->image) }}"
+                                             class="w-10 h-10 object-cover rounded-xl flex-shrink-0">
+                                    @else
+                                        <div class="w-10 h-10 bg-light rounded-xl flex items-center justify-center text-lg flex-shrink-0">📦</div>
+                                    @endif
+                                    <span class="font-outfit text-sm text-dark">{{ $product->getTranslation('name', 'ca') }}</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 font-outfit text-sm text-gray-500">{{ $product->sku }}</td>
+                            <td class="px-6 py-4 font-outfit text-sm text-gray-500">
+                                {{ $product->category?->getTranslation('name', 'ca') }}
+                            </td>
+                            <td class="px-6 py-4 font-outfit text-sm text-gray-500">
+                                {{ $product->supplier ?? '—' }}
+                            </td>
+                            <td class="px-6 py-4 font-outfit text-sm text-right text-dark">
+                                {{ number_format($product->price, 2, ',', '.') }} €
+                                @if($product->priceTiers->isNotEmpty())
+                                    <span class="block font-outfit text-xs text-secondary">{{ $product->priceTiers->count() }} tarif.</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                @if($product->stock === 0)
+                                    <span class="inline-block font-outfit text-xs px-2 py-0.5 bg-red-50 text-red-600 rounded-full">
+                                        Sense stock
+                                    </span>
+                                @elseif($product->is_low_stock)
+                                    <span class="inline-block font-outfit text-xs px-2 py-0.5 bg-orange-50 text-orange-600 rounded-full">
+                                        ⚠️ {{ $product->stock }}
+                                    </span>
+                                @else
+                                    <span class="font-outfit text-sm text-dark">{{ $product->stock }}</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-wrap gap-1">
+                                    @foreach($product->tags as $tag)
+                                        <span class="font-outfit text-xs px-2 py-0.5 bg-light text-gray-600 rounded-full">
+                                            {{ $tag->name }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <form method="POST" action="{{ route('admin.products.toggle', $product->id) }}">
+                                    @csrf @method('PATCH')
+                                    <button type="submit" class="text-lg" title="{{ $product->is_active ? 'Desactivar' : 'Activar' }}">
+                                        {{ $product->is_active ? '✅' : '❌' }}
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <a href="{{ route('admin.products.edit', $product->id) }}"
+                                   class="font-outfit text-sm text-secondary hover:text-primary transition-colors">
+                                    Editar →
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="10" class="px-6 py-12 text-center font-outfit text-sm text-gray-400">
+                                No s'han trobat productes.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4">{{ $products->links() }}</div>
+    </div>
 
 </div>
 @endsection

@@ -58,45 +58,8 @@
     </form>
 
     {{-- Table --}}
-    <div x-data="{ selected: [], allChecked: false }" class="space-y-3">
-
-        {{-- Bulk action bar (visible when rows selected) --}}
-        <div x-show="selected.length > 0"
-             x-transition
-             class="flex items-center gap-3 bg-primary/10 border border-primary/20 rounded-2xl px-5 py-3"
-             style="display:none">
-            <span class="font-outfit text-xs text-primary font-semibold"
-                  x-text="selected.length + ' treball(s) seleccionat(s)'"></span>
-            <form method="POST" action="{{ route('admin.print.jobs.bulk-status') }}"
-                  class="flex items-center gap-2 ml-auto"
-                  @submit.prevent="
-                      $el.querySelectorAll('input[name=\'job_ids[]\']').forEach(e => e.remove());
-                      selected.forEach(id => {
-                          const i = document.createElement('input');
-                          i.type = 'hidden'; i.name = 'job_ids[]'; i.value = id;
-                          $el.appendChild(i);
-                      });
-                      $el.submit();
-                  ">
-                @csrf
-                <select name="status"
-                        class="border border-gray-200 rounded-xl px-3 py-1.5 font-outfit text-xs
-                               focus:outline-none focus:ring-2 focus:ring-primary/40">
-                    <option value="in_production">→ En producció</option>
-                    <option value="completed">→ Completat</option>
-                    <option value="cancelled">→ Cancel·lat</option>
-                </select>
-                <button type="submit"
-                        class="bg-primary text-white font-outfit text-xs px-4 py-1.5 rounded-xl
-                               hover:brightness-110 transition-all">
-                    Aplicar
-                </button>
-                <button type="button" @click="selected = []; allChecked = false"
-                        class="font-outfit text-xs text-gray-400 hover:text-dark transition-colors px-2 py-1.5">
-                    Netejar
-                </button>
-            </form>
-        </div>
+    <div x-data="bulkSelect('print_jobs')" class="space-y-3">
+        @include('admin.partials._bulk_toolbar', ['module' => 'print_jobs'])
 
         <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
             @if($jobs->isEmpty())
@@ -109,9 +72,8 @@
                     <thead class="bg-gray-50 border-b border-gray-100">
                         <tr>
                             <th class="px-4 py-3 w-8">
-                                <input type="checkbox"
-                                       x-model="allChecked"
-                                       @change="selected = allChecked ? [{{ $jobs->pluck('id')->join(',') }}] : []"
+                                <input type="checkbox" x-model="allChecked"
+                                       @change="toggleAll([{{ $jobs->pluck('id')->join(',') }}])"
                                        class="rounded accent-primary">
                             </th>
                             <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-left px-4 py-3">Treball</th>
@@ -142,14 +104,9 @@
                                 default         => $job->status,
                             };
                         @endphp
-                        <tr class="hover:bg-gray-50 transition-colors"
-                            :class="selected.includes({{ $job->id }}) ? 'bg-primary/5' : ''">
+                        <tr class="hover:bg-gray-50 transition-colors" :class="selected.includes({{ $job->id }}) ? 'bg-primary/5' : ''">
                             <td class="px-4 py-4">
-                                <input type="checkbox"
-                                       value="{{ $job->id }}"
-                                       x-model="selected"
-                                       :value="{{ $job->id }}"
-                                       class="rounded accent-primary">
+                                <input type="checkbox" :value="{{ $job->id }}" x-model="selected" class="rounded accent-primary">
                             </td>
                             <td class="px-4 py-4">
                                 <div class="flex items-center gap-2">
