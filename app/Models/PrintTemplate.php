@@ -14,7 +14,7 @@ class PrintTemplate extends Model
     public array $translatable = ['name', 'description'];
 
     protected $fillable = [
-        'slug', 'name', 'description', 'icon',
+        'slug', 'name', 'description', 'icon', 'image',
         'base_price', 'vat_rate', 'base_production_days',
         'sort_order', 'is_active',
         'specifications_path', 'specifications_label',
@@ -75,6 +75,11 @@ class PrintTemplate extends Model
     | Accessors
     |--------------------------------------------------------------------------
     */
+
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->image ? asset('storage/' . $this->image) : null;
+    }
 
     public function getPriceWithVatAttribute(): float
     {

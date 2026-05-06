@@ -49,6 +49,9 @@ class AdminPrintTemplateController extends Controller
                 'sort_order'           => $validated['sort_order'] ?? 0,
                 'is_active'            => $request->boolean('is_active', true),
                 'icon'                 => $validated['icon'] ?? null,
+                'image'                => $request->hasFile('image')
+                    ? $request->file('image')->store('print/templates/covers', 'public')
+                    : null,
                 'name' => [
                     'ca' => $validated['name_ca'],
                     'es' => $validated['name_es'],
@@ -83,6 +86,18 @@ class AdminPrintTemplateController extends Controller
         $validated = $this->validateTemplate($request, $template->id);
 
         DB::transaction(function () use ($request, $validated, $template) {
+            $imagePath = $template->image;
+
+            if ($request->boolean('remove_image') && $imagePath) {
+                Storage::disk('public')->delete($imagePath);
+                $imagePath = null;
+            }
+
+            if ($request->hasFile('image')) {
+                if ($imagePath) Storage::disk('public')->delete($imagePath);
+                $imagePath = $request->file('image')->store('print/templates/covers', 'public');
+            }
+
             $template->update([
                 'slug'                 => Str::slug($validated['name_ca']),
                 'base_price'           => $validated['base_price'],
@@ -91,6 +106,7 @@ class AdminPrintTemplateController extends Controller
                 'sort_order'           => $validated['sort_order'] ?? 0,
                 'is_active'            => $request->boolean('is_active'),
                 'icon'                 => $validated['icon'] ?? null,
+                'image'                => $imagePath,
                 'name' => [
                     'ca' => $validated['name_ca'],
                     'es' => $validated['name_es'],
@@ -116,6 +132,11 @@ class AdminPrintTemplateController extends Controller
 
     public function destroy(PrintTemplate $template)
     {
+        // Delete cover image
+        if ($template->image) {
+            Storage::disk('public')->delete($template->image);
+        }
+
         // Delete artwork files from storage
         foreach ($template->artworks as $artwork) {
             Storage::disk('public')->delete($artwork->file_path);
@@ -158,6 +179,8 @@ class AdminPrintTemplateController extends Controller
             'description_es'       => ['nullable', 'string'],
             'description_en'       => ['nullable', 'string'],
             'icon'                 => ['nullable', 'string', 'max:20'],
+            'image'                => ['nullable', 'image', 'max:4096'],
+            'remove_image'         => ['nullable', 'boolean'],
             'base_price'           => ['required', 'numeric', 'min:0'],
             'vat_rate'             => ['required', 'numeric', 'min:0', 'max:100'],
             'base_production_days' => ['required', 'integer', 'min:1', 'max:90'],

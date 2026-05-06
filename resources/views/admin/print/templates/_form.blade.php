@@ -1,5 +1,39 @@
 @php $isEdit = isset($template) && $template !== null; @endphp
 
+{{-- ── Cover Image ──────────────────────────────────────────────────────── --}}
+<div class="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
+    <h2 class="font-alumni text-h5 text-dark">Imatge principal</h2>
+    <p class="font-outfit text-xs text-gray-400 -mt-2">
+        Es mostrarà a la pàgina de llistat de serveis d'impressió. Recomanat: 800×600 px.
+    </p>
+
+    <div class="flex items-start gap-4">
+        @if($isEdit && $template->image)
+            <div class="relative group shrink-0">
+                <img src="{{ asset('storage/'.$template->image) }}" alt="Imatge actual"
+                     id="cover-preview"
+                     class="w-40 h-28 object-cover rounded-xl border border-gray-100">
+                <label class="flex items-center gap-1 mt-1 cursor-pointer">
+                    <input type="checkbox" name="remove_image" value="1" class="rounded accent-red-500">
+                    <span class="font-outfit text-xs text-red-500">Eliminar</span>
+                </label>
+            </div>
+        @else
+            <div class="w-40 h-28 bg-light rounded-xl flex items-center justify-center text-4xl shrink-0"
+                 id="cover-preview-empty">
+                {{ $template?->icon ?? '🖨️' }}
+            </div>
+        @endif
+
+        <div class="flex-1">
+            <input type="file" name="image" accept="image/*"
+                   onchange="previewCover(this)"
+                   class="font-outfit text-sm text-gray-600 block">
+            <p class="font-outfit text-xs text-gray-400 mt-1">JPG, PNG, WebP — màx. 4 MB</p>
+        </div>
+    </div>
+</div>
+
 {{-- ── Basic Info ──────────────────────────────────────────────────────── --}}
 <div class="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
     <h2 class="font-alumni text-h5 text-dark">Informació bàsica</h2>
@@ -692,6 +726,24 @@ function ruleManager() {
 function removeArtwork(id) {
     document.getElementById('del-artwork-' + id).disabled = false;
     document.getElementById('artwork-' + id).style.opacity = '0.3';
+}
+
+function previewCover(input) {
+    if (!input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        const el = document.getElementById('cover-preview') || document.getElementById('cover-preview-empty');
+        if (el && el.tagName === 'IMG') {
+            el.src = e.target.result;
+        } else if (el) {
+            const img = document.createElement('img');
+            img.id = 'cover-preview';
+            img.src = e.target.result;
+            img.className = 'w-40 h-28 object-cover rounded-xl border border-gray-100';
+            el.replaceWith(img);
+        }
+    };
+    reader.readAsDataURL(input.files[0]);
 }
 </script>
 @endpush

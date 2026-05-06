@@ -50,19 +50,38 @@
                                     ->first(fn($v) => !empty(trim((string) $v)));
                 @endphp
                 <a href="{{ route('print.builder', $template->slug) }}"
-                   class="group bg-white rounded-3xl border border-gray-100 p-6
+                   class="group bg-white rounded-3xl border border-gray-100 overflow-hidden
                           hover:border-primary/30 hover:shadow-lg
-                          transition-all duration-300 flex flex-col"
-                   style="min-height: 220px;">
+                          transition-all duration-300 flex flex-col">
+
+                    {{-- Cover image --}}
+                    @if($template->image_url)
+                        <div class="relative overflow-hidden" style="height:180px;">
+                            <img src="{{ $template->image_url }}" alt="{{ $name }}"
+                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                        </div>
+                    @else
+                        <div class="flex items-center justify-center bg-primary/5"
+                             style="height:180px;">
+                            <span style="font-size:3.5rem;">{{ $template->icon ?? '🖨️' }}</span>
+                        </div>
+                    @endif
+
+                    <div class="p-6 flex flex-col flex-1">
 
                     {{-- Icon + name --}}
                     <div class="flex items-start gap-3 mb-3">
                         <div class="rounded-2xl flex items-center justify-center shrink-0"
-                             style="width:48px; height:48px; background:rgba(242,96,82,0.08);">
-                            <svg class="text-primary" style="width:24px; height:24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                      d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
-                            </svg>
+                             style="width:40px; height:40px; background:rgba(242,96,82,0.08);">
+                            @if($template->icon)
+                                <span style="font-size:1.2rem;">{{ $template->icon }}</span>
+                            @else
+                                <svg class="text-primary" style="width:20px; height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                          d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                                </svg>
+                            @endif
                         </div>
                         <div style="min-width:0; flex:1;">
                             <h2 class="font-alumni text-dark group-hover:text-primary transition-colors"
@@ -105,6 +124,8 @@
                             </svg>
                         </span>
                     </div>
+
+                    </div>{{-- end p-6 --}}
                 </a>
             @endforeach
         </div>

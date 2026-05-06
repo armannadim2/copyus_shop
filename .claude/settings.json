@@ -87,7 +87,10 @@
       "Read(//home/nadim/copyus/**)",
       "Read(//home/nadim/copyus/config/**)",
       "Bash(ls \"\\\\\\\\wsl.localhost\\\\Ubuntu\\\\home\\\\nadim\\\\copyus\\\\app\\\\Http\\\\Controllers\\\\Admin\\\\\")",
-      "Bash(wslpath -u \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\Ubuntu\\\\\\\\home\\\\\\\\nadim\")"
+      "Bash(wslpath -u \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\Ubuntu\\\\\\\\home\\\\\\\\nadim\")",
+      "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && php artisan config:clear\")",
+      "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && php artisan make:migration add_image_to_print_templates_table\")",
+      "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && php artisan migrate\")"
     ],
     "additionalDirectories": [
       "\\\\wsl.localhost\\Ubuntu\\home\\nadim\\copyus\\app"
