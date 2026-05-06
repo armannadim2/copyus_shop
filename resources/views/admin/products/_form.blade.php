@@ -124,6 +124,16 @@
                           focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
         <div>
+            <label class="font-outfit text-xs font-semibold tracking-widest text-primary uppercase mb-1 block">
+                Proveïdor
+                <span class="ml-1 normal-case tracking-normal font-normal text-gray-400">(ús intern)</span>
+            </label>
+            <input type="text" name="supplier" value="{{ old('supplier', $product?->supplier) }}"
+                   placeholder="Nom del proveïdor..."
+                   class="w-full border border-gray-200 rounded-xl px-3 py-2 font-outfit text-sm
+                          focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
             <label class="font-outfit text-xs font-semibold tracking-widest text-primary uppercase mb-1 block">Unitat *</label>
             <input type="text" name="unit" value="{{ old('unit', $product?->unit) }}" required
                    placeholder="unitat, kg, m2, pack..."

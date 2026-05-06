@@ -106,6 +106,7 @@
                     <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Producte</th>
                     <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">SKU</th>
                     <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Categoria</th>
+                    <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Proveïdor</th>
                     <th class="text-right font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Preu</th>
                     <th class="text-right font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Stock</th>
                     <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Etiquetes</th>
@@ -130,6 +131,9 @@
                         <td class="px-6 py-4 font-outfit text-sm text-gray-500">{{ $product->sku }}</td>
                         <td class="px-6 py-4 font-outfit text-sm text-gray-500">
                             {{ $product->category?->getTranslation('name', 'ca') }}
+                        </td>
+                        <td class="px-6 py-4 font-outfit text-sm text-gray-500">
+                            {{ $product->supplier ?? '—' }}
                         </td>
                         <td class="px-6 py-4 font-outfit text-sm text-right text-dark">
                             {{ number_format($product->price, 2, ',', '.') }} €
@@ -176,7 +180,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="px-6 py-12 text-center font-outfit text-sm text-gray-400">
+                        <td colspan="9" class="px-6 py-12 text-center font-outfit text-sm text-gray-400">
                             No s'han trobat productes.
                         </td>
                     </tr>

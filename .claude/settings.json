@@ -90,7 +90,8 @@
       "Bash(wslpath -u \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\Ubuntu\\\\\\\\home\\\\\\\\nadim\")",
       "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && php artisan config:clear\")",
       "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && php artisan make:migration add_image_to_print_templates_table\")",
-      "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && php artisan migrate\")"
+      "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && php artisan migrate\")",
+      "Bash(wsl -d Ubuntu -e bash -c \"cd /home/nadim/copyus && php artisan make:migration add_supplier_to_products_table\")"
     ],
     "additionalDirectories": [
       "\\\\wsl.localhost\\Ubuntu\\home\\nadim\\copyus\\app"

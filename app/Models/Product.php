@@ -28,6 +28,7 @@ class Product extends Model
         'sku',
         'slug',
         'brand',
+        'supplier',
         'name',
         'short_description',
         'description',

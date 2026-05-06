@@ -26,6 +26,7 @@ class AdminProductController extends Controller
                 fn($q, $s) =>
                 $q->where('sku', 'like', "%$s%")
                     ->orWhere('brand', 'like', "%$s%")
+                    ->orWhere('supplier', 'like', "%$s%")
                     ->orWhereJsonContains('name->ca', $s)
             )
             ->when(
@@ -81,6 +82,7 @@ class AdminProductController extends Controller
                 'sku'                 => $validated['sku'],
                 'slug'                => Str::slug($validated['name_ca']),
                 'brand'               => $validated['brand'],
+                'supplier'            => $validated['supplier'] ?? null,
                 'price'               => $validated['price'],
                 'vat_rate'            => $validated['vat_rate'],
                 'stock'               => $validated['stock'],
@@ -172,6 +174,7 @@ class AdminProductController extends Controller
                 'sku'                 => $validated['sku'],
                 'slug'                => Str::slug($validated['name_ca']),
                 'brand'               => $validated['brand'] ?? null,
+                'supplier'            => $validated['supplier'] ?? null,
                 'price'               => $validated['price'],
                 'vat_rate'            => $validated['vat_rate'],
                 'stock'               => $validated['stock'],
@@ -669,6 +672,7 @@ class AdminProductController extends Controller
             'category_id'           => ['required', 'exists:categories,id'],
             'sku'                   => ['required', 'string', 'max:100', "unique:products,sku,{$ignoreId}"],
             'brand'                 => ['required', 'string', 'max:100'],
+            'supplier'              => ['nullable', 'string', 'max:150'],
             'price'                 => ['required', 'numeric', 'min:0'],
             'vat_rate'              => ['required', 'numeric', 'min:0', 'max:100'],
             'stock'                 => ['required', 'integer', 'min:0'],
