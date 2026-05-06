@@ -262,6 +262,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Dashboard
     Route::get('/', [AdminController::class, 'index'])->name('index');
 
+    // Bulk actions
+    Route::post('/bulk-action', [\App\Http\Controllers\Admin\AdminBulkActionController::class, 'handle'])->name('bulk-action');
+
     // Users
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [AdminUserController::class, 'index'])->name('index');

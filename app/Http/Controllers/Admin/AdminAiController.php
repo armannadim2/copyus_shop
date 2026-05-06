@@ -12,45 +12,26 @@ class AdminAiController extends Controller
 {
     /**
      * Generate SEO-friendly product content (name, descriptions, meta fields)
-     * using the Claude API based on a text hint and/or a product image.
+     * using the Gemini API based on a text hint and/or a product image.
      */
     public function generateProductContent(Request $request): JsonResponse
     {
-        $apiKey = config('services.anthropic.key');
-        $model  = config('services.anthropic.model', 'claude-haiku-4-5-20251001');
+        $apiKey = config('services.gemini.api_key');
+        $model  = config('services.gemini.model', 'gemini-2.0-flash');
 
         if (empty($apiKey)) {
             return response()->json(
-                ['error' => 'ANTHROPIC_API_KEY is not configured.'],
+                ['error' => 'GEMINI_API_KEY no configurat.'],
                 503
             );
         }
 
         $request->validate([
-            'hint'          => ['nullable', 'string', 'max:500'],
-            'brand'         => ['nullable', 'string', 'max:100'],
-            'category'      => ['nullable', 'string', 'max:100'],
-            'image'         => ['nullable', 'image', 'max:8192'],
+            'hint'     => ['nullable', 'string', 'max:500'],
+            'brand'    => ['nullable', 'string', 'max:100'],
+            'category' => ['nullable', 'string', 'max:100'],
+            'image'    => ['nullable', 'image', 'max:8192'],
         ]);
-
-        // ── Build the message content blocks ────────────────────────────────
-        $content = [];
-
-        // Attach image if provided
-        if ($request->hasFile('image')) {
-            $file      = $request->file('image');
-            $mime      = $file->getMimeType();
-            $b64       = base64_encode(file_get_contents($file->getRealPath()));
-
-            $content[] = [
-                'type'   => 'image',
-                'source' => [
-                    'type'       => 'base64',
-                    'media_type' => $mime,
-                    'data'       => $b64,
-                ],
-            ];
-        }
 
         // Build context string
         $contextParts = [];
@@ -60,9 +41,7 @@ class AdminAiController extends Controller
 
         $context = implode("\n", $contextParts) ?: 'No extra information provided.';
 
-        $content[] = [
-            'type' => 'text',
-            'text' => <<<PROMPT
+        $prompt = <<<PROMPT
 You are an expert product copywriter for "Copyus", a B2B print supplies and printing services company.
 Your task is to generate complete product content in three languages: Catalan (ca), Spanish (es), and English (en).
 
@@ -107,43 +86,56 @@ Rules:
 - Catalan (ca) is the primary language — use natural Catalan, not Spanish translated.
 - Tone: professional, B2B, concise.
 - Return ONLY the raw JSON object. No markdown fences, no explanation, no extra text.
-PROMPT
-        ];
+PROMPT;
 
-        // ── Call Anthropic Messages API ──────────────────────────────────────
+        // ── Build Gemini content parts ───────────────────────────────────────
+        $parts = [['text' => $prompt]];
+
+        if ($request->hasFile('image')) {
+            $file    = $request->file('image');
+            $parts[] = [
+                'inlineData' => [
+                    'mimeType' => $file->getMimeType(),
+                    'data'     => base64_encode(file_get_contents($file->getRealPath())),
+                ],
+            ];
+        }
+
+        // ── Call Gemini API ──────────────────────────────────────────────────
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}";
+
         try {
-            $response = Http::withHeaders([
-                'x-api-key'         => $apiKey,
-                'anthropic-version' => '2023-06-01',
-                'content-type'      => 'application/json',
-            ])->timeout(30)->post('https://api.anthropic.com/v1/messages', [
-                'model'      => $model,
-                'max_tokens' => 2048,
-                'messages'   => [
-                    ['role' => 'user', 'content' => $content],
+            $response = Http::timeout(30)->post($url, [
+                'contents'         => [['parts' => $parts]],
+                'generationConfig' => [
+                    'responseMimeType' => 'application/json',
+                    'temperature'      => 0.7,
+                    'maxOutputTokens'  => 2048,
                 ],
             ]);
         } catch (\Exception $e) {
-            Log::error('Anthropic API request failed', ['error' => $e->getMessage()]);
-            return response()->json(['error' => 'Could not reach the AI service. Please try again.'], 503);
+            Log::error('Gemini API request failed', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'No s\'ha pogut connectar amb el servei d\'IA. Torna-ho a intentar.'], 503);
         }
 
-        if (!$response->successful()) {
-            Log::error('Anthropic API error', ['status' => $response->status(), 'body' => $response->body()]);
-            return response()->json(['error' => 'AI service returned an error. Please try again.'], 502);
+        if (! $response->successful()) {
+            $err = $response->json('error.message', 'Error del servei d\'IA (' . $response->status() . ').');
+            Log::error('Gemini API error', ['status' => $response->status(), 'body' => $response->body()]);
+            return response()->json(['error' => $err], 502);
         }
 
         // ── Parse the JSON from the model's text output ──────────────────────
-        $text = $response->json('content.0.text', '');
+        $text = $response->json('candidates.0.content.parts.0.text', '');
+
         // Strip any accidental markdown fences
         $text = preg_replace('/^```(?:json)?\s*/i', '', trim($text));
         $text = preg_replace('/\s*```$/', '', $text);
 
         $generated = json_decode($text, true);
 
-        if (json_last_error() !== JSON_ERROR_NONE || !is_array($generated)) {
-            Log::error('AI returned non-JSON output', ['raw' => $text]);
-            return response()->json(['error' => 'AI returned unexpected output. Please try again.'], 422);
+        if (json_last_error() !== JSON_ERROR_NONE || ! is_array($generated)) {
+            Log::error('Gemini returned non-JSON output', ['raw' => $text]);
+            return response()->json(['error' => 'L\'IA ha retornat un format inesperat. Torna-ho a intentar.'], 422);
         }
 
         return response()->json($generated);
