@@ -45,4 +45,8 @@ return [
         'model'   => env('GEMINI_MODEL', 'gemini-2.0-flash'),
     ],
 
+    'ai' => [
+        'provider' => env('AI_PROVIDER', 'gemini'), // 'gemini' or 'anthropic'
+    ],
+
 ];
