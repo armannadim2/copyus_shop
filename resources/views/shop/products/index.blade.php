@@ -512,30 +512,32 @@
 
                                 {{-- Price --}}
                                 <div class="mb-4 flex-1">
-                                    @auth
-                                        @if(auth()->user()->canSeePrices())
-                                            <p class="font-alumni text-h5 text-primary">
-                                                {{ number_format($product->price_with_vat, 2, ',', '.') }} €
-                                            </p>
-                                            <p class="font-outfit text-body-sm text-gray-400">
-                                                {{ __('app.price_without_vat') }}:
-                                                {{ number_format($product->price, 2, ',', '.') }} €
-                                            </p>
-                                            <p class="font-outfit text-body-sm text-gray-400">
-                                                {{ __('app.min_order') }}: {{ $product->min_order_quantity }} {{ $product->unit }}
-                                            </p>
-                                        @endif
-                                    @else
-                                        <div class="bg-light rounded-lg px-3 py-2">
-                                            <p class="font-outfit text-body-sm text-gray-500 flex items-center gap-1.5">
-                                                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                                                </svg>
-                                                {{ __('app.register_to_see_price') }}
-                                            </p>
-                                        </div>
-                                    @endauth
+                                    @if(config('shop.show_prices'))
+                                        @auth
+                                            @if(auth()->user()->canSeePrices())
+                                                <p class="font-alumni text-h5 text-primary">
+                                                    {{ number_format($product->price_with_vat, 2, ',', '.') }} €
+                                                </p>
+                                                <p class="font-outfit text-body-sm text-gray-400">
+                                                    {{ __('app.price_without_vat') }}:
+                                                    {{ number_format($product->price, 2, ',', '.') }} €
+                                                </p>
+                                                <p class="font-outfit text-body-sm text-gray-400">
+                                                    {{ __('app.min_order') }}: {{ $product->min_order_quantity }} {{ $product->unit }}
+                                                </p>
+                                            @endif
+                                        @else
+                                            <div class="bg-light rounded-lg px-3 py-2">
+                                                <p class="font-outfit text-body-sm text-gray-500 flex items-center gap-1.5">
+                                                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                                    </svg>
+                                                    {{ __('app.register_to_see_price') }}
+                                                </p>
+                                            </div>
+                                        @endauth
+                                    @endif
                                 </div>
 
                                 {{-- Actions: View · Quotation · Cart --}}

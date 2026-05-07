@@ -113,7 +113,12 @@ class User extends Authenticatable
 
     public function canSeePrices(): bool
     {
-        return in_array($this->role, [self::ROLE_ADMIN, self::ROLE_APPROVED]);
+        if ($this->role === self::ROLE_ADMIN) {
+            return true;
+        }
+
+        return config('shop.show_prices', true)
+            && in_array($this->role, [self::ROLE_APPROVED]);
     }
 
     // -------------------------------------------------------

@@ -198,6 +198,7 @@
             @endif
 
             {{-- ── Price & Actions ───────────────────────────────────── --}}
+            @if(config('shop.show_prices'))
             @auth
                 @if(auth()->user()->canSeePrices())
                     <div class="bg-white rounded-3xl shadow-sm p-6 space-y-4">
@@ -349,6 +350,7 @@
                     </div>
                 </div>
             @endauth
+            @endif {{-- config('shop.show_prices') --}}
         </div>
     </div>
 

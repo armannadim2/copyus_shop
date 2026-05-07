@@ -102,18 +102,20 @@
                     {{-- Price hint --}}
                     <div class="flex items-center justify-between" style="padding-top:1rem; border-top:1px solid #f3f4f6;">
                         <div>
-                            @auth
-                                <p class="font-outfit text-gray-400" style="font-size:0.75rem;">{{ __('app.print_from') }}</p>
-                                <p class="font-alumni text-primary" style="font-size:1.2rem; line-height:1;">
-                                    {{ number_format($template->base_price, 4, ',', '.') }} €
-                                    <span class="font-outfit text-gray-400" style="font-size:0.7rem; font-weight:400;">{{ __('app.print_per_unit_vat') }}</span>
-                                </p>
-                            @else
-                                <p class="font-outfit text-gray-400" style="font-size:0.75rem;">
-                                    <span class="text-primary" style="font-weight:600;">{{ __('app.login') }}</span>
-                                    {{ __('app.print_login_to_see') }}
-                                </p>
-                            @endauth
+                            @if(config('shop.show_prices'))
+                                @auth
+                                    <p class="font-outfit text-gray-400" style="font-size:0.75rem;">{{ __('app.print_from') }}</p>
+                                    <p class="font-alumni text-primary" style="font-size:1.2rem; line-height:1;">
+                                        {{ number_format($template->base_price, 4, ',', '.') }} €
+                                        <span class="font-outfit text-gray-400" style="font-size:0.7rem; font-weight:400;">{{ __('app.print_per_unit_vat') }}</span>
+                                    </p>
+                                @else
+                                    <p class="font-outfit text-gray-400" style="font-size:0.75rem;">
+                                        <span class="text-primary" style="font-weight:600;">{{ __('app.login') }}</span>
+                                        {{ __('app.print_login_to_see') }}
+                                    </p>
+                                @endauth
+                            @endif
                         </div>
                         <span class="inline-flex items-center gap-1 font-outfit font-semibold bg-primary text-white
                                      group-hover:brightness-110 transition-all"

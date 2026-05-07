@@ -177,7 +177,7 @@
                         @foreach($values as $val)
                         <option value="{{ $val->value_key }}">
                             {{ $val->getTranslation('label', $locale) }}
-                            @if($val->price_modifier != 0)
+                            @if(config('shop.show_prices') && $val->price_modifier != 0)
                                 ({{ $val->price_modifier > 0 ? '+' : '' }}{{ $val->price_modifier_type === 'percent'
                                     ? number_format(abs($val->price_modifier), 0).'%'
                                     : number_format(abs($val->price_modifier), 4, ',', '.').' €' }})
@@ -202,7 +202,7 @@
                                 <p class="font-outfit text-sm font-semibold text-dark">
                                     {{ $val->getTranslation('label', $locale) }}
                                 </p>
-                                @if($val->price_modifier != 0)
+                                @if(config('shop.show_prices') && $val->price_modifier != 0)
                                     <p class="font-outfit text-xs mt-0.5
                                                {{ $val->price_modifier > 0 ? 'text-primary' : 'text-green-600' }}">
                                         {{ $val->price_modifier > 0 ? '+' : '' }}{{ $val->price_modifier_type === 'percent'
@@ -317,6 +317,7 @@
         <div class="lg:sticky lg:top-24 space-y-4 self-start">
 
         @auth
+            @if(config('shop.show_prices'))
             {{-- Price card --}}
             <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
 
@@ -397,6 +398,7 @@
                     </template>
                 </div>
             </div>
+            @endif {{-- config('shop.show_prices') --}}
 
             {{-- Add to cart form --}}
             <form method="POST"
