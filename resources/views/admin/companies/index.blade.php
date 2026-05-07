@@ -34,11 +34,11 @@
                                        @change="toggleAll([{{ $companies->pluck('id')->join(',') }}])"
                                        class="rounded accent-primary">
                             </th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-left px-6 py-3">Empresa</th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-center px-4 py-3">Membres</th>
+                            @include('admin.partials._sort_th', ['thCol' => 'name',          'thLabel' => 'Empresa'])
+                            @include('admin.partials._sort_th', ['thCol' => 'members_count', 'thLabel' => 'Membres',         'thAlign' => 'center'])
                             <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-left px-4 py-3">Terminis pagament</th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-right px-4 py-3">Límit crèdit</th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-center px-4 py-3">Estat</th>
+                            @include('admin.partials._sort_th', ['thCol' => 'credit_limit',  'thLabel' => 'Límit crèdit',    'thAlign' => 'right'])
+                            @include('admin.partials._sort_th', ['thCol' => 'is_active',     'thLabel' => 'Estat',           'thAlign' => 'center'])
                             <th class="px-4 py-3"></th>
                         </tr>
                     </thead>

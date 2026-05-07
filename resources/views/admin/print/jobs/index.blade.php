@@ -78,11 +78,11 @@
                             </th>
                             <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-left px-4 py-3">Treball</th>
                             <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-left px-4 py-3">Client</th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-center px-4 py-3">Quantitat</th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-right px-4 py-3">Total</th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-center px-4 py-3">Estat</th>
+                            @include('admin.partials._sort_th', ['thCol' => 'quantity',    'thLabel' => 'Quantitat',   'thAlign' => 'center'])
+                            @include('admin.partials._sort_th', ['thCol' => 'total_price', 'thLabel' => 'Total',       'thAlign' => 'right'])
+                            @include('admin.partials._sort_th', ['thCol' => 'status',      'thLabel' => 'Estat',       'thAlign' => 'center'])
                             <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-center px-4 py-3">Arxiu</th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-left px-4 py-3">Data</th>
+                            @include('admin.partials._sort_th', ['thCol' => 'created_at',  'thLabel' => 'Data'])
                             <th class="px-4 py-3"></th>
                         </tr>
                     </thead>

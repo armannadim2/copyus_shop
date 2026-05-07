@@ -47,11 +47,11 @@
                                    @change="toggleAll([{{ $quotations->pluck('id')->join(',') }}])"
                                    class="rounded accent-primary">
                         </th>
-                        <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Número</th>
+                                                @include('admin.partials._sort_th', ['thCol' => 'quote_number',  'thLabel' => 'Número'])
                         <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Client</th>
-                        <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Data</th>
-                        <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Estat</th>
-                        <th class="text-right font-outfit text-body-sm text-gray-500 px-6 py-3">Total</th>
+                        @include('admin.partials._sort_th', ['thCol' => 'created_at',    'thLabel' => 'Data'])
+                        @include('admin.partials._sort_th', ['thCol' => 'status',        'thLabel' => 'Estat'])
+                        @include('admin.partials._sort_th', ['thCol' => 'total_quoted',  'thLabel' => 'Total', 'thAlign' => 'right'])
                         <th class="px-6 py-3"></th>
                     </tr>
                 </thead>

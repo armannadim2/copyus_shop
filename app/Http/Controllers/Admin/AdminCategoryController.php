@@ -10,7 +10,11 @@ class AdminCategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Category::with('parent');
+        $allowed = ['name_ca', 'sort_order', 'products_count', 'is_active', 'created_at'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'products_count';
+        $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
+        $query = Category::with('parent')->withCount('products');
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%')
@@ -29,10 +33,16 @@ class AdminCategoryController extends Controller
             $query->where('parent_id', $request->parent_id);
         }
 
-        $categories = $query->orderBy('sort_order')->paginate(20);
-        $parents = Category::parents()->get();
+        if ($sort === 'name_ca') {
+            $query->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(name, '$.ca')) $dir");
+        } else {
+            $query->orderBy($sort, $dir);
+        }
 
-        return view('admin.categories.index', compact('categories', 'parents'));
+        $categories = $query->paginate(20)->withQueryString();
+        $parents    = Category::parents()->get();
+
+        return view('admin.categories.index', compact('categories', 'parents', 'sort', 'dir'));
     }
 
     public function create()

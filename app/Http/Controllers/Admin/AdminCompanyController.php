@@ -10,6 +10,10 @@ class AdminCompanyController extends Controller
 {
     public function index(Request $request)
     {
+        $allowed = ['name', 'members_count', 'is_active', 'created_at', 'credit_limit'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'name';
+        $dir     = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+
         $companies = Company::withCount('members')
             ->when($request->search, fn($q, $s) =>
                 $q->where('name', 'like', "%$s%")
@@ -18,11 +22,11 @@ class AdminCompanyController extends Controller
             ->when($request->filled('active'), fn($q) =>
                 $q->where('is_active', $request->active === '1')
             )
-            ->orderBy('name')
+            ->orderBy($sort, $dir)
             ->paginate(25)
             ->withQueryString();
 
-        return view('admin.companies.index', compact('companies'));
+        return view('admin.companies.index', compact('companies', 'sort', 'dir'));
     }
 
     public function show(Company $company)

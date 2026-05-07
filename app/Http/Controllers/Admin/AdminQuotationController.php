@@ -13,6 +13,10 @@ class AdminQuotationController extends Controller
 {
     public function index(Request $request)
     {
+        $allowed = ['quote_number', 'created_at', 'status', 'total_quoted'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'created_at';
+        $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
         $quotations = Quotation::with('user')
             ->when(
                 $request->search,
@@ -26,11 +30,11 @@ class AdminQuotationController extends Controller
                     )
             )
             ->when($request->status, fn($q, $s) => $q->where('status', $s))
-            ->latest()
+            ->orderBy($sort, $dir)
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.quotations.index', compact('quotations'));
+        return view('admin.quotations.index', compact('quotations', 'sort', 'dir'));
     }
 
     public function show(string $quoteNumber)

@@ -80,12 +80,12 @@
                                        @change="toggleAll([{{ $requests->pluck('id')->join(',') }}])"
                                        class="rounded accent-primary">
                             </th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-6 py-3">Referència</th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Sol·licitant</th>
+                            @include('admin.partials._sort_th', ['thCol' => 'reference',   'thLabel' => 'Referència'])
+                            @include('admin.partials._sort_th', ['thCol' => 'name',        'thLabel' => 'Sol·licitant'])
                             <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Servei</th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Quantitat</th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Estat</th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Data</th>
+                            @include('admin.partials._sort_th', ['thCol' => 'quantity',    'thLabel' => 'Quantitat'])
+                            @include('admin.partials._sort_th', ['thCol' => 'status',      'thLabel' => 'Estat'])
+                            @include('admin.partials._sort_th', ['thCol' => 'created_at',  'thLabel' => 'Data'])
                             <th class="px-4 py-3"></th>
                         </tr>
                     </thead>

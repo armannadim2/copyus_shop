@@ -63,18 +63,12 @@
                                        @change="toggleAll([{{ $templates->pluck('id')->join(',') }}])"
                                        class="rounded accent-primary">
                             </th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
-                                       uppercase text-left px-6 py-3">Plantilla</th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
-                                       uppercase text-left px-4 py-3">Preu base</th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
-                                       uppercase text-center px-4 py-3">Opcions</th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
-                                       uppercase text-center px-4 py-3">Treballs</th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
-                                       uppercase text-center px-4 py-3">Dies prod.</th>
-                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400
-                                       uppercase text-center px-4 py-3">Estat</th>
+                            @include('admin.partials._sort_th', ['thCol' => 'name_ca',               'thLabel' => 'Plantilla'])
+                            @include('admin.partials._sort_th', ['thCol' => 'base_price',             'thLabel' => 'Preu base'])
+                            <th class="font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase text-center px-4 py-3">Opcions</th>
+                            @include('admin.partials._sort_th', ['thCol' => 'jobs_count',             'thLabel' => 'Treballs',    'thAlign' => 'center'])
+                            @include('admin.partials._sort_th', ['thCol' => 'base_production_days',   'thLabel' => 'Dies prod.',  'thAlign' => 'center'])
+                            @include('admin.partials._sort_th', ['thCol' => 'is_active',              'thLabel' => 'Estat',       'thAlign' => 'center'])
                             <th class="px-4 py-3"></th>
                         </tr>
                     </thead>

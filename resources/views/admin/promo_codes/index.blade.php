@@ -25,11 +25,11 @@
                                    @change="toggleAll([{{ $codes->pluck('id')->join(',') }}])"
                                    class="rounded accent-primary">
                         </th>
-                        <th class="text-left px-5 py-3 font-outfit text-xs font-semibold tracking-widest text-primary uppercase">Codi</th>
-                        <th class="text-left px-5 py-3 font-outfit text-xs font-semibold tracking-widest text-primary uppercase">Descompte</th>
-                        <th class="text-left px-5 py-3 font-outfit text-xs font-semibold tracking-widest text-primary uppercase">Usos</th>
-                        <th class="text-left px-5 py-3 font-outfit text-xs font-semibold tracking-widest text-primary uppercase">Validesa</th>
-                        <th class="text-left px-5 py-3 font-outfit text-xs font-semibold tracking-widest text-primary uppercase">Estat</th>
+                        @include('admin.partials._sort_th', ['thCol' => 'code',       'thLabel' => 'Codi',       'thClass' => 'px-5'])
+                        @include('admin.partials._sort_th', ['thCol' => 'value',      'thLabel' => 'Descompte',  'thClass' => 'px-5'])
+                        @include('admin.partials._sort_th', ['thCol' => 'used_count', 'thLabel' => 'Usos',       'thClass' => 'px-5'])
+                        @include('admin.partials._sort_th', ['thCol' => 'valid_from', 'thLabel' => 'Validesa',   'thClass' => 'px-5'])
+                        @include('admin.partials._sort_th', ['thCol' => 'is_active',  'thLabel' => 'Estat',      'thClass' => 'px-5'])
                         <th class="px-5 py-3"></th>
                     </tr>
                 </thead>

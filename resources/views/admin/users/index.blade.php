@@ -49,11 +49,11 @@
                                    @change="toggleAll([{{ $users->pluck('id')->join(',') }}])"
                                    class="rounded accent-primary">
                         </th>
-                        <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Nom</th>
-                        <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Empresa</th>
-                        <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Email</th>
-                        <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Rol</th>
-                        <th class="text-left font-outfit text-body-sm text-gray-500 px-6 py-3">Alta</th>
+                                                @include('admin.partials._sort_th', ['thCol' => 'name',         'thLabel' => 'Nom'])
+                        @include('admin.partials._sort_th', ['thCol' => 'company_name', 'thLabel' => 'Empresa'])
+                        @include('admin.partials._sort_th', ['thCol' => 'email',        'thLabel' => 'Email'])
+                        @include('admin.partials._sort_th', ['thCol' => 'role',         'thLabel' => 'Rol'])
+                        @include('admin.partials._sort_th', ['thCol' => 'created_at',   'thLabel' => 'Alta'])
                         <th class="px-6 py-3"></th>
                     </tr>
                 </thead>

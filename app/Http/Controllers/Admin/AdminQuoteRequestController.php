@@ -10,7 +10,11 @@ class AdminQuoteRequestController extends Controller
 {
     public function index(Request $request)
     {
-        $query = QuoteRequest::with('user')->latest();
+        $allowed = ['reference', 'created_at', 'status', 'name', 'quantity'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'created_at';
+        $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
+        $query = QuoteRequest::with('user');
 
         if ($status = $request->input('status')) {
             $query->where('status', $status);
@@ -24,13 +28,13 @@ class AdminQuoteRequestController extends Controller
             });
         }
 
-        $requests = $query->paginate(20)->withQueryString();
+        $requests = $query->orderBy($sort, $dir)->paginate(20)->withQueryString();
 
         $counts = QuoteRequest::selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        return view('admin.quote_requests.index', compact('requests', 'counts'));
+        return view('admin.quote_requests.index', compact('requests', 'counts', 'sort', 'dir'));
     }
 
     public function show(QuoteRequest $quoteRequest)

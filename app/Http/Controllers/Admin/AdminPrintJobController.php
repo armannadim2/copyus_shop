@@ -21,6 +21,10 @@ class AdminPrintJobController extends Controller
 
     public function index(Request $request)
     {
+        $allowed = ['created_at', 'status', 'quantity', 'total_price'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'created_at';
+        $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
         $query = PrintJob::with(['user', 'template'])
             ->whereNotIn('status', ['draft', 'in_cart']);
 
@@ -36,8 +40,7 @@ class AdminPrintJobController extends Controller
             );
         }
 
-        $jobs = $query->orderByRaw("FIELD(status, 'ordered', 'in_production', 'completed', 'cancelled')")
-            ->orderByDesc('created_at')
+        $jobs = $query->orderBy($sort, $dir)
             ->paginate(20)
             ->withQueryString();
 
@@ -46,7 +49,7 @@ class AdminPrintJobController extends Controller
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        return view('admin.print.jobs.index', compact('jobs', 'counts'));
+        return view('admin.print.jobs.index', compact('jobs', 'counts', 'sort', 'dir'));
     }
 
     public function show(PrintJob $job)

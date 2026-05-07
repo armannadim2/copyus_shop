@@ -12,6 +12,10 @@ class AdminOrderController extends Controller
 {
     public function index(Request $request)
     {
+        $allowed = ['order_number', 'created_at', 'status', 'total'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'created_at';
+        $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
         $orders = Order::with('user')
             ->when(
                 $request->search,
@@ -25,11 +29,11 @@ class AdminOrderController extends Controller
                     )
             )
             ->when($request->status, fn($q, $s) => $q->where('status', $s))
-            ->latest()
+            ->orderBy($sort, $dir)
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.orders.index', compact('orders'));
+        return view('admin.orders.index', compact('orders', 'sort', 'dir'));
     }
 
     public function show(string $orderNumber)

@@ -115,14 +115,14 @@
                                    @change="toggleAll([{{ $products->pluck('id')->join(',') }}])"
                                    class="rounded accent-primary">
                         </th>
-                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Producte</th>
-                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">SKU</th>
+                                                @include('admin.partials._sort_th', ['thCol' => 'name_ca',    'thLabel' => 'Producte'])
+                        @include('admin.partials._sort_th', ['thCol' => 'sku',        'thLabel' => 'SKU'])
                         <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Categoria</th>
                         <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Proveïdor</th>
-                        <th class="text-right font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Preu</th>
-                        <th class="text-right font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Stock</th>
+                        @include('admin.partials._sort_th', ['thCol' => 'price',      'thLabel' => 'Preu',   'thAlign' => 'right'])
+                        @include('admin.partials._sort_th', ['thCol' => 'stock',      'thLabel' => 'Stock',  'thAlign' => 'right'])
                         <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Etiquetes</th>
-                        <th class="text-center font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Actiu</th>
+                        @include('admin.partials._sort_th', ['thCol' => 'is_active',  'thLabel' => 'Actiu',  'thAlign' => 'center'])
                         <th class="px-6 py-3"></th>
                     </tr>
                 </thead>

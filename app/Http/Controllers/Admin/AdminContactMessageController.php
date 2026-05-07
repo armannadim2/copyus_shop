@@ -10,7 +10,11 @@ class AdminContactMessageController extends Controller
 {
     public function index(Request $request)
     {
-        $query = ContactMessage::with('user')->latest();
+        $allowed = ['name', 'created_at', 'status', 'subject'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'created_at';
+        $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
+        $query = ContactMessage::with('user');
 
         if ($status = $request->input('status')) {
             $query->where('status', $status);
@@ -23,13 +27,13 @@ class AdminContactMessageController extends Controller
             });
         }
 
-        $messages = $query->paginate(20)->withQueryString();
+        $messages = $query->orderBy($sort, $dir)->paginate(20)->withQueryString();
 
         $counts = ContactMessage::selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        return view('admin.contact_messages.index', compact('messages', 'counts'));
+        return view('admin.contact_messages.index', compact('messages', 'counts', 'sort', 'dir'));
     }
 
     public function show(ContactMessage $contactMessage)

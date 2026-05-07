@@ -11,14 +11,18 @@ class AdminReviewController extends Controller
 {
     public function index(Request $request)
     {
+        $allowed = ['rating', 'created_at', 'is_approved'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'created_at';
+        $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
         $reviews = ProductReview::with('product', 'user', 'order')
             ->when($request->status === 'pending',  fn($q) => $q->pending())
             ->when($request->status === 'approved', fn($q) => $q->approved())
-            ->latest()
+            ->orderBy($sort, $dir)
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.reviews.index', compact('reviews'));
+        return view('admin.reviews.index', compact('reviews', 'sort', 'dir'));
     }
 
     public function approve(int $id)

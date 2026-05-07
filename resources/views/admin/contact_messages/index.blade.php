@@ -79,10 +79,10 @@
                                        @change="toggleAll([{{ $messages->pluck('id')->join(',') }}])"
                                        class="rounded accent-primary">
                             </th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-6 py-3">Remitent</th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Assumpte</th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Estat</th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Data</th>
+                            @include('admin.partials._sort_th', ['thCol' => 'name',       'thLabel' => 'Remitent'])
+                            @include('admin.partials._sort_th', ['thCol' => 'subject',    'thLabel' => 'Assumpte'])
+                            @include('admin.partials._sort_th', ['thCol' => 'status',     'thLabel' => 'Estat'])
+                            @include('admin.partials._sort_th', ['thCol' => 'created_at', 'thLabel' => 'Data'])
                             <th class="px-4 py-3"></th>
                         </tr>
                     </thead>

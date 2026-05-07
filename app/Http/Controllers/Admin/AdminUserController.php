@@ -10,6 +10,10 @@ class AdminUserController extends Controller
 {
     public function index(Request $request)
     {
+        $allowed = ['name', 'email', 'company_name', 'role', 'created_at'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'created_at';
+        $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
         $users = User::where('role', '!=', 'admin')
             ->when(
                 $request->search,
@@ -20,11 +24,11 @@ class AdminUserController extends Controller
                     ->orWhere('cif', 'like', "%$s%")
             )
             ->when($request->role, fn($q, $r) => $q->where('role', $r))
-            ->latest()
+            ->orderBy($sort, $dir)
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('users', 'sort', 'dir'));
     }
 
     public function pending()

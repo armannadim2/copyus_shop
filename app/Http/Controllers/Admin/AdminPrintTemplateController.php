@@ -17,17 +17,25 @@ class AdminPrintTemplateController extends Controller
 {
     public function index(Request $request)
     {
-        $templates = PrintTemplate::withCount(['jobs', 'options'])
+        $allowed = ['name_ca', 'base_price', 'sort_order', 'is_active', 'jobs_count', 'base_production_days'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'sort_order';
+        $dir     = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+
+        $query = PrintTemplate::withCount(['jobs', 'options'])
             ->when($request->search, fn($q, $s) =>
                 $q->whereJsonContains('name->ca', $s)
                   ->orWhereJsonContains('name->es', $s)
-            )
-            ->orderBy('sort_order')
-            ->orderBy('id')
-            ->paginate(20)
-            ->withQueryString();
+            );
 
-        return view('admin.print.templates.index', compact('templates'));
+        if ($sort === 'name_ca') {
+            $query->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(name, '$.ca')) $dir");
+        } else {
+            $query->orderBy($sort, $dir);
+        }
+
+        $templates = $query->paginate(20)->withQueryString();
+
+        return view('admin.print.templates.index', compact('templates', 'sort', 'dir'));
     }
 
     public function create()

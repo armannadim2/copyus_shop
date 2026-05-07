@@ -84,12 +84,12 @@
                                        @change="toggleAll([{{ $tickets->pluck('id')->join(',') }}])"
                                        class="rounded accent-primary">
                             </th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-6 py-3">Tiquet</th>
+                            @include('admin.partials._sort_th', ['thCol' => 'ticket_number', 'thLabel' => 'Tiquet'])
                             <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Client</th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Estat</th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Prioritat</th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Data</th>
-                            <th class="text-left font-outfit text-xs text-gray-400 px-4 py-3">Respostes</th>
+                            @include('admin.partials._sort_th', ['thCol' => 'status',        'thLabel' => 'Estat'])
+                            @include('admin.partials._sort_th', ['thCol' => 'priority',      'thLabel' => 'Prioritat'])
+                            @include('admin.partials._sort_th', ['thCol' => 'created_at',    'thLabel' => 'Data'])
+                            @include('admin.partials._sort_th', ['thCol' => 'replies_count', 'thLabel' => 'Respostes'])
                             <th class="px-4 py-3"></th>
                         </tr>
                     </thead>

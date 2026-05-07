@@ -8,10 +8,14 @@ use Illuminate\Http\Request;
 
 class AdminPromoCodeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $codes = PromoCode::latest()->paginate(20);
-        return view('admin.promo_codes.index', compact('codes'));
+        $allowed = ['code', 'value', 'used_count', 'is_active', 'valid_from', 'created_at'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'created_at';
+        $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
+        $codes = PromoCode::orderBy($sort, $dir)->paginate(20)->withQueryString();
+        return view('admin.promo_codes.index', compact('codes', 'sort', 'dir'));
     }
 
     public function create()

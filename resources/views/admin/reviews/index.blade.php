@@ -21,6 +21,33 @@
         </div>
     </div>
 
+    {{-- Sort controls --}}
+    @php
+        $sortOptions = [
+            'created_at' => 'Data',
+            'rating'     => 'Valoració',
+        ];
+    @endphp
+    <div class="flex items-center gap-2 mb-6">
+        <span class="font-outfit text-xs text-gray-400">Ordenar per:</span>
+        @foreach($sortOptions as $col => $label)
+            @php
+                $isActive = $sort === $col;
+                $nextDir  = ($isActive && $dir === 'asc') ? 'desc' : 'asc';
+            @endphp
+            <a href="{{ request()->fullUrlWithQuery(['sort' => $col, 'direction' => $nextDir, 'page' => null]) }}"
+               class="inline-flex items-center gap-1 font-outfit text-xs px-3 py-1.5 rounded-xl border transition-colors
+                      {{ $isActive ? 'bg-primary text-white border-primary' : 'border-gray-200 text-gray-500 hover:border-gray-400' }}">
+                {{ $label }}
+                @if($isActive)
+                    <span>{{ $dir === 'asc' ? '↑' : '↓' }}</span>
+                @else
+                    <span class="opacity-40">↕</span>
+                @endif
+            </a>
+        @endforeach
+    </div>
+
     @if(session('success'))
         <div class="mb-6 bg-green-50 border border-green-200 text-green-700 font-outfit text-sm px-4 py-3 rounded-2xl">
             {{ session('success') }}

@@ -80,11 +80,12 @@
                                    @change="toggleAll([{{ $categories->pluck('id')->join(',') }}])"
                                    class="rounded accent-primary">
                         </th>
-                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Categoria</th>
+                        @include('admin.partials._sort_th', ['thCol' => 'name_ca',       'thLabel' => 'Categoria'])
                         <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Slug</th>
-                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Categoria Pare</th>
-                        <th class="text-center font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Ordre</th>
-                        <th class="text-center font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Activa</th>
+                        <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Cat. Pare</th>
+                        @include('admin.partials._sort_th', ['thCol' => 'sort_order',     'thLabel' => 'Ordre',     'thAlign' => 'center'])
+                        @include('admin.partials._sort_th', ['thCol' => 'products_count', 'thLabel' => 'Productes', 'thAlign' => 'center'])
+                        @include('admin.partials._sort_th', ['thCol' => 'is_active',      'thLabel' => 'Activa',    'thAlign' => 'center'])
                         <th class="px-6 py-3"></th>
                     </tr>
                 </thead>
@@ -113,6 +114,11 @@
                                 {{ $category->sort_order }}
                             </td>
                             <td class="px-6 py-4 text-center">
+                                <span class="font-outfit text-sm {{ $category->products_count > 0 ? 'text-dark font-semibold' : 'text-gray-300' }}">
+                                    {{ $category->products_count }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
                                 <form method="POST" action="{{ route('admin.categories.toggle', $category->id) }}">
                                     @csrf @method('PATCH')
                                     <button type="submit" class="text-lg" title="{{ $category->is_active ? 'Desactivar' : 'Activar' }}">
@@ -137,7 +143,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center font-outfit text-sm text-gray-400">
+                            <td colspan="8" class="px-6 py-12 text-center font-outfit text-sm text-gray-400">
                                 No s'han trobat categories.
                             </td>
                         </tr>

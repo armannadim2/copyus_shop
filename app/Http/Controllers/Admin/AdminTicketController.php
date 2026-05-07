@@ -20,9 +20,12 @@ class AdminTicketController extends Controller
 
     public function index(Request $request)
     {
+        $allowed = ['created_at', 'status', 'priority', 'ticket_number', 'replies_count'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'created_at';
+        $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
         $query = Ticket::with(['user', 'order', 'printJob'])
-            ->withCount('replies')
-            ->latest();
+            ->withCount('replies');
 
         if ($status = $request->input('status')) {
             $query->where('status', $status);
@@ -39,13 +42,13 @@ class AdminTicketController extends Controller
             });
         }
 
-        $tickets = $query->paginate(20)->withQueryString();
+        $tickets = $query->orderBy($sort, $dir)->paginate(20)->withQueryString();
 
         $counts = Ticket::selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        return view('admin.tickets.index', compact('tickets', 'counts'));
+        return view('admin.tickets.index', compact('tickets', 'counts', 'sort', 'dir'));
     }
 
     public function show(Ticket $ticket)

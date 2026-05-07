@@ -20,7 +20,11 @@ class AdminProductController extends Controller
 {
     public function index(Request $request)
     {
-        $products = Product::with(['category', 'tags'])
+        $allowed = ['name_ca', 'sku', 'price', 'stock', 'is_active', 'created_at'];
+        $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'created_at';
+        $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
+        $query = Product::with(['category', 'tags', 'priceTiers'])
             ->when(
                 $request->search,
                 fn($q, $s) =>
@@ -29,38 +33,24 @@ class AdminProductController extends Controller
                     ->orWhere('supplier', 'like', "%$s%")
                     ->orWhereJsonContains('name->ca', $s)
             )
-            ->when(
-                $request->category_id,
-                fn($q, $c) => $q->where('category_id', $c)
-            )
-            ->when(
-                $request->status === 'active',
-                fn($q) => $q->where('is_active', true)
-            )
-            ->when(
-                $request->status === 'inactive',
-                fn($q) => $q->where('is_active', false)
-            )
-            ->when(
-                $request->stock === 'low',
-                fn($q) => $q->lowStock()
-            )
-            ->when(
-                $request->stock === 'out',
-                fn($q) => $q->outOfStock()
-            )
-            ->when(
-                $request->tag,
-                fn($q, $t) => $q->whereHas('tags', fn($q) => $q->where('slug', $t))
-            )
-            ->latest()
-            ->paginate(20)
-            ->withQueryString();
+            ->when($request->category_id, fn($q, $c) => $q->where('category_id', $c))
+            ->when($request->status === 'active',   fn($q) => $q->where('is_active', true))
+            ->when($request->status === 'inactive', fn($q) => $q->where('is_active', false))
+            ->when($request->stock === 'low',  fn($q) => $q->lowStock())
+            ->when($request->stock === 'out',  fn($q) => $q->outOfStock())
+            ->when($request->tag, fn($q, $t)  => $q->whereHas('tags', fn($q) => $q->where('slug', $t)));
 
+        if ($sort === 'name_ca') {
+            $query->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(name, '$.ca')) $dir");
+        } else {
+            $query->orderBy($sort, $dir);
+        }
+
+        $products   = $query->paginate(20)->withQueryString();
         $categories = Category::orderBy('sort_order')->get();
         $allTags    = ProductTag::orderBy('name')->get();
 
-        return view('admin.products.index', compact('products', 'categories', 'allTags'));
+        return view('admin.products.index', compact('products', 'categories', 'allTags', 'sort', 'dir'));
     }
 
     public function create()
