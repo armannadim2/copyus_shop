@@ -249,7 +249,7 @@ class AdminProductController extends Controller
     public function bulkStore(Request $request)
     {
         $request->validate([
-            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
+            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:20480'],
             'images'   => ['nullable', 'array'],
             'images.*' => ['file', 'image', 'max:8192'],
         ]);
@@ -341,6 +341,7 @@ class AdminProductController extends Controller
                 $attributes = [
                     'category_id'         => $category->id,
                     'brand'               => trim((string) $values['brand']),
+                    'supplier'            => isset($values['supplier']) && $values['supplier'] !== '' ? trim((string) $values['supplier']) : null,
                     'slug'                => $slug,
                     'price'               => (float) $values['price'],
                     'vat_rate'            => (float) $values['vat_rate'],
@@ -448,6 +449,7 @@ class AdminProductController extends Controller
                 'sku'                  => 'SAMPLE-001',
                 'category_slug'        => 'paper',
                 'brand'                => 'Acme',
+                'supplier'             => 'Proveïdor SA',
                 'name_ca'              => 'Paper A4 80g',
                 'name_es'              => 'Papel A4 80g',
                 'name_en'              => 'A4 paper 80g',
@@ -470,6 +472,7 @@ class AdminProductController extends Controller
                 'sku'                  => 'SAMPLE-002',
                 'category_slug'        => 'tinta',
                 'brand'                => 'Generic',
+                'supplier'             => '',
                 'name_ca'              => 'Cartutx tinta negra',
                 'name_es'              => 'Cartucho tinta negra',
                 'name_en'              => 'Black ink cartridge',
@@ -515,6 +518,7 @@ class AdminProductController extends Controller
             'sku',
             'category_slug',
             'brand',
+            'supplier',
             'name_ca',
             'name_es',
             'name_en',
@@ -535,13 +539,13 @@ class AdminProductController extends Controller
         ];
     }
 
-    private function csvBool($v): bool
+    private function csvBool(mixed $v): bool
     {
         $v = strtolower(trim((string) $v));
         return in_array($v, ['1', 'true', 'yes', 'si', 'sí', 'y'], true);
     }
 
-    private function csvNullableInt($v): ?int
+    private function csvNullableInt(mixed $v): ?int
     {
         $v = trim((string) $v);
         return $v === '' ? null : (int) $v;

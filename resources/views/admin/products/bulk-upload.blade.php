@@ -101,7 +101,7 @@
                           file:bg-primary file:text-white file:font-alumni file:text-sm-header
                           file:cursor-pointer hover:file:brightness-110">
             <p class="font-outfit text-xs text-gray-400 mt-2">
-                Mida màxima: 5 MB. Productes existents (mateix SKU) s'actualitzaran.
+                Mida màxima: 20 MB. Productes existents (mateix SKU) s'actualitzaran.
             </p>
         </div>
 
@@ -171,6 +171,7 @@
                             'sku'                  => 'Identificador únic del producte (s\'utilitza per detectar duplicats)',
                             'category_slug'        => 'Slug de la categoria existent (ex: paper, tinta)',
                             'brand'                => 'Marca del producte',
+                            'supplier'             => 'Proveïdor del producte (opcional)',
                             'name_ca'              => 'Nom en català',
                             'name_es'              => 'Nom en castellà',
                             'name_en'              => 'Nom en anglès (opcional, per defecte = castellà)',
