@@ -119,9 +119,18 @@
         </div>
         <div>
             <label class="font-outfit text-xs font-semibold tracking-widest text-primary uppercase mb-1 block">Marca</label>
-            <input type="text" name="brand" value="{{ old('brand', $product?->brand) }}"
-                   class="w-full border border-gray-200 rounded-xl px-3 py-2 font-outfit text-sm
-                          focus:outline-none focus:ring-2 focus:ring-primary">
+            <select name="brand_id"
+                    class="w-full border border-gray-200 rounded-xl px-3 py-2 font-outfit text-sm
+                           focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="">Sense marca</option>
+                @foreach($brands as $brand)
+                    <option value="{{ $brand->id }}"
+                        @selected(old('brand_id', $product?->brand_id) == $brand->id)>
+                        {{ $brand->getTranslation('name', 'ca') }}
+                    </option>
+                @endforeach
+            </select>
+            @error('brand_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
         </div>
         <div>
             <label class="font-outfit text-xs font-semibold tracking-widest text-primary uppercase mb-1 block">
@@ -790,8 +799,10 @@ function aiGenerator() {
                 else if (this.hint) fd.append('hint', this.hint);
 
                 // Brand
-                const brand = document.querySelector('input[name="brand"]')?.value?.trim();
-                if (brand) fd.append('brand', brand);
+                const brandSel = document.querySelector('select[name="brand_id"]');
+                if (brandSel && brandSel.selectedIndex > 0) {
+                    fd.append('brand', brandSel.options[brandSel.selectedIndex].text.trim());
+                }
 
                 // Category name from the selected <option> text
                 const catSel = document.querySelector('select[name="category_id"]');

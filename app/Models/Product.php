@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Brand;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
@@ -25,9 +26,9 @@ class Product extends Model
 
     protected $fillable = [
         'category_id',
+        'brand_id',
         'sku',
         'slug',
-        'brand',
         'supplier',
         'name',
         'short_description',

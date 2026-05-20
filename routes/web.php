@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminQuotationController;
 use App\Http\Controllers\Admin\AdminAiController;
 use App\Http\Controllers\Admin\AdminPromoCodeController;
+use App\Http\Controllers\Admin\AdminBrandController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminReportController;
 use App\Http\Controllers\Admin\AdminPrintTemplateController;
@@ -273,6 +274,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::patch('/{id}/approve', [AdminUserController::class, 'approve'])->name('approve');
         Route::patch('/{id}/reject', [AdminUserController::class, 'reject'])->name('reject');
         Route::delete('/{id}', [AdminUserController::class, 'destroy'])->name('destroy');
+    });
+
+    // Brands
+    Route::prefix('brands')->name('brands.')->group(function () {
+        Route::get('/', [AdminBrandController::class, 'index'])->name('index');
+        Route::get('/create', [AdminBrandController::class, 'create'])->name('create');
+        Route::post('/', [AdminBrandController::class, 'store'])->name('store');
+        Route::get('/{brand}/edit', [AdminBrandController::class, 'edit'])->name('edit');
+        Route::put('/{brand}', [AdminBrandController::class, 'update'])->name('update');
+        Route::delete('/{brand}', [AdminBrandController::class, 'destroy'])->name('destroy');
+        Route::patch('/{brand}/toggle', [AdminBrandController::class, 'toggle'])->name('toggle');
     });
 
     // Categories

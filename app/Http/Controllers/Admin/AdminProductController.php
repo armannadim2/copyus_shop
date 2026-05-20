@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
@@ -24,14 +25,14 @@ class AdminProductController extends Controller
         $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'created_at';
         $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
 
-        $query = Product::with(['category', 'tags', 'priceTiers'])
+        $query = Product::with(['category', 'brand', 'tags', 'priceTiers'])
             ->when(
                 $request->search,
                 fn($q, $s) =>
                 $q->where('sku', 'like', "%$s%")
-                    ->orWhere('brand', 'like', "%$s%")
                     ->orWhere('supplier', 'like', "%$s%")
                     ->orWhereJsonContains('name->ca', $s)
+                    ->orWhereHas('brand', fn($bq) => $bq->where('name', 'like', "%$s%"))
             )
             ->when($request->category_id, fn($q, $c) => $q->where('category_id', $c))
             ->when($request->status === 'active',   fn($q) => $q->where('is_active', true))
@@ -56,10 +57,11 @@ class AdminProductController extends Controller
     public function create()
     {
         $categories = Category::where('is_active', true)->orderBy('sort_order')->get();
+        $brands     = Brand::where('is_active', true)->ordered()->get();
         $allTags    = ProductTag::orderBy('name')->get();
         $clients    = User::approved()->orderBy('company_name')->get();
 
-        return view('admin.products.create', compact('categories', 'allTags', 'clients'));
+        return view('admin.products.create', compact('categories', 'brands', 'allTags', 'clients'));
     }
 
     public function store(Request $request)
@@ -71,7 +73,7 @@ class AdminProductController extends Controller
                 'category_id'         => $validated['category_id'],
                 'sku'                 => $validated['sku'],
                 'slug'                => Str::slug($validated['name_ca']),
-                'brand'               => $validated['brand'],
+                'brand_id'            => $validated['brand_id'] ?? null,
                 'supplier'            => $validated['supplier'] ?? null,
                 'price'               => $validated['price'],
                 'vat_rate'            => $validated['vat_rate'],
@@ -137,10 +139,11 @@ class AdminProductController extends Controller
         ])->findOrFail($id);
 
         $categories = Category::where('is_active', true)->orderBy('sort_order')->get();
+        $brands     = Brand::where('is_active', true)->ordered()->get();
         $allTags    = ProductTag::orderBy('name')->get();
         $clients    = User::approved()->orderBy('company_name')->get();
 
-        return view('admin.products.edit', compact('product', 'categories', 'allTags', 'clients'));
+        return view('admin.products.edit', compact('product', 'categories', 'brands', 'allTags', 'clients'));
     }
 
     public function update(Request $request, int $id)
@@ -163,7 +166,7 @@ class AdminProductController extends Controller
                 'category_id'         => $validated['category_id'],
                 'sku'                 => $validated['sku'],
                 'slug'                => Str::slug($validated['name_ca']),
-                'brand'               => $validated['brand'] ?? null,
+                'brand_id'            => $validated['brand_id'] ?? null,
                 'supplier'            => $validated['supplier'] ?? null,
                 'price'               => $validated['price'],
                 'vat_rate'            => $validated['vat_rate'],
@@ -338,9 +341,25 @@ class AdminProductController extends Controller
                     $counter++;
                 }
 
+                $brandId = null;
+                $brandName = trim((string) ($values['brand'] ?? ''));
+                if ($brandName !== '') {
+                    $brandSlug = Str::slug($brandName);
+                    $brandRecord = Brand::where('slug', $brandSlug)->first();
+                    if (! $brandRecord) {
+                        $brandRecord = Brand::create([
+                            'name'       => ['ca' => $brandName, 'es' => $brandName, 'en' => $brandName],
+                            'slug'       => $brandSlug,
+                            'is_active'  => true,
+                            'sort_order' => 0,
+                        ]);
+                    }
+                    $brandId = $brandRecord->id;
+                }
+
                 $attributes = [
                     'category_id'         => $category->id,
-                    'brand'               => trim((string) $values['brand']),
+                    'brand_id'            => $brandId,
                     'supplier'            => isset($values['supplier']) && $values['supplier'] !== '' ? trim((string) $values['supplier']) : null,
                     'slug'                => $slug,
                     'price'               => (float) $values['price'],
@@ -665,7 +684,7 @@ class AdminProductController extends Controller
         return $request->validate([
             'category_id'           => ['required', 'exists:categories,id'],
             'sku'                   => ['required', 'string', 'max:100', "unique:products,sku,{$ignoreId}"],
-            'brand'                 => ['required', 'string', 'max:100'],
+            'brand_id'              => ['nullable', 'exists:brands,id'],
             'supplier'              => ['nullable', 'string', 'max:150'],
             'price'                 => ['required', 'numeric', 'min:0'],
             'vat_rate'              => ['required', 'numeric', 'min:0', 'max:100'],

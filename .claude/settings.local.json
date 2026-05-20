@@ -167,7 +167,8 @@
       "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan route:list 2>&1 | grep -i 'approval\\\\|pending\\\\|rejected'\")",
       "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan test --filter='AuthenticationTest|LoginTest|RegistrationTest|MiddlewareTest' 2>&1 | tail -100\")",
       "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan test --filter='AuthenticationTest|LoginTest|RegistrationTest' 2>&1 | tail -200\")",
-      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan test --filter='RegistrationTest::test_user_can_register_with_valid_data' 2>&1 | tail -60\")"
+      "Bash(wsl.exe -d Ubuntu -- bash -lc \"cd /home/nadim/copyus && php artisan test --filter='RegistrationTest::test_user_can_register_with_valid_data' 2>&1 | tail -60\")",
+      "PowerShell($env:PATH -split ';' | Where-Object { $_ -match 'php|laravel|xampp|laragon|wamp' })"
     ]
   }
 }
