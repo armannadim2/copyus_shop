@@ -227,7 +227,7 @@ class QuotationController extends Controller
                     'product_snapshot' => [
                         'name'  => $item->product?->getTranslation('name', app()->getLocale()) ?? '—',
                         'sku'   => $item->product?->sku ?? '—',
-                        'brand' => $item->product?->brand ?? '',
+                        'brand' => $item->product?->brand?->getTranslation('name', app()->getLocale()) ?? '',
                         'unit'  => $item->product?->unit ?? '',
                     ],
                     'quantity'   => $item->quantity,

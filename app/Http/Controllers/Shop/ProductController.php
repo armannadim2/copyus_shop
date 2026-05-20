@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -29,12 +30,11 @@ class ProductController extends Controller
             ->when($request->category, $categoryScope);
 
         // Brands available in this category context, with per-brand product counts
-        $availableBrands = (clone $contextQuery)
-            ->whereNotNull('brand')->where('brand', '!=', '')
-            ->selectRaw('brand, COUNT(*) as cnt')
-            ->groupBy('brand')
-            ->orderBy('brand')
-            ->pluck('cnt', 'brand');
+        $availableBrands = Brand::active()
+            ->whereHas('products', fn($q) => $q->active()->when($request->category, $categoryScope))
+            ->withCount(['products as cnt' => fn($q) => $q->active()->when($request->category, $categoryScope)])
+            ->ordered()
+            ->get();
 
         // Only show seasonal filter if this category actually has seasonal products
         $hasSeasonalProducts = (clone $contextQuery)->where('is_seasonal', true)->exists();
@@ -50,7 +50,7 @@ class ProductController extends Controller
                 $request->search,
                 fn($q, $s) =>
                 $q->where('sku', 'like', "%$s%")
-                    ->orWhere('brand', 'like', "%$s%")
+                    ->orWhereHas('brand', fn($bq) => $bq->where('name', 'like', "%$s%"))
             )
             ->when(
                 $request->category,
@@ -62,7 +62,7 @@ class ProductController extends Controller
             ->when($request->in_stock,   fn($q) => $q->where('stock', '>', 0))
             ->when($request->price_min,  fn($q, $min) => $q->where('price', '>=', $min))
             ->when($request->price_max,  fn($q, $max) => $q->where('price', '<=', $max))
-            ->when($request->brand,      fn($q, $brands) => $q->whereIn('brand', (array) $brands))
+            ->when($request->brand,      fn($q, $brands) => $q->whereIn('brand_id', (array) $brands))
             ->when($request->seasonal,   fn($q) => $q->where('is_seasonal', true))
             ->paginate(24)
             ->withQueryString();
@@ -187,12 +187,11 @@ class ProductController extends Controller
 
         $contextQuery = Product::active()->whereIn('category_id', $categoryIds);
 
-        $availableBrands = (clone $contextQuery)
-            ->whereNotNull('brand')->where('brand', '!=', '')
-            ->selectRaw('brand, COUNT(*) as cnt')
-            ->groupBy('brand')
-            ->orderBy('brand')
-            ->pluck('cnt', 'brand');
+        $availableBrands = Brand::active()
+            ->whereHas('products', fn($q) => $q->active()->whereIn('category_id', $categoryIds))
+            ->withCount(['products as cnt' => fn($q) => $q->active()->whereIn('category_id', $categoryIds)])
+            ->ordered()
+            ->get();
 
         $hasSeasonalProducts = (clone $contextQuery)->where('is_seasonal', true)->exists();
 
@@ -206,7 +205,7 @@ class ProductController extends Controller
             ->when(request('in_stock'),  fn($q) => $q->where('stock', '>', 0))
             ->when(request('price_min'), fn($q, $min) => $q->where('price', '>=', $min))
             ->when(request('price_max'), fn($q, $max) => $q->where('price', '<=', $max))
-            ->when(request('brand'),     fn($q, $brands) => $q->whereIn('brand', (array) $brands))
+            ->when(request('brand'),     fn($q, $brands) => $q->whereIn('brand_id', (array) $brands))
             ->when(request('seasonal'),  fn($q) => $q->where('is_seasonal', true))
             ->paginate(24);
 

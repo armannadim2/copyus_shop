@@ -41,7 +41,7 @@
     "sku": {{ Js::from($product->sku) }},
     "brand": {
         "@@type": "Brand",
-        "name": {{ Js::from($product->brand ?? config('app.name', 'Copyus')) }}
+        "name": {{ Js::from($product->brand?->getTranslation('name', app()->getLocale()) ?? config('app.name', 'Copyus')) }}
     },
     "image": {{ Js::from($ogImage) }},
     "url": {{ Js::from($canonical) }},
@@ -149,7 +149,7 @@
                 </div>
                 <div>
                     <p class="font-outfit text-xs text-gray-400 mb-0.5">{{ __('app.brand') }}</p>
-                    <p class="font-alumni text-sm-header text-dark">{{ $product->brand ?? '—' }}</p>
+                    <p class="font-alumni text-sm-header text-dark">{{ $product->brand?->getTranslation('name', app()->getLocale()) ?? '—' }}</p>
                 </div>
                 <div>
                     <p class="font-outfit text-xs text-gray-400 mb-0.5">{{ __('app.unit') }}</p>

@@ -314,21 +314,21 @@
                                  x-transition:enter-end="opacity-100 translate-y-0"
                                  class="space-y-1.5 max-h-48 overflow-y-auto pr-1"
                                  style="display:none">
-                                @foreach($availableBrands as $brandName => $cnt)
+                                @foreach($availableBrands as $brand)
                                     <label class="flex items-center justify-between gap-2 cursor-pointer
                                                   rounded-lg px-2 py-1 hover:bg-light transition-colors group">
                                         <div class="flex items-center gap-2">
                                             <input type="checkbox"
                                                    name="brand[]"
-                                                   value="{{ $brandName }}"
+                                                   value="{{ $brand->id }}"
                                                    class="w-3.5 h-3.5 accent-primary rounded flex-shrink-0"
-                                                   {{ in_array($brandName, $activeBrands) ? 'checked' : '' }}
+                                                   {{ in_array($brand->id, $activeBrands) ? 'checked' : '' }}
                                                    onchange="this.form.submit()">
                                             <span class="font-outfit text-sm text-dark group-hover:text-primary transition-colors truncate">
-                                                {{ $brandName }}
+                                                {{ $brand->getTranslation('name', app()->getLocale()) }}
                                             </span>
                                         </div>
-                                        <span class="font-outfit text-xs text-gray-400 flex-shrink-0">{{ $cnt }}</span>
+                                        <span class="font-outfit text-xs text-gray-400 flex-shrink-0">{{ $brand->cnt }}</span>
                                     </label>
                                 @endforeach
                             </div>
@@ -444,7 +444,7 @@
                                         description: {{ Js::from($desc) }},
                                         category:    {{ Js::from($category) }},
                                         sku:         {{ Js::from($product->sku) }},
-                                        brand:       {{ Js::from($product->brand) }},
+                                        brand:       {{ Js::from($product->brand?->getTranslation('name', app()->getLocale())) }},
                                         image:       {{ Js::from($imageUrl) }},
                                         url:         {{ Js::from($productUrl) }},
                                         stock:       {{ $product->stock }},
@@ -484,7 +484,7 @@
 
                                 {{-- SKU & Brand --}}
                                 <p class="font-outfit text-body-sm text-gray-400 mb-3">
-                                    {{ $product->brand }} · {{ $product->sku }}
+                                    @if($product->brand){{ $product->brand->getTranslation('name', app()->getLocale()) }} · @endif{{ $product->sku }}
                                 </p>
 
                                 {{-- Stock Badge --}}

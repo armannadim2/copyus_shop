@@ -20,12 +20,12 @@ class SearchController extends Controller
             return redirect()->route('products.index');
         }
 
-        $products = Product::with('category')
+        $products = Product::with(['category', 'brand'])
             ->active()
             ->where(function ($q) use ($query) {
                 $q->where('sku', 'like', "%{$query}%")
-                  ->orWhere('brand', 'like', "%{$query}%")
-                  ->orWhere('name', 'like', "%{$query}%");
+                  ->orWhere('name', 'like', "%{$query}%")
+                  ->orWhereHas('brand', fn($bq) => $bq->where('name', 'like', "%{$query}%"));
             })
             ->when($request->category, fn($q, $c) =>
                 $q->whereHas('category', fn($q) => $q->where('slug', $c))
@@ -57,18 +57,19 @@ class SearchController extends Controller
 
         $locale   = app()->getLocale();
         $results  = Product::active()
-            ->select('id', 'slug', 'name', 'sku', 'brand', 'image')
+            ->with('brand')
+            ->select('id', 'slug', 'name', 'sku', 'brand_id', 'image')
             ->where(function ($query) use ($q) {
-                $query->where('sku',   'like', "%{$q}%")
-                      ->orWhere('brand', 'like', "%{$q}%")
-                      ->orWhere('name',  'like', "%{$q}%");
+                $query->where('sku',  'like', "%{$q}%")
+                      ->orWhere('name', 'like', "%{$q}%")
+                      ->orWhereHas('brand', fn($bq) => $bq->where('name', 'like', "%{$q}%"));
             })
             ->limit(8)
             ->get()
             ->map(fn($p) => [
                 'label' => $p->getTranslation('name', $locale),
                 'sku'   => $p->sku,
-                'brand' => $p->brand,
+                'brand' => $p->brand?->getTranslation('name', $locale),
                 'url'   => route('products.show', $p->slug),
                 'image' => $p->image ? asset('storage/' . $p->image) : null,
             ]);
