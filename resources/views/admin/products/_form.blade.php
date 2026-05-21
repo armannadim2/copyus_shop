@@ -414,7 +414,9 @@
 
                 <div class="col-span-2">
                     <label class="font-outfit text-xs text-gray-400 mb-1 block">Tipus</label>
-                    <select :name="`variants[${i}][type]`" x-model="v.type"
+                    {{-- Hidden input always submits the Alpine model value (avoids select option mismatch issue) --}}
+                    <input type="hidden" :name="`variants[${i}][type]`" :value="v.type">
+                    <select x-model="v.type"
                             class="w-full border border-gray-200 rounded-lg px-2 py-1.5 font-outfit text-xs
                                    focus:outline-none focus:ring-1 focus:ring-primary">
                         <option value="">—</option>

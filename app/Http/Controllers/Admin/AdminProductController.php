@@ -769,51 +769,75 @@ class AdminProductController extends Controller
             return;
         }
 
-        $submittedIds  = [];
-        $variantFiles  = $request->file('variants') ?? [];
+        $submittedIds = [];
+        $variantFiles = $request->file('variants') ?? [];
 
         foreach ($request->variants as $i => $data) {
-            // Skip empty rows
-            if (empty($data['type']) || empty($data['value'])) continue;
+            $hasId      = !empty($data['id']);
+            $hasContent = !empty($data['type']) && !empty($data['value']);
 
-            $attrs = [
-                'type'             => $data['type'],
-                'value'            => $data['value'],
-                'sku'              => $data['sku'] ?? null,
-                'price_adjustment' => $data['price_adjustment'] ?? 0,
-                'stock'            => $data['stock'] ?? 0,
-                'is_active'        => isset($data['is_active']),
-                'sort_order'       => $data['sort_order'] ?? 0,
-            ];
+            // New rows with no content are unintentional empty stubs — skip them
+            if (!$hasId && !$hasContent) {
+                continue;
+            }
 
             $imageFile = $variantFiles[$i]['image'] ?? null;
 
-            if (!empty($data['id'])) {
+            if ($hasId) {
+                // Existing variant — always protect it from deletion even if
+                // type/value came through empty (e.g. select option mismatch)
                 $variant = ProductVariant::find($data['id']);
-                if ($variant && $variant->product_id === $product->id) {
-                    // Remove image if checkbox was ticked
+                if (!$variant || $variant->product_id !== $product->id) {
+                    continue;
+                }
+
+                // Only update the editable fields when meaningful content is present
+                if ($hasContent) {
+                    $attrs = [
+                        'type'             => $data['type'],
+                        'value'            => $data['value'],
+                        'sku'              => $data['sku'] ?? null,
+                        'price_adjustment' => $data['price_adjustment'] ?? 0,
+                        'stock'            => $data['stock'] ?? 0,
+                        'is_active'        => isset($data['is_active']),
+                        'sort_order'       => $data['sort_order'] ?? 0,
+                    ];
+
                     if (!empty($data['remove_image']) && $variant->image) {
                         Storage::disk('public')->delete($variant->image);
                         $attrs['image'] = null;
                     }
-                    // Upload new image (replaces existing)
                     if ($imageFile) {
                         if ($variant->image) Storage::disk('public')->delete($variant->image);
                         $attrs['image'] = $imageFile->store('products/variants', 'public');
                     }
+
                     $variant->update($attrs);
-                    $submittedIds[] = $variant->id;
                 }
+
+                $submittedIds[] = $variant->id;
             } else {
+                // New variant — only create when content is valid
+                $attrs = [
+                    'type'             => $data['type'],
+                    'value'            => $data['value'],
+                    'sku'              => $data['sku'] ?? null,
+                    'price_adjustment' => $data['price_adjustment'] ?? 0,
+                    'stock'            => $data['stock'] ?? 0,
+                    'is_active'        => isset($data['is_active']),
+                    'sort_order'       => $data['sort_order'] ?? 0,
+                ];
+
                 if ($imageFile) {
                     $attrs['image'] = $imageFile->store('products/variants', 'public');
                 }
-                $variant = $product->variants()->create($attrs);
+
+                $variant       = $product->variants()->create($attrs);
                 $submittedIds[] = $variant->id;
             }
         }
 
-        // Remove variants not in the submission (delete their images too)
+        // Delete only the variants whose rows were explicitly removed (not in submission)
         $toDelete = $product->variants()->whereNotIn('id', $submittedIds)->get();
         foreach ($toDelete as $v) {
             if ($v->image) Storage::disk('public')->delete($v->image);
