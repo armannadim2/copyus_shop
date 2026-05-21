@@ -182,8 +182,8 @@
                 <h2 class="font-alumni text-h6 text-dark mb-4">
                     {{ __('app.all_categories') }}
                 </h2>
-                <ul class="space-y-1">
-                    {{-- All categories --}}
+                <ul class="space-y-0.5">
+                    {{-- All --}}
                     <li>
                         <a href="{{ route('products.index') }}"
                            class="flex items-center justify-between font-outfit text-body-lg
@@ -197,58 +197,67 @@
 
                     @foreach($categories as $cat)
                         @php
-                            $childSlugs   = $cat->children->pluck('slug');
-                            $isActive     = request('category') === $cat->slug
-                                         || $childSlugs->contains(request('category'));
-                            $hasChildren  = $cat->children->isNotEmpty();
+                            $childSlugs  = $cat->children->pluck('slug');
+                            $isActive    = request('category') === $cat->slug
+                                       || $childSlugs->contains(request('category'));
+                            $hasChildren = $cat->children->isNotEmpty();
                         @endphp
-                        <li x-data="{ open: false }"
-                            @mouseenter="open = true"
-                            @mouseleave="open = false"
-                            class="relative">
+                        <li x-data="{ open: {{ $isActive && $hasChildren ? 'true' : 'false' }} }">
 
-                            <a href="{{ route('products.index', ['category' => $cat->slug]) }}"
-                               class="flex items-center justify-between font-outfit text-body-lg
-                                      rounded-lg px-3 py-2 transition-colors
-                                      {{ $isActive
-                                         ? 'bg-primary text-white'
-                                         : 'text-dark hover:bg-light hover:text-primary' }}">
-                                <span>{{ $cat->getTranslation('name', app()->getLocale()) }}</span>
-                                <div class="flex items-center gap-1 shrink-0">
-                                    <span class="text-body-sm opacity-60">({{ $cat->products_count }})</span>
-                                    @if($hasChildren)
-                                        <svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                            {{-- Parent row --}}
+                            <div class="flex items-center gap-1">
+                                <a href="{{ route('products.index', ['category' => $cat->slug]) }}"
+                                   class="flex-1 flex items-center justify-between font-outfit text-body-lg
+                                          rounded-lg px-3 py-2 transition-colors
+                                          {{ $isActive
+                                             ? 'bg-primary text-white'
+                                             : 'text-dark hover:bg-light hover:text-primary' }}">
+                                    <span>{{ $cat->getTranslation('name', app()->getLocale()) }}</span>
+                                    <span class="text-body-sm opacity-60 shrink-0 ml-1">({{ $cat->products_count }})</span>
+                                </a>
+
+                                @if($hasChildren)
+                                    <button type="button" @click="open = !open"
+                                            class="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0
+                                                   transition-colors
+                                                   {{ $isActive
+                                                      ? 'text-primary'
+                                                      : 'text-gray-400 hover:text-primary hover:bg-light' }}">
+                                        <svg class="w-4 h-4 transition-transform duration-200"
+                                             :class="open ? 'rotate-180' : ''"
+                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  stroke-width="2" d="M19 9l-7 7-7-7"/>
                                         </svg>
-                                    @endif
-                                </div>
-                            </a>
+                                    </button>
+                                @endif
+                            </div>
 
-                            {{-- Subcategory flyout --}}
+                            {{-- Children inline --}}
                             @if($hasChildren)
-                                <div x-show="open"
-                                     x-transition:enter="transition ease-out duration-100"
-                                     x-transition:enter-start="opacity-0 translate-x-1"
-                                     x-transition:enter-end="opacity-100 translate-x-0"
-                                     x-transition:leave="transition ease-in duration-75"
-                                     x-transition:leave-start="opacity-100 translate-x-0"
-                                     x-transition:leave-end="opacity-0 translate-x-1"
-                                     class="absolute left-full top-0 ml-2 w-52 bg-white rounded-2xl
-                                            shadow-[0_8px_24px_rgba(0,0,0,0.10)] border border-gray-100
-                                            py-2 z-50"
-                                     style="display:none">
+                                <ul x-show="open"
+                                    x-transition:enter="transition ease-out duration-150"
+                                    x-transition:enter-start="opacity-0 -translate-y-1"
+                                    x-transition:enter-end="opacity-100 translate-y-0"
+                                    x-transition:leave="transition ease-in duration-100"
+                                    x-transition:leave-start="opacity-100 translate-y-0"
+                                    x-transition:leave-end="opacity-0 -translate-y-1"
+                                    class="mt-0.5 ml-3 pl-3 border-l-2 border-gray-100 space-y-0.5"
+                                    style="display:none">
                                     @foreach($cat->children as $child)
-                                        <a href="{{ route('products.index', ['category' => $child->slug]) }}"
-                                           class="flex items-center justify-between px-4 py-2
-                                                  font-outfit text-body-lg transition-colors
-                                                  {{ request('category') === $child->slug
-                                                     ? 'text-primary bg-light font-medium'
-                                                     : 'text-dark hover:bg-light hover:text-primary' }}">
-                                            <span>{{ $child->getTranslation('name', app()->getLocale()) }}</span>
-                                            <span class="text-body-sm opacity-50 shrink-0">{{ $child->products_count }}</span>
-                                        </a>
+                                        <li>
+                                            <a href="{{ route('products.index', ['category' => $child->slug]) }}"
+                                               class="flex items-center justify-between font-outfit text-sm
+                                                      rounded-lg px-3 py-1.5 transition-colors
+                                                      {{ request('category') === $child->slug
+                                                         ? 'text-primary bg-primary/10 font-medium'
+                                                         : 'text-gray-600 hover:bg-light hover:text-primary' }}">
+                                                <span>{{ $child->getTranslation('name', app()->getLocale()) }}</span>
+                                                <span class="text-xs opacity-50 shrink-0">{{ $child->products_count }}</span>
+                                            </a>
+                                        </li>
                                     @endforeach
-                                </div>
+                                </ul>
                             @endif
                         </li>
                     @endforeach
