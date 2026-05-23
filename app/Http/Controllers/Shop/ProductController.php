@@ -74,18 +74,9 @@ class ProductController extends Controller
                 ->withCount(['products as products_count' => fn($q) => $q->active()])
                 ->ordered()
             ])
-            ->withCount(['products as own_count' => fn($q) => $q->active()])
+            ->withCount(['products as products_count' => fn($q) => $q->active()])
             ->ordered()
-            ->get()
-            ->map(function ($cat) {
-                // Filter out children with no products
-                $cat->children = $cat->children->filter(fn($c) => $c->products_count > 0)->values();
-                // Total = own products + sum of children's products
-                $cat->products_count = $cat->own_count + $cat->children->sum('products_count');
-                return $cat;
-            })
-            ->filter(fn($cat) => $cat->products_count > 0)
-            ->values();
+            ->get();
 
         $wishlistIds = Auth::check()
             ? Wishlist::where('user_id', Auth::id())->pluck('product_id')->flip()
@@ -215,16 +206,9 @@ class ProductController extends Controller
                 ->withCount(['products as products_count' => fn($q) => $q->active()])
                 ->ordered()
             ])
-            ->withCount(['products as own_count' => fn($q) => $q->active()])
+            ->withCount(['products as products_count' => fn($q) => $q->active()])
             ->ordered()
-            ->get()
-            ->map(function ($cat) {
-                $cat->children = $cat->children->filter(fn($c) => $c->products_count > 0)->values();
-                $cat->products_count = $cat->own_count + $cat->children->sum('products_count');
-                return $cat;
-            })
-            ->filter(fn($cat) => $cat->products_count > 0)
-            ->values();
+            ->get();
 
         $wishlistIds = Auth::check()
             ? Wishlist::where('user_id', Auth::id())->pluck('product_id')->flip()
