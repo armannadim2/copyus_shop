@@ -69,7 +69,7 @@ class SearchController extends Controller
             ->map(fn($p) => [
                 'label' => $p->getTranslation('name', $locale),
                 'sku'   => $p->sku,
-                'brand' => $p->brand?->getTranslation('name', $locale),
+                'brand' => $p->brand?->name,
                 'url'   => route('products.show', $p->slug),
                 'image' => $p->image ? asset('storage/' . $p->image) : null,
             ]);

@@ -126,7 +126,7 @@
                 @foreach($brands as $brand)
                     <option value="{{ $brand->id }}"
                         @selected(old('brand_id', $product?->brand_id) == $brand->id)>
-                        {{ $brand->getTranslation('name', 'ca') }}
+                        {{ $brand->name }}
                     </option>
                 @endforeach
             </select>

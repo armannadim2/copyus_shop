@@ -20,11 +20,11 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block font-outfit text-sm font-medium text-gray-700 mb-2">Nom (Català) *</label>
-                    <input type="text" name="name[ca]" value="{{ old('name.ca') }}" required
+                    <label class="block font-outfit text-sm font-medium text-gray-700 mb-2">Nom *</label>
+                    <input type="text" name="name" value="{{ old('name') }}" required
                            class="w-full border border-gray-200 rounded-xl px-4 py-2 font-outfit text-sm
                                   focus:outline-none focus:ring-2 focus:ring-primary">
-                    @error('name.ca') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                    @error('name') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                 </div>
                 <div>
                     <label class="block font-outfit text-sm font-medium text-gray-700 mb-2">Slug *</label>
@@ -32,21 +32,6 @@
                            class="w-full border border-gray-200 rounded-xl px-4 py-2 font-outfit text-sm
                                   focus:outline-none focus:ring-2 focus:ring-primary">
                     @error('slug') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block font-outfit text-sm font-medium text-gray-700 mb-2">Nom (Castellà)</label>
-                    <input type="text" name="name[es]" value="{{ old('name.es') }}"
-                           class="w-full border border-gray-200 rounded-xl px-4 py-2 font-outfit text-sm
-                                  focus:outline-none focus:ring-2 focus:ring-primary">
-                </div>
-                <div>
-                    <label class="block font-outfit text-sm font-medium text-gray-700 mb-2">Nom (Anglès)</label>
-                    <input type="text" name="name[en]" value="{{ old('name.en') }}"
-                           class="w-full border border-gray-200 rounded-xl px-4 py-2 font-outfit text-sm
-                                  focus:outline-none focus:ring-2 focus:ring-primary">
                 </div>
             </div>
 

@@ -79,7 +79,7 @@
                                 @else
                                     <div class="w-10 h-10 bg-light rounded-xl flex items-center justify-center text-lg flex-shrink-0">🏷️</div>
                                 @endif
-                                <span class="font-outfit text-sm text-dark">{{ $brand->getTranslation('name', 'ca') }}</span>
+                                <span class="font-outfit text-sm text-dark">{{ $brand->name }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-4 font-outfit text-sm text-gray-500">{{ $brand->slug }}</td>

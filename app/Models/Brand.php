@@ -11,10 +11,7 @@ class Brand extends Model
 {
     use HasFactory, HasTranslations;
 
-    public array $translatable = [
-        'name',
-        'description',
-    ];
+    public array $translatable = ['description'];
 
     protected $fillable = [
         'name',

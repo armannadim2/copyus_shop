@@ -10,7 +10,7 @@ class AdminBrandController extends Controller
 {
     public function index(Request $request)
     {
-        $allowed = ['name_ca', 'sort_order', 'products_count', 'is_active', 'created_at'];
+        $allowed = ['name', 'sort_order', 'products_count', 'is_active', 'created_at'];
         $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'sort_order';
         $dir     = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
 
@@ -29,11 +29,7 @@ class AdminBrandController extends Controller
             }
         }
 
-        if ($sort === 'name_ca') {
-            $query->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(name, '$.ca')) $dir");
-        } else {
-            $query->orderBy($sort, $dir);
-        }
+        $query->orderBy($sort, $dir);
 
         $brands = $query->paginate(20)->withQueryString();
 
@@ -48,10 +44,7 @@ class AdminBrandController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'           => 'required|array',
-            'name.ca'        => 'required|string|max:255',
-            'name.es'        => 'nullable|string|max:255',
-            'name.en'        => 'nullable|string|max:255',
+            'name'           => 'required|string|max:255',
             'description'    => 'nullable|array',
             'description.ca' => 'nullable|string',
             'description.es' => 'nullable|string',
@@ -81,10 +74,7 @@ class AdminBrandController extends Controller
     public function update(Request $request, Brand $brand)
     {
         $validated = $request->validate([
-            'name'           => 'required|array',
-            'name.ca'        => 'required|string|max:255',
-            'name.es'        => 'nullable|string|max:255',
-            'name.en'        => 'nullable|string|max:255',
+            'name'           => 'required|string|max:255',
             'description'    => 'nullable|array',
             'description.ca' => 'nullable|string',
             'description.es' => 'nullable|string',

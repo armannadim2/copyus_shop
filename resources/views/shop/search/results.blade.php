@@ -71,7 +71,7 @@
                             {{ $name }}
                         </h3>
                         <p class="font-outfit text-xs text-gray-400 mb-3">
-                            @if($product->brand){{ $product->brand->getTranslation('name', app()->getLocale()) }} · @endif{{ $product->sku }}
+                            @if($product->brand){{ $product->brand->name }} · @endif{{ $product->sku }}
                         </p>
 
                         @auth

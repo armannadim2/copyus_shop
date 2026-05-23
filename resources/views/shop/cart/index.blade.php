@@ -142,7 +142,7 @@
                                     {{ $item->product->getTranslation('name', app()->getLocale()) }}
                                 </h3>
                                 <p class="font-outfit text-xs text-gray-400 mt-0.5">
-                                    @if($item->product->brand){{ $item->product->brand->getTranslation('name', app()->getLocale()) }} · @endif{{ $item->product->sku }}
+                                    @if($item->product->brand){{ $item->product->brand->name }} · @endif{{ $item->product->sku }}
                                     · {{ number_format($item->product->price_with_vat, 2, ',', '.') }} € / {{ $item->product->unit }}
                                 </p>
                             </div>

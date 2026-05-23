@@ -180,7 +180,7 @@ class OrderController extends Controller
                         'product_snapshot' => [
                             'name'  => $item->product->getTranslation('name', app()->getLocale()),
                             'sku'   => $item->product->sku,
-                            'brand' => $item->product->brand?->getTranslation('name', app()->getLocale()),
+                            'brand' => $item->product->brand?->name,
                             'unit'  => $item->product->unit,
                         ],
                         'quantity'   => $item->quantity,

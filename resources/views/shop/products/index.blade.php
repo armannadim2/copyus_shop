@@ -273,7 +273,7 @@
                                                    {{ in_array($brand->id, $activeBrands) ? 'checked' : '' }}
                                                    onchange="this.form.submit()">
                                             <span class="font-outfit text-sm text-dark group-hover:text-primary transition-colors truncate">
-                                                {{ $brand->getTranslation('name', app()->getLocale()) }}
+                                                {{ $brand->name }}
                                             </span>
                                         </div>
                                         <span class="font-outfit text-xs text-gray-400 flex-shrink-0">{{ $brand->cnt }}</span>
@@ -392,7 +392,7 @@
                                         description: {{ Js::from($desc) }},
                                         category:    {{ Js::from($category) }},
                                         sku:         {{ Js::from($product->sku) }},
-                                        brand:       {{ Js::from($product->brand?->getTranslation('name', app()->getLocale())) }},
+                                        brand:       {{ Js::from($product->brand?->name) }},
                                         image:       {{ Js::from($imageUrl) }},
                                         url:         {{ Js::from($productUrl) }},
                                         stock:       {{ $product->stock }},
@@ -432,7 +432,7 @@
 
                                 {{-- SKU & Brand --}}
                                 <p class="font-outfit text-body-sm text-gray-400 mb-3">
-                                    @if($product->brand){{ $product->brand->getTranslation('name', app()->getLocale()) }} · @endif{{ $product->sku }}
+                                    @if($product->brand){{ $product->brand->name }} · @endif{{ $product->sku }}
                                 </p>
 
                                 {{-- Stock Badge --}}
