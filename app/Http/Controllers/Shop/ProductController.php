@@ -95,7 +95,7 @@ class ProductController extends Controller
         $isB2B = Auth::check() && in_array(Auth::user()->role, ['approved', 'admin']);
         $user  = Auth::user();
 
-        $product = Product::with(['category', 'images', 'variants' => fn($q) => $q->where('is_active', true)->orderBy('sort_order'), 'tags'])
+        $product = Product::with(['category.parent.parent', 'images', 'variants' => fn($q) => $q->where('is_active', true)->orderBy('sort_order'), 'tags'])
             ->active()
             ->where('slug', $slug)
             ->firstOrFail();

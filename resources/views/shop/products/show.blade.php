@@ -60,15 +60,30 @@
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20">
 
     {{-- Breadcrumb --}}
+    @php
+        // Build ancestor chain bottom-up, then reverse
+        $breadcrumbChain = [];
+        $bc = $product->category;
+        while ($bc) {
+            array_unshift($breadcrumbChain, $bc);
+            $bc = $bc->parent;
+        }
+        // Drop the topmost level (family) — show Category and below only
+        if (count($breadcrumbChain) > 1) {
+            array_shift($breadcrumbChain);
+        }
+    @endphp
     <nav class="flex items-center gap-2 font-outfit text-xs text-gray-400 mb-10">
         <a href="{{ route('products.index') }}" class="hover:text-primary transition-colors">
             {{ __('app.products') }}
         </a>
-        <span>/</span>
-        <a href="{{ route('products.index', ['category' => $product->category->slug]) }}"
-           class="hover:text-primary transition-colors">
-            {{ $product->category->getTranslation('name', app()->getLocale()) }}
-        </a>
+        @foreach($breadcrumbChain as $bc)
+            <span>/</span>
+            <a href="{{ route('products.index', ['category' => $bc->slug]) }}"
+               class="hover:text-primary transition-colors">
+                {{ $bc->getTranslation('name', app()->getLocale()) }}
+            </a>
+        @endforeach
         <span>/</span>
         <span class="text-dark">{{ $product->getTranslation('name', app()->getLocale()) }}</span>
     </nav>
