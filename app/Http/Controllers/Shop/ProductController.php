@@ -67,16 +67,8 @@ class ProductController extends Controller
             ->paginate(24)
             ->withQueryString();
 
-        // Parent categories with children, counting only active products
-        $categories = Category::active()
-            ->parents()
-            ->with(['children' => fn($q) => $q->active()
-                ->withCount(['products as products_count' => fn($q) => $q->active()])
-                ->ordered()
-            ])
-            ->withCount(['products as products_count' => fn($q) => $q->active()])
-            ->ordered()
-            ->get();
+        $activeSlug = request('category');
+        [$categories, $openIds] = $this->buildCategoryTree($activeSlug);
 
         $wishlistIds = Auth::check()
             ? Wishlist::where('user_id', Auth::id())->pluck('product_id')->flip()
@@ -85,6 +77,8 @@ class ProductController extends Controller
         return view('shop.products.index', compact(
             'products',
             'categories',
+            'openIds',
+            'activeSlug',
             'isB2B',
             'wishlistIds',
             'availableBrands',
@@ -200,15 +194,8 @@ class ProductController extends Controller
             ->when(request('seasonal'),  fn($q) => $q->where('is_seasonal', true))
             ->paginate(24);
 
-        $categories = Category::active()
-            ->parents()
-            ->with(['children' => fn($q) => $q->active()
-                ->withCount(['products as products_count' => fn($q) => $q->active()])
-                ->ordered()
-            ])
-            ->withCount(['products as products_count' => fn($q) => $q->active()])
-            ->ordered()
-            ->get();
+        $activeSlug = $slug;
+        [$categories, $openIds] = $this->buildCategoryTree($activeSlug);
 
         $wishlistIds = Auth::check()
             ? Wishlist::where('user_id', Auth::id())->pluck('product_id')->flip()
@@ -218,11 +205,59 @@ class ProductController extends Controller
             'products',
             'category',
             'categories',
+            'openIds',
+            'activeSlug',
             'isB2B',
             'wishlistIds',
             'availableBrands',
             'hasSeasonalProducts',
             'priceRange'
         ));
+    }
+
+    private function buildCategoryTree(?string $activeSlug): array
+    {
+        // One query — all active categories with their own product count
+        $allCats = Category::active()
+            ->withCount(['products as products_count' => fn($q) => $q->active()])
+            ->ordered()
+            ->get();
+
+        // Group by parent_id into a plain array (null parent → 'root')
+        $byParent = [];
+        foreach ($allCats as $cat) {
+            $byParent[$cat->parent_id ?? 'root'][] = $cat;
+        }
+
+        // Recursively build tree; each node gets subtree + total_count
+        $buildTree = function ($parentId) use (&$buildTree, &$byParent) {
+            $key = $parentId ?? 'root';
+            return collect($byParent[$key] ?? [])
+                ->map(function ($cat) use (&$buildTree) {
+                    $cat->subtree     = $buildTree($cat->id);
+                    $cat->total_count = $cat->products_count + $cat->subtree->sum('total_count');
+                    return $cat;
+                })
+                ->filter(fn($cat) => $cat->total_count > 0)
+                ->values();
+        };
+
+        $categories = $buildTree(null);
+
+        // Walk up ancestors of the active category to know which nodes to auto-open
+        $openIds = [];
+        if ($activeSlug) {
+            $activeCat = $allCats->firstWhere('slug', $activeSlug);
+            if ($activeCat) {
+                $cur = $activeCat;
+                while ($cur->parent_id) {
+                    $openIds[] = $cur->parent_id;
+                    $cur = $allCats->find($cur->parent_id);
+                    if (!$cur) break;
+                }
+            }
+        }
+
+        return [$categories, $openIds];
     }
 }
