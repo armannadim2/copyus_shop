@@ -250,6 +250,18 @@ return [
     'recent_quotes'                  => 'Pressupostos recents',
     'account_details'                => 'Detalls del compte',
 
+    // ── Welcome popup ────────────────────────────────────────
+    'popup_eyebrow'                  => 'Copyus — Tot per a la teva empresa',
+    'popup_title'                    => 'Impressió digital i papeleria en un sol lloc',
+    'popup_subtitle'                 => 'Descobreix tots els serveis que tenim per a tu.',
+    'popup_service_print'            => 'Impressió Digital',
+    'popup_service_print_desc'       => 'Targetes, flyers, tríptics, banners, samarretes i molt més.',
+    'popup_service_papeleria'        => 'Papeleria',
+    'popup_service_papeleria_desc'   => 'Material d\'oficina, bolígrafs, sobres, carpetes i productes de papeleria.',
+    'popup_new_badge'                => 'NOU',
+    'popup_cta'                      => 'Explorar productes',
+    'popup_dismiss'                  => 'Tancar',
+
     // ── Product enhancements ──────────────────────────────────
     'low_stock'                      => 'Stock baix',
     'your_price'                     => 'El teu preu',

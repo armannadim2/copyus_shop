@@ -250,6 +250,18 @@ return [
     'recent_quotes'                  => 'Presupuestos recientes',
     'account_details'                => 'Detalles de la cuenta',
 
+    // ── Welcome popup ────────────────────────────────────────
+    'popup_eyebrow'                  => 'Copyus — Todo para tu empresa',
+    'popup_title'                    => 'Impresión digital y papelería en un solo lugar',
+    'popup_subtitle'                 => 'Descubre todos los servicios que tenemos para ti.',
+    'popup_service_print'            => 'Impresión Digital',
+    'popup_service_print_desc'       => 'Tarjetas, flyers, trípticos, banners, camisetas y mucho más.',
+    'popup_service_papeleria'        => 'Papelería',
+    'popup_service_papeleria_desc'   => 'Material de oficina, bolígrafos, sobres, carpetas y productos de papelería.',
+    'popup_new_badge'                => 'NUEVO',
+    'popup_cta'                      => 'Explorar productos',
+    'popup_dismiss'                  => 'Cerrar',
+
     // ── Product enhancements ──────────────────────────────────
     'low_stock'                      => 'Stock bajo',
     'your_price'                     => 'Tu precio',

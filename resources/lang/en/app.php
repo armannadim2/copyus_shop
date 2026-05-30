@@ -250,6 +250,18 @@ return [
     'recent_quotes'                  => 'Recent quotes',
     'account_details'                => 'Account details',
 
+    // ── Welcome popup ────────────────────────────────────────
+    'popup_eyebrow'                  => 'Copyus — Everything for your business',
+    'popup_title'                    => 'Digital printing & stationery in one place',
+    'popup_subtitle'                 => 'Discover all the services we have for you.',
+    'popup_service_print'            => 'Digital Printing',
+    'popup_service_print_desc'       => 'Business cards, flyers, brochures, banners, t-shirts and more.',
+    'popup_service_papeleria'        => 'Stationery',
+    'popup_service_papeleria_desc'   => 'Office supplies, pens, envelopes, folders and stationery products.',
+    'popup_new_badge'                => 'NEW',
+    'popup_cta'                      => 'Explore products',
+    'popup_dismiss'                  => 'Close',
+
     // ── Product enhancements ──────────────────────────────────
     'low_stock'                      => 'Low stock',
     'your_price'                     => 'Your price',
