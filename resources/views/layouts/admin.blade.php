@@ -67,6 +67,15 @@
                     @endif
                 </a>
 
+                <a href="{{ route('admin.hero-slides.index') }}"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl
+                          font-outfit text-sm transition-colors
+                          {{ request()->routeIs('admin.hero-slides.*')
+                             ? 'bg-primary text-white'
+                             : 'text-gray-400 hover:bg-white hover:bg-opacity-10 hover:text-white' }}">
+                    <span>🖼️</span> Slides portada
+                </a>
+
                 <a href="{{ route('admin.brands.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
                           font-outfit text-sm transition-colors

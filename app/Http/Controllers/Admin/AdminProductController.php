@@ -11,7 +11,6 @@ use App\Models\ProductPriceTier;
 use App\Models\ProductTag;
 use App\Models\ProductVariant;
 use App\Models\User;
-use App\Notifications\LowStockNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -21,7 +20,7 @@ class AdminProductController extends Controller
 {
     public function index(Request $request)
     {
-        $allowed = ['name_ca', 'sku', 'price', 'stock', 'is_active', 'created_at'];
+        $allowed = ['name_ca', 'sku', 'price', 'stock_status', 'is_active', 'created_at'];
         $sort    = in_array($request->input('sort'), $allowed) ? $request->input('sort') : 'created_at';
         $dir     = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
 
@@ -37,8 +36,8 @@ class AdminProductController extends Controller
             ->when($request->category_id, fn($q, $c) => $q->where('category_id', $c))
             ->when($request->status === 'active',   fn($q) => $q->where('is_active', true))
             ->when($request->status === 'inactive', fn($q) => $q->where('is_active', false))
-            ->when($request->stock === 'low',  fn($q) => $q->lowStock())
-            ->when($request->stock === 'out',  fn($q) => $q->outOfStock())
+            ->when($request->stock === 'in_stock',  fn($q) => $q->inStock())
+            ->when($request->stock === 'pre_order', fn($q) => $q->preOrder())
             ->when($request->tag, fn($q, $t)  => $q->whereHas('tags', fn($q) => $q->where('slug', $t)));
 
         if ($sort === 'name_ca') {
@@ -76,15 +75,13 @@ class AdminProductController extends Controller
                 'brand_id'            => $validated['brand_id'] ?? null,
                 'supplier'            => $validated['supplier'] ?? null,
                 'price'               => $validated['price'],
-                'vat_rate'            => $validated['vat_rate'],
-                'stock'               => $validated['stock'],
-                'min_order_quantity'  => $validated['min_order_quantity'],
-                'unit'                => $validated['unit'],
-                'is_active'           => $request->boolean('is_active', true),
-                'is_featured'         => $request->boolean('is_featured', false),
-                'low_stock_threshold' => $validated['low_stock_threshold'] ?? null,
-                'notify_low_stock'    => $request->boolean('notify_low_stock', false),
-                'image'               => $request->hasFile('image')
+                'vat_rate'           => $validated['vat_rate'],
+                'stock_status'       => $validated['stock_status'],
+                'min_order_quantity' => $validated['min_order_quantity'],
+                'unit'               => $validated['unit'],
+                'is_active'          => $request->boolean('is_active', true),
+                'is_featured'        => $request->boolean('is_featured', false),
+                'image'              => $request->hasFile('image')
                     ? $request->file('image')->store('products', 'public')
                     : null,
                 'name' => [
@@ -169,15 +166,13 @@ class AdminProductController extends Controller
                 'brand_id'            => $validated['brand_id'] ?? null,
                 'supplier'            => $validated['supplier'] ?? null,
                 'price'               => $validated['price'],
-                'vat_rate'            => $validated['vat_rate'],
-                'stock'               => $validated['stock'],
-                'min_order_quantity'  => $validated['min_order_quantity'],
-                'unit'                => $validated['unit'],
-                'is_active'           => $request->boolean('is_active'),
-                'is_featured'         => $request->boolean('is_featured'),
-                'low_stock_threshold' => $validated['low_stock_threshold'] ?? null,
-                'notify_low_stock'    => $request->boolean('notify_low_stock', false),
-                'image'               => $imagePath,
+                'vat_rate'           => $validated['vat_rate'],
+                'stock_status'       => $validated['stock_status'],
+                'min_order_quantity' => $validated['min_order_quantity'],
+                'unit'               => $validated['unit'],
+                'is_active'          => $request->boolean('is_active'),
+                'is_featured'        => $request->boolean('is_featured'),
+                'image'              => $imagePath,
                 'name' => [
                     'ca' => $validated['name_ca'],
                     'es' => $validated['name_es'],
@@ -214,14 +209,6 @@ class AdminProductController extends Controller
             $this->syncVariants($request, $product);
             $this->syncPriceTiers($request, $product);
             $this->syncTags($request, $product);
-
-            // Fire low-stock notification if threshold crossed
-            if ($product->notify_low_stock && $product->is_low_stock) {
-                $admins = User::where('role', 'admin')->get();
-                foreach ($admins as $admin) {
-                    $admin->notify(new LowStockNotification($product));
-                }
-            }
         });
 
         return redirect()->route('admin.products.index')
@@ -686,15 +673,13 @@ class AdminProductController extends Controller
             'sku'                   => ['required', 'string', 'max:100', "unique:products,sku,{$ignoreId}"],
             'brand_id'              => ['nullable', 'exists:brands,id'],
             'supplier'              => ['nullable', 'string', 'max:150'],
-            'price'                 => ['required', 'numeric', 'min:0'],
-            'vat_rate'              => ['required', 'numeric', 'min:0', 'max:100'],
-            'stock'                 => ['required', 'integer', 'min:0'],
-            'min_order_quantity'    => ['required', 'integer', 'min:1'],
-            'unit'                  => ['required', 'string', 'max:50'],
-            'is_active'             => ['boolean'],
-            'is_featured'           => ['boolean'],
-            'low_stock_threshold'   => ['nullable', 'integer', 'min:1'],
-            'notify_low_stock'      => ['boolean'],
+            'price'              => ['required', 'numeric', 'min:0'],
+            'vat_rate'           => ['required', 'numeric', 'min:0', 'max:100'],
+            'stock_status'       => ['required', 'in:in_stock,pre_order'],
+            'min_order_quantity' => ['required', 'integer', 'min:1'],
+            'unit'               => ['required', 'string', 'max:50'],
+            'is_active'          => ['boolean'],
+            'is_featured'        => ['boolean'],
             'name_ca'               => ['required', 'string', 'max:255'],
             'name_es'               => ['required', 'string', 'max:255'],
             'name_en'               => ['nullable', 'string', 'max:255'],

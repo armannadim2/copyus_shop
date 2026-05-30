@@ -138,6 +138,8 @@ return [
     // ── Products ──────────────────────────────────────────────
     'all_categories'                 => 'Todas las categorías',
     'in_stock'                       => 'En stock',
+    'pre_order'                      => 'Pre-pedido',
+    'pre_order_notice'               => 'Pre-pedido — entrega en 24-48 horas.',
     'out_of_stock'                   => 'Sin stock',
     'min_order'                      => 'Pedido mínimo',
     'sku'                            => 'Referencia',

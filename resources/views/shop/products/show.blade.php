@@ -49,7 +49,7 @@
         "@@type": "Offer",
         "priceCurrency": "EUR",
         "price": "{{ number_format($product->price_with_vat, 2, '.', '') }}",
-        "availability": "https://schema.org/{{ $product->stock > 0 ? 'InStock' : 'OutOfStock' }}",
+        "availability": "https://schema.org/{{ $product->stock_status === 'pre_order' ? 'PreOrder' : 'InStock' }}",
         "url": {{ Js::from($canonical) }}
     }
 }
@@ -172,10 +172,8 @@
                 </div>
                 <div>
                     <p class="font-outfit text-xs text-gray-400 mb-0.5">{{ __('app.status') }}</p>
-                    @if($product->stock === 0)
-                        <p class="font-alumni text-sm-header text-red-500">{{ __('app.out_of_stock') }}</p>
-                    @elseif($product->is_low_stock)
-                        <p class="font-alumni text-sm-header text-orange-500">⚠️ {{ __('app.low_stock') }}</p>
+                    @if($product->stock_status === 'pre_order')
+                        <p class="font-alumni text-sm-header text-amber-600">{{ __('app.pre_order') }}</p>
                     @else
                         <p class="font-alumni text-sm-header text-green-600">{{ __('app.in_stock') }}</p>
                     @endif
@@ -294,51 +292,59 @@
                             </form>
                         </div>
 
-                        @if($product->stock > 0)
-                            {{-- Add to Cart --}}
-                            <form method="POST" action="{{ route('cart.add') }}" class="flex gap-3">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{ $product->id }}" />
-                                <input type="number" name="quantity"
-                                       value="{{ $product->min_order_quantity }}"
-                                       min="{{ $product->min_order_quantity }}"
-                                       class="w-24 bg-light border-0 rounded-2xl px-4 py-3
-                                              font-outfit text-sm text-dark text-center
-                                              focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
-                                       id="qty-input" />
-                                <button type="submit"
-                                        class="flex-1 flex items-center justify-center gap-2
-                                               bg-primary text-white font-alumni text-sm-header
-                                               py-3 rounded-2xl hover:brightness-110 active:scale-95 transition-all">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                    </svg>
-                                    {{ __('app.add_to_cart') }}
-                                </button>
-                            </form>
-
-                            {{-- Add to Quote --}}
-                            <form method="POST" action="{{ route('quotations.add') }}">
-                                @csrf
-                                <input type="hidden" name="product_id" value="{{ $product->id }}" />
-                                <input type="hidden" name="quantity" value="{{ $product->min_order_quantity }}" />
-                                <button type="submit"
-                                        class="w-full flex items-center justify-center gap-2
-                                               border-2 border-secondary text-secondary font-alumni text-sm-header
-                                               py-3 rounded-2xl hover:bg-secondary hover:text-white transition-all">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                    </svg>
-                                    {{ __('app.add_to_quote') }}
-                                </button>
-                            </form>
-                        @else
-                            <div class="bg-red-50 border border-red-100 rounded-2xl px-5 py-4 text-center">
-                                <p class="font-outfit text-xs text-red-500">{{ __('app.out_of_stock') }}</p>
+                        {{-- Pre-order delivery notice --}}
+                        @if($product->stock_status === 'pre_order')
+                            <div class="flex items-center gap-2 bg-amber-50 border border-amber-200
+                                        rounded-2xl px-4 py-3">
+                                <svg class="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <p class="font-outfit text-xs text-amber-700">
+                                    {{ __('app.pre_order_notice') }}
+                                </p>
                             </div>
                         @endif
+
+                        {{-- Add to Cart --}}
+                        <form method="POST" action="{{ route('cart.add') }}" class="flex gap-3">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}" />
+                            <input type="number" name="quantity"
+                                   value="{{ $product->min_order_quantity }}"
+                                   min="{{ $product->min_order_quantity }}"
+                                   class="w-24 bg-light border-0 rounded-2xl px-4 py-3
+                                          font-outfit text-sm text-dark text-center
+                                          focus:outline-none focus:ring-2 focus:ring-primary/30 transition"
+                                   id="qty-input" />
+                            <button type="submit"
+                                    class="flex-1 flex items-center justify-center gap-2
+                                           bg-primary text-white font-alumni text-sm-header
+                                           py-3 rounded-2xl hover:brightness-110 active:scale-95 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                                {{ __('app.add_to_cart') }}
+                            </button>
+                        </form>
+
+                        {{-- Add to Quote --}}
+                        <form method="POST" action="{{ route('quotations.add') }}">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}" />
+                            <input type="hidden" name="quantity" value="{{ $product->min_order_quantity }}" />
+                            <button type="submit"
+                                    class="w-full flex items-center justify-center gap-2
+                                           border-2 border-secondary text-secondary font-alumni text-sm-header
+                                           py-3 rounded-2xl hover:bg-secondary hover:text-white transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                {{ __('app.add_to_quote') }}
+                            </button>
+                        </form>
                     </div>
                 @endif
             @else

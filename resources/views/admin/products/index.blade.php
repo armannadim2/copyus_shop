@@ -70,8 +70,8 @@
                 class="border border-gray-200 rounded-xl px-4 py-2 font-outfit text-sm
                        focus:outline-none focus:ring-2 focus:ring-primary">
             <option value="">Tot l'estoc</option>
-            <option value="low" @selected(request('stock') === 'low')>Stock baix</option>
-            <option value="out" @selected(request('stock') === 'out')>Sense stock</option>
+            <option value="in_stock"  @selected(request('stock') === 'in_stock')>En estoc</option>
+            <option value="pre_order" @selected(request('stock') === 'pre_order')>Pre-comanda</option>
         </select>
         @if($allTags->isNotEmpty())
             <select name="tag"
@@ -120,7 +120,7 @@
                         <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Categoria</th>
                         <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Proveïdor</th>
                         @include('admin.partials._sort_th', ['thCol' => 'price',      'thLabel' => 'Preu',   'thAlign' => 'right'])
-                        @include('admin.partials._sort_th', ['thCol' => 'stock',      'thLabel' => 'Stock',  'thAlign' => 'right'])
+                        @include('admin.partials._sort_th', ['thCol' => 'stock_status', 'thLabel' => 'Estoc', 'thAlign' => 'center'])
                         <th class="text-left font-outfit text-xs font-semibold tracking-widest text-gray-400 uppercase px-6 py-3">Etiquetes</th>
                         @include('admin.partials._sort_th', ['thCol' => 'is_active',  'thLabel' => 'Actiu',  'thAlign' => 'center'])
                         <th class="px-6 py-3"></th>
@@ -156,17 +156,19 @@
                                     <span class="block font-outfit text-xs text-secondary">{{ $product->priceTiers->count() }} tarif.</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-right">
-                                @if($product->stock === 0)
-                                    <span class="inline-block font-outfit text-xs px-2 py-0.5 bg-red-50 text-red-600 rounded-full">
-                                        Sense stock
-                                    </span>
-                                @elseif($product->is_low_stock)
-                                    <span class="inline-block font-outfit text-xs px-2 py-0.5 bg-orange-50 text-orange-600 rounded-full">
-                                        ⚠️ {{ $product->stock }}
+                            <td class="px-6 py-4 text-center">
+                                @if($product->stock_status === 'pre_order')
+                                    <span class="inline-flex items-center gap-1 font-outfit text-xs px-2.5 py-1
+                                                 bg-amber-50 text-amber-700 rounded-full font-medium">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        Pre-comanda
                                     </span>
                                 @else
-                                    <span class="font-outfit text-sm text-dark">{{ $product->stock }}</span>
+                                    <span class="inline-flex items-center gap-1 font-outfit text-xs px-2.5 py-1
+                                                 bg-green-50 text-green-700 rounded-full font-medium">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                        En estoc
+                                    </span>
                                 @endif
                             </td>
                             <td class="px-6 py-4">

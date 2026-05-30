@@ -138,6 +138,8 @@ return [
     // ── Products ──────────────────────────────────────────────
     'all_categories'                 => 'Totes les categories',
     'in_stock'                       => 'En estoc',
+    'pre_order'                      => 'Pre-comanda',
+    'pre_order_notice'               => 'Pre-comanda — lliurament en 24-48 hores.',
     'out_of_stock'                   => 'Sense estoc',
     'min_order'                      => 'Comanda mínima',
     'sku'                            => 'Referència',

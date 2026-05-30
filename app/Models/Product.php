@@ -35,30 +35,26 @@ class Product extends Model
         'description',
         'price',
         'vat_rate',
-        'stock',
+        'stock_status',
         'min_order_quantity',
         'unit',
         'image',
         'is_active',
         'is_featured',
         'is_seasonal',
-        'low_stock_threshold',
-        'notify_low_stock',
         'meta_title',
         'meta_description',
         'meta_keywords',
     ];
 
     protected $casts = [
-        'price'               => 'decimal:4',
-        'vat_rate'            => 'decimal:2',
-        'stock'               => 'integer',
-        'min_order_quantity'  => 'integer',
-        'is_active'           => 'boolean',
-        'is_featured'         => 'boolean',
-        'is_seasonal'         => 'boolean',
-        'notify_low_stock'    => 'boolean',
-        'low_stock_threshold' => 'integer',
+        'price'              => 'decimal:4',
+        'vat_rate'           => 'decimal:2',
+        'stock_status'       => 'string',
+        'min_order_quantity' => 'integer',
+        'is_active'          => 'boolean',
+        'is_featured'        => 'boolean',
+        'is_seasonal'        => 'boolean',
     ];
 
     /*
@@ -151,19 +147,12 @@ class Product extends Model
 
     public function scopeInStock($query)
     {
-        return $query->where('stock', '>', 0);
+        return $query->where('stock_status', 'in_stock');
     }
 
-    public function scopeLowStock($query)
+    public function scopePreOrder($query)
     {
-        return $query->whereNotNull('low_stock_threshold')
-            ->whereColumn('stock', '<=', 'low_stock_threshold')
-            ->where('stock', '>', 0);
-    }
-
-    public function scopeOutOfStock($query)
-    {
-        return $query->where('stock', 0);
+        return $query->where('stock_status', 'pre_order');
     }
 
     /*
@@ -184,14 +173,12 @@ class Product extends Model
 
     public function getIsInStockAttribute(): bool
     {
-        return $this->stock > 0;
+        return $this->stock_status === 'in_stock';
     }
 
-    public function getIsLowStockAttribute(): bool
+    public function getIsPreOrderAttribute(): bool
     {
-        return $this->low_stock_threshold !== null
-            && $this->stock > 0
-            && $this->stock <= $this->low_stock_threshold;
+        return $this->stock_status === 'pre_order';
     }
 
     /**

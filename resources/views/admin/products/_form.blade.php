@@ -192,49 +192,62 @@
     </div>
 </div>
 
-{{-- ── Stock & Alerts ───────────────────────────────────────────────────── --}}
+{{-- ── Stock Status ─────────────────────────────────────────────────────── --}}
 <div class="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
-    <h2 class="font-alumni text-h5 text-dark">Estoc i alertes</h2>
+    <h2 class="font-alumni text-h5 text-dark">Estat d'estoc</h2>
 
-    <div class="grid grid-cols-3 gap-4">
-        <div>
-            <label class="font-outfit text-xs font-semibold tracking-widest text-primary uppercase mb-1 block">Estoc actual *</label>
-            <input type="number" name="stock" value="{{ old('stock', $product?->stock ?? 0) }}"
-                   min="0" required
-                   class="w-full border border-gray-200 rounded-xl px-3 py-2 font-outfit text-sm
-                          focus:outline-none focus:ring-2 focus:ring-primary">
-            @error('stock') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label class="font-outfit text-xs font-semibold tracking-widest text-primary uppercase mb-1 block">Llindar d'estoc baix</label>
-            <input type="number" name="low_stock_threshold"
-                   value="{{ old('low_stock_threshold', $product?->low_stock_threshold) }}"
-                   min="1" placeholder="ex: 10"
-                   class="w-full border border-gray-200 rounded-xl px-3 py-2 font-outfit text-sm
-                          focus:outline-none focus:ring-2 focus:ring-primary">
-            <p class="font-outfit text-xs text-gray-400 mt-1">Avisa quan l'estoc sigui ≤ aquest valor</p>
-        </div>
-        <div class="flex items-end pb-1">
-            <label class="flex items-center gap-2 font-outfit text-sm text-gray-600 cursor-pointer">
-                <input type="checkbox" name="notify_low_stock" value="1"
-                       @checked(old('notify_low_stock', $product?->notify_low_stock ?? false))
-                       class="rounded accent-primary">
-                Notificar per correu
-            </label>
-        </div>
+    @php $currentStatus = old('stock_status', $product?->stock_status ?? 'in_stock'); @endphp
+
+    <div class="flex gap-4">
+        {{-- In Stock --}}
+        <label class="flex-1 cursor-pointer">
+            <input type="radio" name="stock_status" value="in_stock"
+                   @checked($currentStatus === 'in_stock')
+                   class="sr-only peer">
+            <div class="flex items-center gap-3 border-2 rounded-2xl px-5 py-4 transition-all
+                        border-gray-200 peer-checked:border-green-500 peer-checked:bg-green-50">
+                <span class="w-4 h-4 rounded-full border-2 border-gray-300 peer-checked:border-green-500 flex items-center justify-center shrink-0
+                             {{ $currentStatus === 'in_stock' ? 'border-green-500 bg-green-500' : 'border-gray-300' }}">
+                    @if($currentStatus === 'in_stock')
+                        <svg class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                    @endif
+                </span>
+                <div>
+                    <p class="font-outfit text-sm font-semibold {{ $currentStatus === 'in_stock' ? 'text-green-700' : 'text-dark' }}">
+                        En estoc
+                    </p>
+                    <p class="font-outfit text-xs text-gray-400 mt-0.5">Disponible per envio immediat</p>
+                </div>
+            </div>
+        </label>
+
+        {{-- Pre-order --}}
+        <label class="flex-1 cursor-pointer">
+            <input type="radio" name="stock_status" value="pre_order"
+                   @checked($currentStatus === 'pre_order')
+                   class="sr-only peer">
+            <div class="flex items-center gap-3 border-2 rounded-2xl px-5 py-4 transition-all
+                        border-gray-200 peer-checked:border-amber-500 peer-checked:bg-amber-50">
+                <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0
+                             {{ $currentStatus === 'pre_order' ? 'border-amber-500 bg-amber-500' : 'border-gray-300' }}">
+                    @if($currentStatus === 'pre_order')
+                        <svg class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                    @endif
+                </span>
+                <div>
+                    <p class="font-outfit text-sm font-semibold {{ $currentStatus === 'pre_order' ? 'text-amber-700' : 'text-dark' }}">
+                        Pre-comanda
+                    </p>
+                    <p class="font-outfit text-xs text-gray-400 mt-0.5">Lliurament en 24-48 h</p>
+                </div>
+            </div>
+        </label>
     </div>
-
-    @if($isEdit && $product->is_low_stock)
-        <div class="flex items-center gap-2 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3">
-            <svg class="w-4 h-4 text-orange-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-            </svg>
-            <p class="font-outfit text-xs text-orange-700">
-                <strong>Estoc baix!</strong> — {{ $product->stock }} unitats restants (llindar: {{ $product->low_stock_threshold }})
-            </p>
-        </div>
-    @endif
+    @error('stock_status') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
 </div>
 
 {{-- ── Tags ─────────────────────────────────────────────────────────────── --}}

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\HeroSlide;
 use App\Models\Order;
 use App\Models\PrintJob;
 use App\Models\PrintTemplate;
@@ -37,11 +38,14 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
+        $heroSlides = HeroSlide::active()->ordered()->get();
+
         return view('shop.home', compact(
             'featuredProducts',
             'categories',
             'isB2B',
-            'printTemplates'
+            'printTemplates',
+            'heroSlides'
         ));
     }
 

@@ -86,11 +86,11 @@
                     </div>
                     <div>
                         <span class="text-gray-400 block">{{ __('app.stock') }}</span>
-                        <template x-if="p.stock > 0">
-                            <span class="text-green-600 font-medium">{{ __('app.in_stock') }}</span>
+                        <template x-if="p.stock_status === 'pre_order'">
+                            <span class="text-amber-600 font-medium">{{ __('app.pre_order') }}</span>
                         </template>
-                        <template x-if="p.stock <= 0">
-                            <span class="text-red-500 font-medium">{{ __('app.out_of_stock') }}</span>
+                        <template x-if="p.stock_status !== 'pre_order'">
+                            <span class="text-green-600 font-medium">{{ __('app.in_stock') }}</span>
                         </template>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
                             </form>
 
                             {{-- Add to cart from modal --}}
-                            <template x-if="p.stock > 0">
+                            <template x-if="true">
                                 <form method="POST" action="{{ route('cart.add') }}">
                                     @csrf
                                     <input type="hidden" name="product_id" :value="p.id" />
@@ -395,7 +395,7 @@
                                         brand:       {{ Js::from($product->brand?->name) }},
                                         image:       {{ Js::from($imageUrl) }},
                                         url:         {{ Js::from($productUrl) }},
-                                        stock:       {{ $product->stock }},
+                                        stock_status: {{ Js::from($product->stock_status) }},
                                         min_qty:     {{ $product->min_order_quantity }},
                                         unit:        {{ Js::from($product->unit) }},
                                         price:       {{ Js::from(number_format($product->price, 2, '.', '')) }},
@@ -437,7 +437,17 @@
 
                                 {{-- Stock Badge --}}
                                 <div class="mb-3">
-                                    @if($product->stock > 0)
+                                    @if($product->stock_status === 'pre_order')
+                                        <span class="inline-flex items-center gap-1 font-outfit
+                                                     text-body-sm text-amber-700 bg-amber-50
+                                                     px-2 py-0.5 rounded-full">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            {{ __('app.pre_order') }}
+                                        </span>
+                                    @else
                                         <span class="inline-flex items-center gap-1 font-outfit
                                                      text-body-sm text-green-700 bg-green-50
                                                      px-2 py-0.5 rounded-full">
@@ -445,15 +455,6 @@
                                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                             </svg>
                                             {{ __('app.in_stock') }}
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1 font-outfit
-                                                     text-body-sm text-red-600 bg-red-50
-                                                     px-2 py-0.5 rounded-full">
-                                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                                            </svg>
-                                            {{ __('app.out_of_stock') }}
                                         </span>
                                     @endif
                                 </div>
@@ -544,32 +545,21 @@
                                             </form>
 
                                             {{-- Add to Cart --}}
-                                            @if($product->stock > 0)
-                                                <form method="POST" action="{{ route('cart.add') }}">
-                                                    @csrf
-                                                    <input type="hidden" name="product_id" value="{{ $product->id }}" />
-                                                    <input type="hidden" name="quantity" value="{{ $product->min_order_quantity }}" />
-                                                    <button type="submit"
-                                                            title="{{ __('app.add_to_cart') }}"
-                                                            class="flex items-center justify-center w-10 h-10 rounded-xl
-                                                                   bg-primary text-white hover:brightness-110
-                                                                   active:scale-95 transition-all duration-200">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                                        </svg>
-                                                    </button>
-                                                </form>
-                                            @else
-                                                <span class="flex items-center justify-center w-10 h-10 rounded-xl
-                                                             bg-gray-100 text-gray-300 cursor-not-allowed"
-                                                      title="{{ __('app.out_of_stock') }}">
+                                            <form method="POST" action="{{ route('cart.add') }}">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}" />
+                                                <input type="hidden" name="quantity" value="{{ $product->min_order_quantity }}" />
+                                                <button type="submit"
+                                                        title="{{ __('app.add_to_cart') }}"
+                                                        class="flex items-center justify-center w-10 h-10 rounded-xl
+                                                               bg-primary text-white hover:brightness-110
+                                                               active:scale-95 transition-all duration-200">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                                                     </svg>
-                                                </span>
-                                            @endif
+                                                </button>
+                                            </form>
 
                                         @endif
                                     @endauth

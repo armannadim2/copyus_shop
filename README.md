@@ -1,58 +1,118 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CopyUS Shop
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A B2B e-commerce platform for print-on-demand and custom product ordering, targeting European (primarily Catalan-speaking) markets. Built with **Laravel 13**, **TailwindCSS 4**, and **Alpine.js**.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Product Catalogue** — variants, bulk pricing tiers, reviews, wishlist
+- **Print-on-Demand** — dynamic print builder with customisable options, artwork upload, and volume pricing
+- **B2B Company Accounts** — multi-user companies with role-based access and admin approval workflow
+- **Quotation System** — request and receive itemised custom quotes
+- **Multi-Language** — Catalan, Spanish, and English (via Spatie Translatable)
+- **AI Content Generation** — auto-generate product descriptions and SEO via Google Gemini or Anthropic Claude
+- **Admin Panel** — full CRUD, user approval, order management, reporting, PDF invoices, Excel exports
+- **Support Tickets** — integrated customer support ticketing
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Tech Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Layer | Technology |
+|---|---|
+| Framework | Laravel 13 (PHP 8.3+) |
+| Frontend | Blade, Alpine.js 3, TailwindCSS 4, Vite 8 |
+| Database | SQLite (dev) / MySQL (prod) |
+| Auth | Laravel Breeze (extended) |
+| Media | Spatie Laravel MediaLibrary |
+| i18n | Spatie Laravel Translatable |
+| PDF | barryvdh/laravel-dompdf |
+| Excel | maatwebsite/excel |
+| AI | Google Gemini 2.0 Flash / Anthropic Claude Haiku |
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Quick Start
 
 ```bash
-composer require laravel/boost --dev
+git clone https://github.com/armannadim2/copyus_shop.git
+cd copyus_shop
 
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+npm install && npm run build
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Open [http://localhost:8000](http://localhost:8000).
 
-## Contributing
+For full setup instructions see [docs/SETUP.md](docs/SETUP.md).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## Documentation
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Document | Description |
+|---|---|
+| [docs/SETUP.md](docs/SETUP.md) | Developer setup, environment variables, deployment |
+| [docs/USER_MANUAL.md](docs/USER_MANUAL.md) | End-user guide for all features |
+| [CLAUDE.md](CLAUDE.md) | AI coding agent context (Claude Code / Cursor) |
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## User Roles
+
+| Role | Access |
+|---|---|
+| Guest | Browse products, request quotes, contact |
+| Regular user | Cart, checkout, orders, support tickets |
+| B2B (pending) | Waiting for admin approval |
+| B2B (approved) | Full B2B features: company management, exclusive pricing, quotations |
+| Admin | Full admin panel access |
+
+---
+
+## Project Structure
+
+```
+app/
+  Http/Controllers/
+    Admin/        # Admin panel
+    Auth/         # Authentication & B2B approval
+    Shop/         # Storefront
+  Models/         # 50+ Eloquent models
+  Services/       # PrintPriceCalculator, etc.
+  Notifications/  # 15+ notification classes
+resources/
+  views/
+    admin/        # Admin Blade views
+    shop/         # Storefront Blade views
+    layouts/      # Shared layouts
+routes/
+  web.php         # All application routes
+database/
+  migrations/     # 70+ migrations
+```
+
+---
+
+## Environment
+
+Key variables in `.env`:
+
+```env
+APP_LOCALE=ca               # ca | es | en
+SHOW_PRICES=true            # Hide prices from non-B2B guests
+AI_PROVIDER=gemini          # gemini | anthropic
+GEMINI_API_KEY=...
+ANTHROPIC_API_KEY=...
+```
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Private — all rights reserved. Not open for public contribution without explicit permission.

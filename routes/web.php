@@ -406,6 +406,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::patch('/{ticket}/status', [AdminTicketController::class, 'updateStatus'])->name('status');
     });
 
+    // Hero slides (homepage banner slider)
+    Route::prefix('hero-slides')->name('hero-slides.')->group(function () {
+        Route::get('/',                    [\App\Http\Controllers\Admin\AdminHeroSlideController::class, 'index'])->name('index');
+        Route::get('/create',              [\App\Http\Controllers\Admin\AdminHeroSlideController::class, 'create'])->name('create');
+        Route::post('/',                   [\App\Http\Controllers\Admin\AdminHeroSlideController::class, 'store'])->name('store');
+        Route::get('/{heroSlide}/edit',    [\App\Http\Controllers\Admin\AdminHeroSlideController::class, 'edit'])->name('edit');
+        Route::put('/{heroSlide}',         [\App\Http\Controllers\Admin\AdminHeroSlideController::class, 'update'])->name('update');
+        Route::delete('/{heroSlide}',      [\App\Http\Controllers\Admin\AdminHeroSlideController::class, 'destroy'])->name('destroy');
+        Route::patch('/{heroSlide}/toggle',    [\App\Http\Controllers\Admin\AdminHeroSlideController::class, 'toggle'])->name('toggle');
+        Route::patch('/{heroSlide}/move-up',   [\App\Http\Controllers\Admin\AdminHeroSlideController::class, 'moveUp'])->name('move-up');
+        Route::patch('/{heroSlide}/move-down', [\App\Http\Controllers\Admin\AdminHeroSlideController::class, 'moveDown'])->name('move-down');
+    });
+
     // Notifications
     Route::prefix('notifications')->name('notifications.')->group(function () {
         Route::patch('/{id}/read', [AdminNotificationController::class, 'markRead'])->name('read');

@@ -48,28 +48,118 @@
                     </div>
                 </div>
 
-                {{-- Right: featured card (no white frame) --}}
+                {{-- Right: hero slider --}}
                 <div class="relative animate-reveal-up delay-300">
-                    <div class="relative rounded-3xl overflow-hidden h-80 md:h-[28rem]
-                                flex items-end p-8 shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
-                        {{-- Hero image --}}
-                        <img src="{{ asset('images/hero_1.png') }}"
-                             alt="{{ __('app.home_hero_card_eyebrow') }}"
-                             class="absolute inset-0 w-full h-full object-cover">
-                        {{-- Bottom gradient for legibility --}}
-                        <div class="absolute inset-x-0 bottom-0 h-2/5
-                                    bg-gradient-to-t from-black/70 to-transparent"></div>
+                    @if($heroSlides->isNotEmpty())
+                        <div
+                            x-data="{
+                                current: 0,
+                                count: {{ $heroSlides->count() }},
+                                timer: null,
+                                init() {
+                                    if (this.count > 1) {
+                                        this.timer = setInterval(() => this.next(), 5000);
+                                    }
+                                },
+                                next() { this.current = (this.current + 1) % this.count; },
+                                prev() { this.current = (this.current - 1 + this.count) % this.count; },
+                                goTo(i) {
+                                    this.current = i;
+                                    clearInterval(this.timer);
+                                    this.timer = setInterval(() => this.next(), 5000);
+                                }
+                            }"
+                            x-init="init()"
+                            class="relative rounded-3xl overflow-hidden h-80 md:h-[28rem]
+                                   shadow-[0_20px_50px_rgba(0,0,0,0.25)]"
+                        >
+                            @foreach($heroSlides as $i => $slide)
+                            <div
+                                x-show="current === {{ $i }}"
+                                x-transition:enter="transition-opacity ease-in-out duration-700"
+                                x-transition:enter-start="opacity-0"
+                                x-transition:enter-end="opacity-100"
+                                x-transition:leave="transition-opacity ease-in-out duration-300"
+                                x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0"
+                                class="absolute inset-0 flex items-end p-8"
+                                @if($i > 0) style="display:none" @endif
+                            >
+                                <img src="{{ $slide->imageUrl() }}"
+                                     alt="{{ $slide->eyebrow ?? $slide->title ?? '' }}"
+                                     class="absolute inset-0 w-full h-full object-cover">
+                                <div class="absolute inset-x-0 bottom-0 h-2/5
+                                            bg-gradient-to-t from-black/70 to-transparent"></div>
+                                @if($slide->eyebrow || $slide->title)
+                                <div class="relative">
+                                    @if($slide->eyebrow)
+                                    <p class="font-outfit font-bold text-body-md text-white/90
+                                              uppercase tracking-wider mb-1">
+                                        {{ $slide->eyebrow }}
+                                    </p>
+                                    @endif
+                                    @if($slide->title)
+                                    <h3 class="font-alumni text-h4 text-white">
+                                        {{ $slide->title }}
+                                    </h3>
+                                    @endif
+                                </div>
+                                @endif
+                            </div>
+                            @endforeach
 
-                        <div class="relative">
-                            <p class="font-outfit font-bold text-body-md text-white/90
-                                      uppercase tracking-wider mb-1">
-                                {{ __('app.home_hero_card_eyebrow') }}
-                            </p>
-                            <h3 class="font-alumni text-h4 text-white">
-                                {{ __('app.home_hero_card_title') }}
-                            </h3>
+                            @if($heroSlides->count() > 1)
+                            {{-- Prev / Next arrows --}}
+                            <button @click="prev()"
+                                    class="absolute left-3 top-1/2 -translate-y-1/2 z-10
+                                           p-2 rounded-full bg-black/30 hover:bg-black/50
+                                           text-white transition-colors focus:outline-none">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                            </button>
+                            <button @click="next()"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 z-10
+                                           p-2 rounded-full bg-black/30 hover:bg-black/50
+                                           text-white transition-colors focus:outline-none">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+
+                            {{-- Dot indicators --}}
+                            <div class="absolute bottom-4 right-6 flex gap-2 z-10">
+                                @foreach($heroSlides as $i => $slide)
+                                <button
+                                    @click="goTo({{ $i }})"
+                                    :class="current === {{ $i }} ? 'bg-white scale-125' : 'bg-white/40 hover:bg-white/70'"
+                                    class="w-2 h-2 rounded-full transition-all duration-300 focus:outline-none"
+                                    aria-label="Slide {{ $i + 1 }}"
+                                ></button>
+                                @endforeach
+                            </div>
+                            @endif
                         </div>
-                    </div>
+                    @else
+                        {{-- Fallback: static image when no slides configured --}}
+                        <div class="relative rounded-3xl overflow-hidden h-80 md:h-[28rem]
+                                    flex items-end p-8 shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
+                            <img src="{{ asset('images/hero_1.png') }}"
+                                 alt="{{ __('app.home_hero_card_eyebrow') }}"
+                                 class="absolute inset-0 w-full h-full object-cover">
+                            <div class="absolute inset-x-0 bottom-0 h-2/5
+                                        bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <div class="relative">
+                                <p class="font-outfit font-bold text-body-md text-white/90
+                                          uppercase tracking-wider mb-1">
+                                    {{ __('app.home_hero_card_eyebrow') }}
+                                </p>
+                                <h3 class="font-alumni text-h4 text-white">
+                                    {{ __('app.home_hero_card_title') }}
+                                </h3>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
