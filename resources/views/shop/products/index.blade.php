@@ -447,6 +447,9 @@
                                             </svg>
                                             {{ __('app.pre_order') }}
                                         </span>
+                                        <p class="font-outfit text-xs text-amber-700 mt-1.5 leading-snug">
+                                            {{ __('app.pre_order_banner') }}
+                                        </p>
                                     @else
                                         <span class="inline-flex items-center gap-1 font-outfit
                                                      text-body-sm text-green-700 bg-green-50

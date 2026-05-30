@@ -140,6 +140,7 @@ return [
     'in_stock'                       => 'En estoc',
     'pre_order'                      => 'Pre-comanda',
     'pre_order_notice'               => 'Pre-comanda — lliurament en 24-48 hores.',
+    'pre_order_banner'               => 'Els articles en pre-comanda estaran disponibles per recollir o s\'enviaran en un termini de 24-48 hores.',
     'out_of_stock'                   => 'Sense estoc',
     'min_order'                      => 'Comanda mínima',
     'sku'                            => 'Referència',

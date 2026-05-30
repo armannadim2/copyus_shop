@@ -140,6 +140,7 @@ return [
     'in_stock'                       => 'En stock',
     'pre_order'                      => 'Pre-pedido',
     'pre_order_notice'               => 'Pre-pedido — entrega en 24-48 horas.',
+    'pre_order_banner'               => 'Los artículos en pre-pedido estarán disponibles para recoger o se enviarán en un plazo de 24-48 horas.',
     'out_of_stock'                   => 'Sin stock',
     'min_order'                      => 'Pedido mínimo',
     'sku'                            => 'Referencia',

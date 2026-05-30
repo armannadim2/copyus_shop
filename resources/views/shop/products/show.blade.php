@@ -180,6 +180,18 @@
                 </div>
             </div>
 
+            @if($product->stock_status === 'pre_order')
+            <div class="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4">
+                <svg class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p class="font-outfit text-sm text-amber-800">
+                    {{ __('app.pre_order_banner') }}
+                </p>
+            </div>
+            @endif
+
             {{-- ── Variants ──────────────────────────────────────────── --}}
             @php $variantTypes = $product->variant_types; @endphp
             @if(!empty($variantTypes))
