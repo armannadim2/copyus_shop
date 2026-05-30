@@ -24,7 +24,7 @@ class AdminController extends Controller
             'approved_users'       => User::where('role', 'approved')->count(),
             'total_products'       => Product::count(),
             'active_products'      => Product::where('is_active', true)->count(),
-            'low_stock_products'   => Product::lowStock()->count(),
+            'pre_order_products'   => Product::preOrder()->count(),
             'total_orders'         => Order::count(),
             'orders_pending'       => Order::where('status', 'pending')->count(),
             'orders_processing'    => Order::whereIn('status', ['confirmed', 'processing'])->count(),

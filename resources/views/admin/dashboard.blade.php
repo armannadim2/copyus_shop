@@ -114,9 +114,9 @@
                 <span class="inline-block bg-green-50 text-green-700 font-outfit text-xs px-2 py-0.5 rounded-full">
                     {{ $stats['active_products'] }} actius
                 </span>
-                @if($stats['low_stock_products'] > 0)
-                    <span class="inline-block bg-orange-50 text-orange-700 font-outfit text-xs px-2 py-0.5 rounded-full">
-                        {{ $stats['low_stock_products'] }} stock baix
+                @if($stats['pre_order_products'] > 0)
+                    <span class="inline-block bg-amber-50 text-amber-700 font-outfit text-xs px-2 py-0.5 rounded-full">
+                        {{ $stats['pre_order_products'] }} pre-comanda
                     </span>
                 @endif
             </div>
