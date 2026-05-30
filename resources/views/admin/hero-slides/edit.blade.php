@@ -18,30 +18,19 @@
               x-data="{ preview: null }">
             @csrf @method('PUT')
 
-            {{-- Current image + upload --}}
+            {{-- Image --}}
             <div class="mb-6">
-                <label class="block font-outfit text-sm font-medium text-dark mb-1.5">
-                    Imatge
-                </label>
-                <p class="font-outfit text-xs text-gray-400 mb-3">
-                    Deixa-ho en blanc per conservar la imatge actual. Selecciona una nova per substituir-la.
-                </p>
+                <label class="block font-outfit text-sm font-medium text-dark mb-1.5">Imatge</label>
+                <p class="font-outfit text-xs text-gray-400 mb-3">Deixa en blanc per conservar la imatge actual.</p>
 
-                {{-- Current image preview --}}
                 <div class="mb-4 rounded-xl overflow-hidden w-48 h-28 bg-gray-100 shadow-sm">
                     <img src="{{ $heroSlide->imageUrl() }}" alt="Imatge actual"
-                         class="w-full h-full object-cover"
-                         x-show="!preview">
+                         class="w-full h-full object-cover" x-show="!preview">
                     <img :src="preview" alt="Nova imatge"
-                         class="w-full h-full object-cover"
-                         x-show="preview" style="display:none">
+                         class="w-full h-full object-cover" x-show="preview" style="display:none">
                 </div>
-                <p class="font-outfit text-xs text-gray-400 mb-3" x-show="!preview">
-                    Imatge actual
-                </p>
-                <p class="font-outfit text-xs text-primary mb-3" x-show="preview" style="display:none">
-                    ✓ Nova imatge seleccionada
-                </p>
+                <p class="font-outfit text-xs text-gray-400 mb-3" x-show="!preview">Imatge actual</p>
+                <p class="font-outfit text-xs text-primary mb-3" x-show="preview" style="display:none">✓ Nova imatge seleccionada</p>
 
                 <div class="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center
                             hover:border-primary/40 transition-colors cursor-pointer"
@@ -50,8 +39,7 @@
                      @drop.prevent="
                         const f = $event.dataTransfer.files[0];
                         if (f && f.type.startsWith('image/')) {
-                            const dt = new DataTransfer();
-                            dt.items.add(f);
+                            const dt = new DataTransfer(); dt.items.add(f);
                             $refs.imageInput.files = dt.files;
                             preview = URL.createObjectURL(f);
                         }
@@ -60,49 +48,84 @@
                            x-ref="imageInput"
                            @change="preview = $event.target.files[0] ? URL.createObjectURL($event.target.files[0]) : null"
                            class="hidden">
-                    <p class="font-outfit text-sm text-gray-400">
-                        Fes clic o arrossega per canviar la imatge
-                    </p>
+                    <p class="font-outfit text-sm text-gray-400">Fes clic o arrossega per canviar la imatge</p>
                     <p class="font-outfit text-xs text-gray-300 mt-1">JPG, PNG, WebP · màx. 4 MB</p>
                 </div>
-                @error('image')
-                    <p class="mt-1.5 font-outfit text-xs text-red-500">{{ $message }}</p>
-                @enderror
+                @error('image') <p class="mt-1.5 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
             </div>
 
-            {{-- Eyebrow --}}
+            {{-- Eyebrow — 3 locales --}}
             <div class="mb-5">
-                <label for="eyebrow" class="block font-outfit text-sm font-medium text-dark mb-1.5">
+                <label class="block font-outfit text-sm font-medium text-dark mb-1.5">
                     Text petit (eyebrow)
+                    <span class="font-normal text-gray-400 ml-1">— apareix a sobre del títol, en majúscules</span>
                 </label>
-                <p class="font-outfit text-xs text-gray-400 mb-2">
-                    S'mostra a sobre del títol, en majúscules.
-                </p>
-                <input type="text" name="eyebrow" id="eyebrow"
-                       value="{{ old('eyebrow', $heroSlide->eyebrow) }}"
-                       maxlength="100" placeholder="Novetat"
-                       class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-4 py-3
-                              focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all
-                              placeholder:text-gray-300">
-                @error('eyebrow')
-                    <p class="mt-1.5 font-outfit text-xs text-red-500">{{ $message }}</p>
-                @enderror
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="font-outfit text-xs font-semibold text-primary uppercase tracking-widest mb-1 block">CA</label>
+                        <input type="text" name="eyebrow_ca"
+                               value="{{ old('eyebrow_ca', $heroSlide->getTranslation('eyebrow', 'ca', false)) }}"
+                               maxlength="100" placeholder="Novetat"
+                               class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-3 py-2.5
+                                      focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-300">
+                        @error('eyebrow_ca') <p class="mt-1 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="font-outfit text-xs font-semibold text-primary uppercase tracking-widest mb-1 block">ES</label>
+                        <input type="text" name="eyebrow_es"
+                               value="{{ old('eyebrow_es', $heroSlide->getTranslation('eyebrow', 'es', false)) }}"
+                               maxlength="100" placeholder="Novedad"
+                               class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-3 py-2.5
+                                      focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-300">
+                        @error('eyebrow_es') <p class="mt-1 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="font-outfit text-xs font-semibold text-primary uppercase tracking-widest mb-1 block">EN</label>
+                        <input type="text" name="eyebrow_en"
+                               value="{{ old('eyebrow_en', $heroSlide->getTranslation('eyebrow', 'en', false)) }}"
+                               maxlength="100" placeholder="New"
+                               class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-3 py-2.5
+                                      focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-300">
+                        @error('eyebrow_en') <p class="mt-1 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                </div>
             </div>
 
-            {{-- Title --}}
+            {{-- Title — 3 locales --}}
             <div class="mb-5">
-                <label for="title" class="block font-outfit text-sm font-medium text-dark mb-1.5">
+                <label class="block font-outfit text-sm font-medium text-dark mb-1.5">
                     Títol principal
+                    <span class="font-normal text-gray-400 ml-1">— apareix en gran sobre la imatge</span>
                 </label>
-                <input type="text" name="title" id="title"
-                       value="{{ old('title', $heroSlide->title) }}"
-                       maxlength="200" placeholder="El teu títol aquí"
-                       class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-4 py-3
-                              focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all
-                              placeholder:text-gray-300">
-                @error('title')
-                    <p class="mt-1.5 font-outfit text-xs text-red-500">{{ $message }}</p>
-                @enderror
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="font-outfit text-xs font-semibold text-primary uppercase tracking-widest mb-1 block">CA</label>
+                        <input type="text" name="title_ca"
+                               value="{{ old('title_ca', $heroSlide->getTranslation('title', 'ca', false)) }}"
+                               maxlength="200" placeholder="El teu títol aquí"
+                               class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-3 py-2.5
+                                      focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-300">
+                        @error('title_ca') <p class="mt-1 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="font-outfit text-xs font-semibold text-primary uppercase tracking-widest mb-1 block">ES</label>
+                        <input type="text" name="title_es"
+                               value="{{ old('title_es', $heroSlide->getTranslation('title', 'es', false)) }}"
+                               maxlength="200" placeholder="Tu título aquí"
+                               class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-3 py-2.5
+                                      focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-300">
+                        @error('title_es') <p class="mt-1 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="font-outfit text-xs font-semibold text-primary uppercase tracking-widest mb-1 block">EN</label>
+                        <input type="text" name="title_en"
+                               value="{{ old('title_en', $heroSlide->getTranslation('title', 'en', false)) }}"
+                               maxlength="200" placeholder="Your title here"
+                               class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-3 py-2.5
+                                      focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-300">
+                        @error('title_en') <p class="mt-1 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                </div>
             </div>
 
             {{-- Sort order --}}
@@ -114,9 +137,7 @@
                        value="{{ old('sort_order', $heroSlide->sort_order) }}" min="0"
                        class="w-28 font-outfit text-sm border border-gray-200 rounded-xl px-4 py-3
                               focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
-                @error('sort_order')
-                    <p class="mt-1.5 font-outfit text-xs text-red-500">{{ $message }}</p>
-                @enderror
+                @error('sort_order') <p class="mt-1.5 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
             </div>
 
             {{-- Active --}}
@@ -124,7 +145,7 @@
                 <label class="inline-flex items-center gap-3 cursor-pointer">
                     <input type="hidden" name="is_active" value="0">
                     <input type="checkbox" name="is_active" id="is_active" value="1"
-                           {{ old('is_active', $heroSlide->is_active) ? 'checked' : '' }}
+                           {{ $heroSlide->is_active ? 'checked' : '' }}
                            class="w-4 h-4 accent-primary rounded">
                     <span class="font-outfit text-sm text-dark">Actiu (visible a la portada)</span>
                 </label>
@@ -137,8 +158,7 @@
                     Desar canvis
                 </button>
                 <a href="{{ route('admin.hero-slides.index') }}"
-                   class="bg-gray-100 text-gray-600 font-outfit text-sm px-6 py-3 rounded-xl
-                          hover:bg-gray-200 transition-all">
+                   class="bg-gray-100 text-gray-600 font-outfit text-sm px-6 py-3 rounded-xl hover:bg-gray-200 transition-all">
                     Cancel·lar
                 </a>
             </div>
@@ -149,7 +169,7 @@
     <div class="mt-6 bg-white rounded-2xl border border-red-100 p-6">
         <h3 class="font-outfit text-sm font-semibold text-red-600 mb-3">Zona de perill</h3>
         <form method="POST" action="{{ route('admin.hero-slides.destroy', $heroSlide) }}"
-              onsubmit="return confirm('Segur que vols eliminar aquest slide? L\'acció no es pot desfer.')">
+              onsubmit="return confirm('Segur que vols eliminar aquest slide?')">
             @csrf @method('DELETE')
             <button type="submit"
                     class="bg-red-50 text-red-600 border border-red-200 font-outfit text-sm px-5 py-2.5
@@ -158,6 +178,5 @@
             </button>
         </form>
     </div>
-
 </div>
 @endsection

@@ -4,9 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Translatable\HasTranslations;
 
 class HeroSlide extends Model
 {
+    use HasTranslations;
+
+    public array $translatable = ['eyebrow', 'title'];
+
     protected $fillable = ['image', 'eyebrow', 'title', 'is_active', 'sort_order'];
 
     protected $casts = ['is_active' => 'boolean'];

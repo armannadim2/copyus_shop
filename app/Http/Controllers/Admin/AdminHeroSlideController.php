@@ -25,8 +25,12 @@ class AdminHeroSlideController extends Controller
     {
         $data = $request->validate([
             'image'      => 'required|image|max:4096',
-            'eyebrow'    => 'nullable|string|max:100',
-            'title'      => 'nullable|string|max:200',
+            'eyebrow_ca' => 'nullable|string|max:100',
+            'eyebrow_es' => 'nullable|string|max:100',
+            'eyebrow_en' => 'nullable|string|max:100',
+            'title_ca'   => 'nullable|string|max:200',
+            'title_es'   => 'nullable|string|max:200',
+            'title_en'   => 'nullable|string|max:200',
             'sort_order' => 'nullable|integer|min:0',
         ]);
 
@@ -34,8 +38,8 @@ class AdminHeroSlideController extends Controller
 
         HeroSlide::create([
             'image'      => $path,
-            'eyebrow'    => $data['eyebrow'] ?? null,
-            'title'      => $data['title'] ?? null,
+            'eyebrow'    => ['ca' => $data['eyebrow_ca'] ?? null, 'es' => $data['eyebrow_es'] ?? null, 'en' => $data['eyebrow_en'] ?? null],
+            'title'      => ['ca' => $data['title_ca'] ?? null,   'es' => $data['title_es'] ?? null,   'en' => $data['title_en'] ?? null],
             'is_active'  => $request->boolean('is_active', true),
             'sort_order' => $data['sort_order'] ?? (HeroSlide::max('sort_order') + 1),
         ]);
@@ -53,8 +57,12 @@ class AdminHeroSlideController extends Controller
     {
         $data = $request->validate([
             'image'      => 'nullable|image|max:4096',
-            'eyebrow'    => 'nullable|string|max:100',
-            'title'      => 'nullable|string|max:200',
+            'eyebrow_ca' => 'nullable|string|max:100',
+            'eyebrow_es' => 'nullable|string|max:100',
+            'eyebrow_en' => 'nullable|string|max:100',
+            'title_ca'   => 'nullable|string|max:200',
+            'title_es'   => 'nullable|string|max:200',
+            'title_en'   => 'nullable|string|max:200',
             'sort_order' => 'nullable|integer|min:0',
         ]);
 
@@ -65,8 +73,8 @@ class AdminHeroSlideController extends Controller
 
         $heroSlide->update([
             'image'      => $data['image'] ?? $heroSlide->image,
-            'eyebrow'    => $data['eyebrow'] ?? null,
-            'title'      => $data['title'] ?? null,
+            'eyebrow'    => ['ca' => $data['eyebrow_ca'] ?? null, 'es' => $data['eyebrow_es'] ?? null, 'en' => $data['eyebrow_en'] ?? null],
+            'title'      => ['ca' => $data['title_ca'] ?? null,   'es' => $data['title_es'] ?? null,   'en' => $data['title_en'] ?? null],
             'is_active'  => $request->boolean('is_active', true),
             'sort_order' => $data['sort_order'] ?? $heroSlide->sort_order,
         ]);

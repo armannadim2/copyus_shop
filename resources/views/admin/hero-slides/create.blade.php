@@ -20,7 +20,7 @@
 
             {{-- Image upload --}}
             <div class="mb-6">
-                <label class="block font-outfit text-sm font-medium text-dark mb-2">
+                <label class="block font-outfit text-sm font-medium text-dark mb-1.5">
                     Imatge <span class="text-red-500">*</span>
                 </label>
                 <div class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center
@@ -30,8 +30,7 @@
                      @drop.prevent="
                         const f = $event.dataTransfer.files[0];
                         if (f && f.type.startsWith('image/')) {
-                            const dt = new DataTransfer();
-                            dt.items.add(f);
+                            const dt = new DataTransfer(); dt.items.add(f);
                             $refs.imageInput.files = dt.files;
                             preview = URL.createObjectURL(f);
                         }
@@ -40,7 +39,6 @@
                            x-ref="imageInput"
                            @change="preview = $event.target.files[0] ? URL.createObjectURL($event.target.files[0]) : null"
                            class="hidden">
-
                     <template x-if="preview">
                         <div>
                             <img :src="preview" class="mx-auto max-h-52 rounded-xl object-cover mb-3 shadow-sm">
@@ -50,52 +48,80 @@
                     <template x-if="!preview">
                         <div class="py-4">
                             <p class="text-3xl mb-3">🖼️</p>
-                            <p class="font-outfit text-sm text-gray-500">
-                                Arrossega una imatge o fes clic per seleccionar
-                            </p>
+                            <p class="font-outfit text-sm text-gray-500">Arrossega una imatge o fes clic per seleccionar</p>
                             <p class="font-outfit text-xs text-gray-400 mt-1">JPG, PNG, WebP · màx. 4 MB</p>
                         </div>
                     </template>
                 </div>
-                @error('image')
-                    <p class="mt-1.5 font-outfit text-xs text-red-500">{{ $message }}</p>
-                @enderror
+                @error('image') <p class="mt-1.5 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
             </div>
 
-            {{-- Eyebrow --}}
+            {{-- Eyebrow — 3 locales --}}
             <div class="mb-5">
-                <label for="eyebrow" class="block font-outfit text-sm font-medium text-dark mb-1.5">
+                <label class="block font-outfit text-sm font-medium text-dark mb-1.5">
                     Text petit (eyebrow)
+                    <span class="font-normal text-gray-400 ml-1">— apareix a sobre del títol, en majúscules</span>
                 </label>
-                <p class="font-outfit text-xs text-gray-400 mb-2">
-                    S'mostra a sobre del títol, en majúscules. Ex: «Novetat», «Oferta especial».
-                </p>
-                <input type="text" name="eyebrow" id="eyebrow" value="{{ old('eyebrow') }}"
-                       maxlength="100" placeholder="Novetat"
-                       class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-4 py-3
-                              focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all
-                              placeholder:text-gray-300">
-                @error('eyebrow')
-                    <p class="mt-1.5 font-outfit text-xs text-red-500">{{ $message }}</p>
-                @enderror
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="font-outfit text-xs font-semibold text-primary uppercase tracking-widest mb-1 block">CA</label>
+                        <input type="text" name="eyebrow_ca" value="{{ old('eyebrow_ca') }}"
+                               maxlength="100" placeholder="Novetat"
+                               class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-3 py-2.5
+                                      focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-300">
+                        @error('eyebrow_ca') <p class="mt-1 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="font-outfit text-xs font-semibold text-primary uppercase tracking-widest mb-1 block">ES</label>
+                        <input type="text" name="eyebrow_es" value="{{ old('eyebrow_es') }}"
+                               maxlength="100" placeholder="Novedad"
+                               class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-3 py-2.5
+                                      focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-300">
+                        @error('eyebrow_es') <p class="mt-1 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="font-outfit text-xs font-semibold text-primary uppercase tracking-widest mb-1 block">EN</label>
+                        <input type="text" name="eyebrow_en" value="{{ old('eyebrow_en') }}"
+                               maxlength="100" placeholder="New"
+                               class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-3 py-2.5
+                                      focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-300">
+                        @error('eyebrow_en') <p class="mt-1 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                </div>
             </div>
 
-            {{-- Title --}}
+            {{-- Title — 3 locales --}}
             <div class="mb-5">
-                <label for="title" class="block font-outfit text-sm font-medium text-dark mb-1.5">
+                <label class="block font-outfit text-sm font-medium text-dark mb-1.5">
                     Títol principal
+                    <span class="font-normal text-gray-400 ml-1">— apareix en gran sobre la imatge</span>
                 </label>
-                <p class="font-outfit text-xs text-gray-400 mb-2">
-                    Apareix en gran sobre la imatge. Ex: «Targetes de visita des de 9,90 €».
-                </p>
-                <input type="text" name="title" id="title" value="{{ old('title') }}"
-                       maxlength="200" placeholder="El teu títol aquí"
-                       class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-4 py-3
-                              focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all
-                              placeholder:text-gray-300">
-                @error('title')
-                    <p class="mt-1.5 font-outfit text-xs text-red-500">{{ $message }}</p>
-                @enderror
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="font-outfit text-xs font-semibold text-primary uppercase tracking-widest mb-1 block">CA</label>
+                        <input type="text" name="title_ca" value="{{ old('title_ca') }}"
+                               maxlength="200" placeholder="El teu títol aquí"
+                               class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-3 py-2.5
+                                      focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-300">
+                        @error('title_ca') <p class="mt-1 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="font-outfit text-xs font-semibold text-primary uppercase tracking-widest mb-1 block">ES</label>
+                        <input type="text" name="title_es" value="{{ old('title_es') }}"
+                               maxlength="200" placeholder="Tu título aquí"
+                               class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-3 py-2.5
+                                      focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-300">
+                        @error('title_es') <p class="mt-1 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="font-outfit text-xs font-semibold text-primary uppercase tracking-widest mb-1 block">EN</label>
+                        <input type="text" name="title_en" value="{{ old('title_en') }}"
+                               maxlength="200" placeholder="Your title here"
+                               class="w-full font-outfit text-sm border border-gray-200 rounded-xl px-3 py-2.5
+                                      focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-gray-300">
+                        @error('title_en') <p class="mt-1 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                </div>
             </div>
 
             {{-- Sort order --}}
@@ -107,17 +133,14 @@
                        value="{{ old('sort_order', 0) }}" min="0"
                        class="w-28 font-outfit text-sm border border-gray-200 rounded-xl px-4 py-3
                               focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
-                @error('sort_order')
-                    <p class="mt-1.5 font-outfit text-xs text-red-500">{{ $message }}</p>
-                @enderror
+                @error('sort_order') <p class="mt-1.5 font-outfit text-xs text-red-500">{{ $message }}</p> @enderror
             </div>
 
             {{-- Active --}}
             <div class="mb-8">
                 <label class="inline-flex items-center gap-3 cursor-pointer">
                     <input type="hidden" name="is_active" value="0">
-                    <input type="checkbox" name="is_active" id="is_active" value="1"
-                           {{ old('is_active', '1') ? 'checked' : '' }}
+                    <input type="checkbox" name="is_active" id="is_active" value="1" checked
                            class="w-4 h-4 accent-primary rounded">
                     <span class="font-outfit text-sm text-dark">Actiu (visible a la portada)</span>
                 </label>
@@ -130,8 +153,7 @@
                     Desar slide
                 </button>
                 <a href="{{ route('admin.hero-slides.index') }}"
-                   class="bg-gray-100 text-gray-600 font-outfit text-sm px-6 py-3 rounded-xl
-                          hover:bg-gray-200 transition-all">
+                   class="bg-gray-100 text-gray-600 font-outfit text-sm px-6 py-3 rounded-xl hover:bg-gray-200 transition-all">
                     Cancel·lar
                 </a>
             </div>

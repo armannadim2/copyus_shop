@@ -55,21 +55,18 @@
                             x-data="{
                                 current: 0,
                                 count: {{ $heroSlides->count() }},
-                                timer: null,
+                                _t: null,
                                 init() {
-                                    if (this.count > 1) {
-                                        this.timer = setInterval(() => this.next(), 5000);
-                                    }
+                                    if (this.count > 1) this._start();
+                                },
+                                _start() {
+                                    clearInterval(this._t);
+                                    this._t = setInterval(() => this.next(), 5000);
                                 },
                                 next() { this.current = (this.current + 1) % this.count; },
                                 prev() { this.current = (this.current - 1 + this.count) % this.count; },
-                                goTo(i) {
-                                    this.current = i;
-                                    clearInterval(this.timer);
-                                    this.timer = setInterval(() => this.next(), 5000);
-                                }
+                                goTo(i) { this.current = i; this._start(); }
                             }"
-                            x-init="init()"
                             class="relative rounded-3xl overflow-hidden h-80 md:h-[28rem]
                                    shadow-[0_20px_50px_rgba(0,0,0,0.25)]"
                         >
