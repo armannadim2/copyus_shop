@@ -73,17 +73,14 @@
                             class="relative rounded-3xl overflow-hidden h-80 md:h-[28rem]
                                    shadow-[0_20px_50px_rgba(0,0,0,0.25)]"
                         >
+                            {{-- Slides — all in DOM, cross-fade via CSS opacity --}}
                             @foreach($heroSlides as $i => $slide)
                             <div
-                                x-show="current === {{ $i }}"
-                                x-transition:enter="transition-opacity ease-in-out duration-700"
-                                x-transition:enter-start="opacity-0"
-                                x-transition:enter-end="opacity-100"
-                                x-transition:leave="transition-opacity ease-in-out duration-300"
-                                x-transition:leave-start="opacity-100"
-                                x-transition:leave-end="opacity-0"
                                 class="absolute inset-0 flex items-end p-8"
-                                @if($i > 0) style="display:none" @endif
+                                style="transition: opacity 0.8s ease-in-out; {{ $i === 0 ? 'opacity:1;z-index:10' : 'opacity:0;z-index:0' }}"
+                                :style="current === {{ $i }}
+                                    ? 'opacity:1;z-index:10;transition:opacity 0.8s ease-in-out'
+                                    : 'opacity:0;z-index:0;transition:opacity 0.8s ease-in-out'"
                             >
                                 <img src="{{ $slide->imageUrl() }}"
                                      alt="{{ $slide->eyebrow ?? $slide->title ?? '' }}"
@@ -91,7 +88,7 @@
                                 <div class="absolute inset-x-0 bottom-0 h-2/5
                                             bg-gradient-to-t from-black/70 to-transparent"></div>
                                 @if($slide->eyebrow || $slide->title)
-                                <div class="relative">
+                                <div class="relative z-10">
                                     @if($slide->eyebrow)
                                     <p class="font-outfit font-bold text-body-md text-white/90
                                               uppercase tracking-wider mb-1">
@@ -109,31 +106,38 @@
                             @endforeach
 
                             @if($heroSlides->count() > 1)
-                            {{-- Prev / Next arrows --}}
+                            {{-- Prev arrow — z-30 to always sit above slides --}}
                             <button @click="prev()"
-                                    class="absolute left-3 top-1/2 -translate-y-1/2 z-10
-                                           p-2 rounded-full bg-black/30 hover:bg-black/50
-                                           text-white transition-colors focus:outline-none">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 z-30
+                                           w-10 h-10 flex items-center justify-center
+                                           rounded-full bg-black/40 hover:bg-black/65
+                                           text-white transition-colors duration-200
+                                           focus:outline-none focus:ring-2 focus:ring-white/50">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
                                 </svg>
                             </button>
+                            {{-- Next arrow --}}
                             <button @click="next()"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 z-10
-                                           p-2 rounded-full bg-black/30 hover:bg-black/50
-                                           text-white transition-colors focus:outline-none">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 z-30
+                                           w-10 h-10 flex items-center justify-center
+                                           rounded-full bg-black/40 hover:bg-black/65
+                                           text-white transition-colors duration-200
+                                           focus:outline-none focus:ring-2 focus:ring-white/50">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                                 </svg>
                             </button>
 
-                            {{-- Dot indicators --}}
-                            <div class="absolute bottom-4 right-6 flex gap-2 z-10">
+                            {{-- Dot indicators — centred at bottom, z-30 --}}
+                            <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2.5 z-30">
                                 @foreach($heroSlides as $i => $slide)
                                 <button
                                     @click="goTo({{ $i }})"
-                                    :class="current === {{ $i }} ? 'bg-white scale-125' : 'bg-white/40 hover:bg-white/70'"
-                                    class="w-2 h-2 rounded-full transition-all duration-300 focus:outline-none"
+                                    :class="current === {{ $i }}
+                                        ? 'bg-white w-6 h-2.5'
+                                        : 'bg-white/50 hover:bg-white/80 w-2.5 h-2.5'"
+                                    class="rounded-full transition-all duration-400 focus:outline-none"
                                     aria-label="Slide {{ $i + 1 }}"
                                 ></button>
                                 @endforeach
