@@ -591,8 +591,19 @@
             x-transition:leave-end="opacity-0 scale-95 translate-y-3"
             class="relative w-full max-w-md bg-white rounded-3xl overflow-hidden shadow-2xl z-10"
         >
+            {{-- Close button — card level so it never overlaps header content --}}
+            <button @click="close()"
+                    class="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center
+                           rounded-full bg-white/10 hover:bg-white/20 text-white/60 hover:text-white
+                           transition-all focus:outline-none">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                          d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
             {{-- ── Header — solid dark, no gradient ── --}}
-            <div class="relative bg-dark px-8 pt-9 pb-9 overflow-hidden">
+            <div class="relative bg-dark px-8 pt-6 pb-6 overflow-hidden">
 
                 {{-- Decorative ring top-right --}}
                 <div class="absolute -top-10 -right-10 w-48 h-48 rounded-full
@@ -600,40 +611,27 @@
                 {{-- Decorative ring bottom-left --}}
                 <div class="absolute -bottom-8 -left-8 w-32 h-32 rounded-full
                             border-[24px] border-white/[0.04]"></div>
-                {{-- Accent dot --}}
-                <div class="absolute top-9 right-9 w-2 h-2 rounded-full bg-primary"></div>
-
-                {{-- Close button --}}
-                <button @click="close()"
-                        class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center
-                               rounded-full text-white/40 hover:text-white hover:bg-white/10
-                               transition-all focus:outline-none">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
 
                 {{-- Eyebrow label --}}
                 <p class="font-outfit text-xs font-semibold uppercase tracking-[0.2em]
-                           text-primary mb-5 relative">
+                           text-primary mb-4 relative">
                     {{ __('app.popup_eyebrow') }}
                 </p>
 
                 {{-- Main headline --}}
-                <h2 class="font-alumni leading-none relative" style="font-size: 3rem;">
+                <h2 class="font-alumni leading-none relative" style="font-size: 2.75rem;">
                     <span class="text-white/70">{{ __('app.popup_headline_1') }}</span><br>
                     <span class="text-primary">{{ __('app.popup_headline_2') }}</span>
                 </h2>
 
                 {{-- Subtitle --}}
-                <p class="font-outfit text-sm text-white/55 mt-4 leading-relaxed relative max-w-xs">
+                <p class="font-outfit text-sm text-white/55 mt-3 leading-relaxed relative max-w-xs">
                     {{ __('app.popup_subtitle') }}
                 </p>
             </div>
 
             {{-- ── Features ── --}}
-            <div class="px-8 py-7 space-y-5">
+            <div class="px-8 pt-6 pb-5 space-y-4">
 
                 {{-- Feature 1: Online order --}}
                 <div class="flex items-start gap-4">
@@ -697,7 +695,7 @@
             </div>
 
             {{-- ── Footer CTA ── --}}
-            <div class="px-8 pb-8 pt-1">
+            <div class="px-8 pb-7 pt-2 border-t border-gray-100">
                 <a href="{{ route('products.index') }}"
                    @click="close()"
                    class="block w-full text-center bg-primary text-white
