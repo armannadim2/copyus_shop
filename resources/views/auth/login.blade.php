@@ -72,6 +72,10 @@
                            class="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary accent-primary" />
                     <span class="font-outfit text-xs text-gray-500">{{ __('app.remember_me') }}</span>
                 </label>
+                <a href="{{ route('password.request') }}"
+                   class="font-outfit text-xs text-secondary hover:text-primary transition-colors">
+                    {{ __('app.forgot_password') }}
+                </a>
             </div>
 
             <button type="submit"
