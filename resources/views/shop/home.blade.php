@@ -602,30 +602,32 @@
                 </svg>
             </button>
 
-            {{-- ── Header — solid dark, no gradient ── --}}
-            <div class="relative bg-dark px-8 pt-6 pb-6 overflow-hidden">
+            {{-- ── Header — image background with dark overlay ── --}}
+            <div class="relative px-8 pt-6 pb-6 overflow-hidden">
 
-                {{-- Decorative ring top-right --}}
-                <div class="absolute -top-10 -right-10 w-48 h-48 rounded-full
-                            border-[36px] border-white/[0.05]"></div>
-                {{-- Decorative ring bottom-left --}}
-                <div class="absolute -bottom-8 -left-8 w-32 h-32 rounded-full
-                            border-[24px] border-white/[0.04]"></div>
+                {{-- Background image --}}
+                <img src="{{ asset('images/popup_header.png') }}"
+                     alt=""
+                     class="absolute inset-0 w-full h-full object-cover object-center"
+                     aria-hidden="true">
+
+                {{-- Dark overlay for text legibility --}}
+                <div class="absolute inset-0 bg-dark/65"></div>
 
                 {{-- Eyebrow label --}}
-                <p class="font-outfit text-xs font-semibold uppercase tracking-[0.2em]
-                           text-primary mb-4 relative">
+                <p class="relative z-10 font-outfit text-xs font-semibold uppercase tracking-[0.2em]
+                           text-primary mb-4">
                     {{ __('app.popup_eyebrow') }}
                 </p>
 
                 {{-- Main headline --}}
-                <h2 class="font-alumni leading-none relative" style="font-size: 2.75rem;">
-                    <span class="text-white/70">{{ __('app.popup_headline_1') }}</span><br>
+                <h2 class="relative z-10 font-alumni leading-none" style="font-size: 2.75rem;">
+                    <span class="text-white/80">{{ __('app.popup_headline_1') }}</span><br>
                     <span class="text-primary">{{ __('app.popup_headline_2') }}</span>
                 </h2>
 
                 {{-- Subtitle --}}
-                <p class="font-outfit text-sm text-white/55 mt-3 leading-relaxed relative max-w-xs">
+                <p class="relative z-10 font-outfit text-sm text-white/60 mt-3 leading-relaxed max-w-xs">
                     {{ __('app.popup_subtitle') }}
                 </p>
             </div>
@@ -695,7 +697,7 @@
             </div>
 
             {{-- ── Footer CTA ── --}}
-            <div class="px-8 pb-7 pt-2 border-t border-gray-100">
+            <div class="px-8 pb-9 pt-4 border-t border-gray-100">
                 <a href="{{ route('products.index') }}"
                    @click="close()"
                    class="block w-full text-center bg-primary text-white
