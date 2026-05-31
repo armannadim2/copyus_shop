@@ -276,16 +276,18 @@ return [
     'account_details'                => 'Detalls del compte',
 
     // ── Welcome popup ────────────────────────────────────────
-    'popup_eyebrow'                  => 'Copyus — Tot per a la teva empresa',
-    'popup_title'                    => 'Impressió digital i papeleria en un sol lloc',
-    'popup_subtitle'                 => 'Descobreix tots els serveis que tenim per a tu.',
-    'popup_service_print'            => 'Impressió Digital',
-    'popup_service_print_desc'       => 'Targetes, flyers, tríptics, banners, samarretes i molt més.',
-    'popup_service_papeleria'        => 'Papeleria',
-    'popup_service_papeleria_desc'   => 'Material d\'oficina, bolígrafs, sobres, carpetes i productes de papeleria.',
-    'popup_new_badge'                => 'NOU',
-    'popup_cta'                      => 'Explorar productes',
-    'popup_dismiss'                  => 'Tancar',
+    'popup_eyebrow'                  => 'Novetat a Copyus',
+    'popup_headline_1'               => 'Ara també,',
+    'popup_headline_2'               => 'Papeleria.',
+    'popup_subtitle'                 => 'Tot el material d\'oficina que necessites, disponible en línia i a la nostra botiga.',
+    'popup_f1_title'                 => 'Compra en línia, recull a la botiga',
+    'popup_f1_desc'                  => 'Tria els teus productes des de casa i passa a recollir-los quan et vagi bé.',
+    'popup_f2_title'                 => 'Compra directament a l\'establiment',
+    'popup_f2_desc'                  => 'Visita\'ns i trobaràs tot el que necessites al moment.',
+    'popup_f3_title'                 => 'No en estoc? Llest en 24-48 h',
+    'popup_f3_desc'                  => 'Si un article no és disponible, el rebràs o el podràs recollir en 24-48 hores.',
+    'popup_cta'                      => 'Explorar la Papeleria',
+    'popup_dismiss'                  => 'Potser més tard',
 
     // ── Product enhancements ──────────────────────────────────
     'low_stock'                      => 'Stock baix',

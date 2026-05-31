@@ -276,16 +276,18 @@ return [
     'account_details'                => 'Detalles de la cuenta',
 
     // ── Welcome popup ────────────────────────────────────────
-    'popup_eyebrow'                  => 'Copyus — Todo para tu empresa',
-    'popup_title'                    => 'Impresión digital y papelería en un solo lugar',
-    'popup_subtitle'                 => 'Descubre todos los servicios que tenemos para ti.',
-    'popup_service_print'            => 'Impresión Digital',
-    'popup_service_print_desc'       => 'Tarjetas, flyers, trípticos, banners, camisetas y mucho más.',
-    'popup_service_papeleria'        => 'Papelería',
-    'popup_service_papeleria_desc'   => 'Material de oficina, bolígrafos, sobres, carpetas y productos de papelería.',
-    'popup_new_badge'                => 'NUEVO',
-    'popup_cta'                      => 'Explorar productos',
-    'popup_dismiss'                  => 'Cerrar',
+    'popup_eyebrow'                  => 'Novedad en Copyus',
+    'popup_headline_1'               => 'Papelería,',
+    'popup_headline_2'               => 'ahora en línea.',
+    'popup_subtitle'                 => 'Todo el material de oficina que necesitas — disponible online y en nuestra tienda.',
+    'popup_f1_title'                 => 'Pide online, recoge en tienda',
+    'popup_f1_desc'                  => 'Compra desde casa y pasa a recogerlo cuando te venga bien.',
+    'popup_f2_title'                 => 'Compra directamente en tienda',
+    'popup_f2_desc'                  => 'Visítanos y encuentra todo lo que necesitas al momento.',
+    'popup_f3_title'                 => '¿No está en stock? Listo en 24-48 h',
+    'popup_f3_desc'                  => 'Si un artículo no está disponible, lo tendrás en 24-48 horas.',
+    'popup_cta'                      => 'Explorar la Papelería',
+    'popup_dismiss'                  => 'Quizás más tarde',
 
     // ── Product enhancements ──────────────────────────────────
     'low_stock'                      => 'Stock bajo',

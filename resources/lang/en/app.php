@@ -276,16 +276,18 @@ return [
     'account_details'                => 'Account details',
 
     // ── Welcome popup ────────────────────────────────────────
-    'popup_eyebrow'                  => 'Copyus — Everything for your business',
-    'popup_title'                    => 'Digital printing & stationery in one place',
-    'popup_subtitle'                 => 'Discover all the services we have for you.',
-    'popup_service_print'            => 'Digital Printing',
-    'popup_service_print_desc'       => 'Business cards, flyers, brochures, banners, t-shirts and more.',
-    'popup_service_papeleria'        => 'Stationery',
-    'popup_service_papeleria_desc'   => 'Office supplies, pens, envelopes, folders and stationery products.',
-    'popup_new_badge'                => 'NEW',
-    'popup_cta'                      => 'Explore products',
-    'popup_dismiss'                  => 'Close',
+    'popup_eyebrow'                  => 'New at Copyus',
+    'popup_headline_1'               => 'Stationery,',
+    'popup_headline_2'               => 'Now Online.',
+    'popup_subtitle'                 => 'All the office supplies you need — available online and in our store.',
+    'popup_f1_title'                 => 'Order online, pick up in store',
+    'popup_f1_desc'                  => 'Browse from home and collect at your convenience.',
+    'popup_f2_title'                 => 'Shop directly in store',
+    'popup_f2_desc'                  => 'Visit us and find everything you need on the spot.',
+    'popup_f3_title'                 => 'Not in stock? Ready in 24-48 h',
+    'popup_f3_desc'                  => 'If an item isn\'t available, we\'ll have it ready within 24-48 hours.',
+    'popup_cta'                      => 'Explore Stationery',
+    'popup_dismiss'                  => 'Maybe later',
 
     // ── Product enhancements ──────────────────────────────────
     'low_stock'                      => 'Low stock',

@@ -550,12 +550,12 @@
         </div>
     </section>
 
-    {{-- ── Welcome Popup ──────────────────────────────────────────────────── --}}
+    {{-- ── Papeleria Announcement Popup ───────────────────────────────────── --}}
     <div
         x-data="{
             open: false,
             init() {
-                const key  = 'copyus_welcome_v1';
+                const key  = 'copyus_papeleria_v1';
                 const last = localStorage.getItem(key);
                 if (!last || Date.now() - parseInt(last) > 86400000) {
                     setTimeout(() => { this.open = true; }, 900);
@@ -563,7 +563,7 @@
             },
             close() {
                 this.open = false;
-                localStorage.setItem('copyus_welcome_v1', Date.now());
+                localStorage.setItem('copyus_papeleria_v1', Date.now());
             }
         }"
         x-show="open"
@@ -578,104 +578,137 @@
         @keydown.escape.window="close()"
     >
         {{-- Backdrop --}}
-        <div class="absolute inset-0 bg-dark/70 backdrop-blur-sm" @click="close()"></div>
+        <div class="absolute inset-0 bg-dark/75 backdrop-blur-sm" @click="close()"></div>
 
         {{-- Card --}}
         <div
             x-show="open"
             x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-3"
             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-            x-transition:leave-end="opacity-0 scale-95 translate-y-4"
-            class="relative w-full max-w-xl bg-white rounded-3xl overflow-hidden shadow-2xl z-10"
+            x-transition:leave-end="opacity-0 scale-95 translate-y-3"
+            class="relative w-full max-w-md bg-white rounded-3xl overflow-hidden shadow-2xl z-10"
         >
-            {{-- Close button --}}
-            <button @click="close()"
-                    class="absolute top-4 right-4 z-20 w-8 h-8 flex items-center justify-center
-                           rounded-full bg-white/20 hover:bg-white/40 text-white
-                           transition-colors focus:outline-none">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
+            {{-- ── Header — solid dark, no gradient ── --}}
+            <div class="relative bg-dark px-8 pt-9 pb-9 overflow-hidden">
 
-            {{-- Gradient header --}}
-            <div class="relative px-8 pt-10 pb-8 overflow-hidden"
-                 style="background: linear-gradient(135deg, #5F75F4, #F26052);">
-                {{-- Decorative circles --}}
-                <div class="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white/10"></div>
-                <div class="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-white/10"></div>
+                {{-- Decorative ring top-right --}}
+                <div class="absolute -top-10 -right-10 w-48 h-48 rounded-full
+                            border-[36px] border-white/[0.05]"></div>
+                {{-- Decorative ring bottom-left --}}
+                <div class="absolute -bottom-8 -left-8 w-32 h-32 rounded-full
+                            border-[24px] border-white/[0.04]"></div>
+                {{-- Accent dot --}}
+                <div class="absolute top-9 right-9 w-2 h-2 rounded-full bg-primary"></div>
 
-                <p class="font-outfit text-xs font-semibold uppercase tracking-widest text-white/70 mb-2 relative">
+                {{-- Close button --}}
+                <button @click="close()"
+                        class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center
+                               rounded-full text-white/40 hover:text-white hover:bg-white/10
+                               transition-all focus:outline-none">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+
+                {{-- Eyebrow label --}}
+                <p class="font-outfit text-xs font-semibold uppercase tracking-[0.2em]
+                           text-primary mb-5 relative">
                     {{ __('app.popup_eyebrow') }}
                 </p>
-                <h2 class="font-alumni text-h4 text-white leading-tight relative">
-                    {{ __('app.popup_title') }}
+
+                {{-- Main headline --}}
+                <h2 class="font-alumni leading-none relative" style="font-size: 3rem;">
+                    <span class="text-white/70">{{ __('app.popup_headline_1') }}</span><br>
+                    <span class="text-primary">{{ __('app.popup_headline_2') }}</span>
                 </h2>
-                <p class="font-outfit text-sm text-white/80 mt-2 relative">
+
+                {{-- Subtitle --}}
+                <p class="font-outfit text-sm text-white/55 mt-4 leading-relaxed relative max-w-xs">
                     {{ __('app.popup_subtitle') }}
                 </p>
             </div>
 
-            {{-- Services --}}
-            <div class="grid grid-cols-2 gap-4 px-8 py-7">
+            {{-- ── Features ── --}}
+            <div class="px-8 py-7 space-y-5">
 
-                {{-- Digital Printing --}}
-                <div class="bg-light rounded-2xl p-5">
-                    <div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center mb-3">
-                        <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                  d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                {{-- Feature 1: Online order --}}
+                <div class="flex items-start gap-4">
+                    <div class="w-9 h-9 rounded-xl bg-light flex items-center justify-center shrink-0 mt-0.5">
+                        <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
                     </div>
-                    <h3 class="font-alumni text-sm-header text-dark mb-1">
-                        {{ __('app.popup_service_print') }}
-                    </h3>
-                    <p class="font-outfit text-xs text-gray-500 leading-relaxed">
-                        {{ __('app.popup_service_print_desc') }}
-                    </p>
+                    <div>
+                        <p class="font-outfit text-sm font-semibold text-dark leading-tight">
+                            {{ __('app.popup_f1_title') }}
+                        </p>
+                        <p class="font-outfit text-xs text-gray-400 mt-1 leading-relaxed">
+                            {{ __('app.popup_f1_desc') }}
+                        </p>
+                    </div>
                 </div>
 
-                {{-- Papeleria — NEW --}}
-                <div class="relative bg-primary/5 border-2 border-primary/20 rounded-2xl p-5">
-                    {{-- NEW badge --}}
-                    <span class="absolute -top-3 left-4 inline-flex items-center gap-1
-                                 px-3 py-1 rounded-full text-xs font-outfit font-bold
-                                 text-white shadow-sm"
-                          style="background: linear-gradient(135deg, #5F75F4, #F26052);">
-                        ✦ {{ __('app.popup_new_badge') }}
-                    </span>
-                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-3 mt-1">
-                        <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                {{-- Divider --}}
+                <div class="border-t border-gray-100"></div>
+
+                {{-- Feature 2: In-store --}}
+                <div class="flex items-start gap-4">
+                    <div class="w-9 h-9 rounded-xl bg-light flex items-center justify-center shrink-0 mt-0.5">
+                        <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                         </svg>
                     </div>
-                    <h3 class="font-alumni text-sm-header text-primary mb-1">
-                        {{ __('app.popup_service_papeleria') }}
-                    </h3>
-                    <p class="font-outfit text-xs text-gray-500 leading-relaxed">
-                        {{ __('app.popup_service_papeleria_desc') }}
-                    </p>
+                    <div>
+                        <p class="font-outfit text-sm font-semibold text-dark leading-tight">
+                            {{ __('app.popup_f2_title') }}
+                        </p>
+                        <p class="font-outfit text-xs text-gray-400 mt-1 leading-relaxed">
+                            {{ __('app.popup_f2_desc') }}
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Divider --}}
+                <div class="border-t border-gray-100"></div>
+
+                {{-- Feature 3: 24-48h --}}
+                <div class="flex items-start gap-4">
+                    <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-outfit text-sm font-semibold text-dark leading-tight">
+                            {{ __('app.popup_f3_title') }}
+                        </p>
+                        <p class="font-outfit text-xs text-gray-400 mt-1 leading-relaxed">
+                            {{ __('app.popup_f3_desc') }}
+                        </p>
+                    </div>
                 </div>
             </div>
 
-            {{-- Footer actions --}}
-            <div class="px-8 pb-8 flex flex-col sm:flex-row items-center gap-3">
+            {{-- ── Footer CTA ── --}}
+            <div class="px-8 pb-8 pt-1">
                 <a href="{{ route('products.index') }}"
                    @click="close()"
-                   class="w-full sm:flex-1 inline-flex items-center justify-center gap-2
-                          bg-primary text-white font-outfit text-sm font-medium
-                          px-6 py-3 rounded-xl hover:brightness-110 active:scale-95 transition-all">
-                    {{ __('app.popup_cta') }}
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
+                   class="block w-full text-center bg-primary text-white
+                          font-alumni text-sm-header tracking-wide
+                          py-4 rounded-2xl hover:brightness-110 active:scale-[0.98]
+                          transition-all duration-200">
+                    {{ __('app.popup_cta') }} →
                 </a>
                 <button @click="close()"
-                        class="font-outfit text-sm text-gray-400 hover:text-dark transition-colors whitespace-nowrap">
+                        class="block w-full text-center font-outfit text-xs text-gray-400
+                               hover:text-dark transition-colors mt-3">
                     {{ __('app.popup_dismiss') }}
                 </button>
             </div>
