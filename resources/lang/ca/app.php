@@ -751,6 +751,9 @@ return [
     'home_newsletter_placeholder' => 'Introdueix el teu correu electrònic',
     'home_newsletter_subscribe'   => 'Subscriure\'s ara',
     'home_newsletter_thanks'      => '✓ Gràcies!',
+    'home_newsletter_success'     => '✓ Subscrit/a correctament! Gràcies.',
+    'home_newsletter_duplicate'   => 'Ja estàs subscrit/a amb aquest correu electrònic.',
+    'home_newsletter_error'       => 'S\'ha produït un error. Torna-ho a intentar.',
     'home_newsletter_disclaimer_1' => 'En subscriure\'t, acceptes la nostra',
     'home_newsletter_disclaimer_link' => 'Privadesa',
 ];

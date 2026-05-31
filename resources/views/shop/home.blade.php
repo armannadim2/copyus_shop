@@ -456,40 +456,93 @@
                 {{ __('app.home_newsletter_subtitle') }}
             </p>
 
-            <form x-data="{ email: '', sent: false }"
-                  @submit.prevent="if(email){sent=true; email=''}"
-                  class="mt-10 flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto">
+            <form
+                x-data="{
+                    email: '',
+                    status: null,
+                    loading: false,
+                    async submit() {
+                        if (!this.email || this.loading) return;
+                        this.loading = true;
+                        this.status  = null;
+                        try {
+                            const res  = await fetch('{{ route('newsletter.subscribe') }}', {
+                                method:  'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                                    'Accept':        'application/json',
+                                },
+                                body: JSON.stringify({ email: this.email }),
+                            });
+                            const data = await res.json();
+                            this.status = data.status ?? 'error';
+                            if (this.status === 'success') this.email = '';
+                        } catch (e) {
+                            this.status = 'error';
+                        }
+                        this.loading = false;
+                    }
+                }"
+                @submit.prevent="submit()"
+                class="mt-10 max-w-2xl mx-auto">
 
-                {{-- Email input — pill, dark, with trailing icon --}}
-                <div class="relative flex-1">
-                    <input type="email" x-model="email" required
-                           :disabled="sent"
-                           placeholder="{{ __('app.home_newsletter_placeholder') }}"
-                           class="w-full bg-white/[0.04] border border-primary/30
-                                  rounded-full pl-7 pr-12 py-4 font-outfit text-sm
-                                  text-white placeholder:text-white/40
-                                  focus:outline-none focus:ring-2 focus:ring-secondary/50
-                                  focus:border-secondary/60 focus:bg-white/[0.06]
-                                  transition disabled:opacity-50">
-                    <svg class="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 pointer-events-none"
-                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                    </svg>
+                <div class="flex flex-col sm:flex-row gap-3">
+
+                    {{-- Email input — pill, dark, with trailing icon --}}
+                    <div class="relative flex-1">
+                        <input type="email" x-model="email" required
+                               :disabled="status === 'success' || loading"
+                               placeholder="{{ __('app.home_newsletter_placeholder') }}"
+                               class="w-full bg-white/[0.04] border border-primary/30
+                                      rounded-full pl-7 pr-12 py-4 font-outfit text-sm
+                                      text-white placeholder:text-white/40
+                                      focus:outline-none focus:ring-2 focus:ring-secondary/50
+                                      focus:border-secondary/60 focus:bg-white/[0.06]
+                                      transition disabled:opacity-50">
+                        <svg class="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 pointer-events-none"
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                    </div>
+
+                    {{-- Subscribe button — pill, secondary blue --}}
+                    <button type="submit"
+                            :disabled="status === 'success' || loading"
+                            class="bg-secondary text-white font-alumni font-bold italic text-sm-header
+                                   px-9 py-4 rounded-full hover:brightness-110
+                                   active:scale-95 transition-all whitespace-nowrap
+                                   disabled:opacity-60">
+                        <span x-show="!loading && status !== 'success'">{{ __('app.home_newsletter_subscribe') }}</span>
+                        <span x-show="loading" x-cloak>
+                            <svg class="w-5 h-5 animate-spin inline" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                            </svg>
+                        </span>
+                        <span x-show="status === 'success'" x-cloak>{{ __('app.home_newsletter_thanks') }}</span>
+                    </button>
                 </div>
 
-                {{-- Subscribe button — pill, secondary blue --}}
-                <button type="submit" :disabled="sent"
-                        class="bg-secondary text-white font-alumni font-bold italic text-sm-header
-                               px-9 py-4 rounded-full hover:brightness-110
-                               active:scale-95 transition-all whitespace-nowrap
-                               disabled:opacity-50">
-                    <span x-show="!sent">{{ __('app.home_newsletter_subscribe') }}</span>
-                    <span x-show="sent" x-cloak>{{ __('app.home_newsletter_thanks') }}</span>
-                </button>
+                {{-- Feedback messages --}}
+                <div class="mt-4 min-h-[1.5rem] text-center">
+                    <p x-show="status === 'success'" x-cloak
+                       class="font-outfit text-sm text-green-400">
+                        {{ __('app.home_newsletter_success') }}
+                    </p>
+                    <p x-show="status === 'duplicate'" x-cloak
+                       class="font-outfit text-sm text-white/60">
+                        {{ __('app.home_newsletter_duplicate') }}
+                    </p>
+                    <p x-show="status === 'error'" x-cloak
+                       class="font-outfit text-sm text-red-400">
+                        {{ __('app.home_newsletter_error') }}
+                    </p>
+                </div>
             </form>
 
-            <p class="font-outfit text-body-sm text-white/45 mt-6">
+            <p class="font-outfit text-body-sm text-white/45 mt-4">
                 {{ __('app.home_newsletter_disclaimer_1') }}
                 <a href="{{ route('privacy') }}" class="underline font-semibold text-white/70
                                    hover:text-white transition-colors">{{ __('app.home_newsletter_disclaimer_link') }}</a>.

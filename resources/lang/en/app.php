@@ -751,6 +751,9 @@ return [
     'home_newsletter_placeholder' => 'Enter your email',
     'home_newsletter_subscribe'   => 'Subscribe now',
     'home_newsletter_thanks'      => '✓ Thanks!',
+    'home_newsletter_success'     => '✓ Subscribed successfully! Thank you.',
+    'home_newsletter_duplicate'   => 'You are already subscribed with this email address.',
+    'home_newsletter_error'       => 'Something went wrong. Please try again.',
     'home_newsletter_disclaimer_1' => 'By subscribing, you accept our',
     'home_newsletter_disclaimer_link' => 'Privacy',
 ];

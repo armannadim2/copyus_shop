@@ -40,6 +40,8 @@ use App\Http\Controllers\Shop\SavedPrintConfigController;
 use App\Http\Controllers\Shop\TicketController;
 use App\Http\Controllers\Admin\AdminCompanyController;
 use App\Http\Controllers\Admin\AdminTicketController;
+use App\Http\Controllers\Admin\AdminNewsletterController;
+use App\Http\Controllers\NewsletterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,6 +52,9 @@ use Illuminate\Support\Facades\Route;
 
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Newsletter subscription
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 // Static corporate pages
 Route::get('/qui-som',  [PageController::class, 'about'])->name('about');
@@ -423,6 +428,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::prefix('notifications')->name('notifications.')->group(function () {
         Route::patch('/{id}/read', [AdminNotificationController::class, 'markRead'])->name('read');
         Route::patch('/read-all', [AdminNotificationController::class, 'markAllRead'])->name('read-all');
+    });
+
+    // Newsletter subscriptions
+    Route::prefix('newsletter')->name('newsletter.')->group(function () {
+        Route::get('/',              [AdminNewsletterController::class, 'index'])->name('index');
+        Route::delete('/{newsletterSubscription}', [AdminNewsletterController::class, 'destroy'])->name('destroy');
+        Route::get('/export/csv',    [AdminNewsletterController::class, 'export'])->name('export');
     });
 
     // Reports

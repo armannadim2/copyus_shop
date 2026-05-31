@@ -751,6 +751,9 @@ return [
     'home_newsletter_placeholder' => 'Introduce tu correo electrónico',
     'home_newsletter_subscribe'   => 'Suscribirse ahora',
     'home_newsletter_thanks'      => '✓ ¡Gracias!',
+    'home_newsletter_success'     => '✓ ¡Suscrito/a correctamente! Gracias.',
+    'home_newsletter_duplicate'   => 'Ya estás suscrito/a con este correo electrónico.',
+    'home_newsletter_error'       => 'Se ha producido un error. Vuelve a intentarlo.',
     'home_newsletter_disclaimer_1' => 'Al suscribirte, aceptas nuestra',
     'home_newsletter_disclaimer_link' => 'Privacidad',
 ];
