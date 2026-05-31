@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Notifications\RegistrationConfirmationNotification;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,9 +14,16 @@ use App\Models\Wishlist;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, SoftDeletes;
+
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(
+            (new RegistrationConfirmationNotification())->locale($this->locale ?? 'ca')
+        );
+    }
 
     const ROLE_ADMIN    = 'admin';
     const ROLE_APPROVED = 'approved';

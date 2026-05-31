@@ -78,9 +78,34 @@ return [
 
     // ── Approval Flow ─────────────────────────────────────────
     'prices_hidden'                  => 'Registra\'t per veure els preus exclusius B2B',
+    // ── Email Verification ───────────────────────────────────
+    'verify_email_title'             => 'Verifica el correu electrònic',
+    'verify_email_heading_1'         => 'Verifica el teu',
+    'verify_email_heading_2'         => 'correu.',
+    'verify_email_subheading'        => 'Un pas més per activar el teu compte',
+    'verify_email_sent_to'           => 'T\'hem enviat un correu a:',
+    'verify_email_instruction'       => 'Fes clic al botó de verificació del correu per confirmar la teva adreça i continuar amb el procés d\'aprovació del compte.',
+    'verify_email_resend_btn'        => 'Reenviar correu de verificació',
+    'verify_email_spam_hint'         => 'No trobes el correu? Revisa la carpeta de correu brossa o no desitjat.',
+    'verify_email_sent_success'      => 'S\'ha enviat un nou correu de verificació a la teva adreça.',
+
+    // ── Registration Email (sent to user after signup) ────────
+    'reg_email_subject'              => 'Benvingut/da a Copyus – Verifica el teu correu electrònic',
+    'reg_email_greeting'             => 'Benvingut/da, :name!',
+    'reg_email_thanks'               => 'Gràcies per registrar-te a Copyus. El teu compte s\'ha creat correctament i està pendent de revisió per part del nostre equip.',
+    'reg_email_pending'              => 'Un cop verifiquis el teu correu electrònic i el nostre equip aprovi el teu compte, tindràs accés complet al catàleg amb preus i podràs fer comandes.',
+    'reg_email_verify_instruction'   => 'Per continuar, fes clic al botó següent per verificar la teva adreça de correu electrònic:',
+    'reg_email_verify_btn'           => 'Verificar el correu electrònic',
+    'reg_email_expire'               => 'Aquest enllaç de verificació caducarà en :minutes minuts.',
+    'reg_email_ignore'               => 'Si no t\'has registrat a Copyus, pots ignorar aquest correu.',
+
     'pending_approval'               => 'El teu compte està pendent d\'aprovació',
     'pending_approval_title'         => 'Sol·licitud enviada!',
     'pending_approval_message'       => 'El teu compte està pendent de revisió. Et notificarem per correu electrònic quan sigui aprovat.',
+    'pending_verify_email_required'  => 'Primer has de verificar el teu correu electrònic',
+    'pending_verify_email_hint'      => 'T\'hem enviat un correu amb un enllaç de verificació. Fes-hi clic per activar el teu compte.',
+    'pending_verify_email_btn'       => 'Anar a la pàgina de verificació',
+    'pending_step_email'             => 'Verifica el teu correu electrònic (comprova la teva bústia)',
     'pending_step_1'                 => 'Sol·licitud rebuda i en revisió per l\'equip de Copyus',
     'pending_step_2'                 => 'Verificació de les dades de l\'empresa',
     'pending_step_3'                 => 'Accés complet al catàleg amb preus i compra',

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\UserApprovedNotification;
+use App\Notifications\UserRejectedNotification;
 use Illuminate\Http\Request;
 
 class AdminUserController extends Controller
@@ -56,16 +58,22 @@ class AdminUserController extends Controller
             'approved_at' => now(),
         ]);
 
+        $user->notify((new UserApprovedNotification())->locale($user->locale ?? 'ca'));
+
         return back()->with('success', "Usuari {$user->name} aprovat correctament. ✅");
     }
 
-    public function reject(int $id)
+    public function reject(int $id, Request $request)
     {
         $user = User::findOrFail($id);
         $user->update([
             'role'        => 'rejected',
             'approved_at' => null,
         ]);
+
+        $user->notify(
+            (new UserRejectedNotification($request->input('reason', '')))->locale($user->locale ?? 'ca')
+        );
 
         return back()->with('error', "Usuari {$user->name} rebutjat.");
     }

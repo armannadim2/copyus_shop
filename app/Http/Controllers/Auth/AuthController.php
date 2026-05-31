@@ -125,17 +125,20 @@ class AuthController extends Controller
             'locale'           => app()->getLocale(),
         ]);
 
+        // Send combined welcome + email verification email to the new user
+        $user->sendEmailVerificationNotification();
+
         // Notify admins of new registration
         User::admins()->get()
             ->each(fn($admin) => $admin->notify(new NewUserRegisteredNotification($user)));
 
-        // Log the user in immediately after registration
+        // Log the user in so they can access the verification page
         Auth::login($user);
 
         $request->session()->regenerate();
 
-        // Redirect to pending approval page
-        return redirect()->route('pending');
+        // Redirect to verify-email prompt
+        return redirect()->route('verification.notice');
     }
 
     /*

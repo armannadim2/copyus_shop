@@ -78,9 +78,34 @@ return [
 
     // ── Approval Flow ─────────────────────────────────────────
     'prices_hidden'                  => 'Register to see exclusive B2B prices',
+    // ── Email Verification ───────────────────────────────────
+    'verify_email_title'             => 'Verify your email address',
+    'verify_email_heading_1'         => 'Verify your',
+    'verify_email_heading_2'         => 'email.',
+    'verify_email_subheading'        => 'One more step to activate your account',
+    'verify_email_sent_to'           => 'We\'ve sent a verification email to:',
+    'verify_email_instruction'       => 'Click the verification button in the email to confirm your address and continue with the account approval process.',
+    'verify_email_resend_btn'        => 'Resend verification email',
+    'verify_email_spam_hint'         => 'Can\'t find the email? Check your spam or junk folder.',
+    'verify_email_sent_success'      => 'A new verification email has been sent to your address.',
+
+    // ── Registration Email (sent to user after signup) ────────
+    'reg_email_subject'              => 'Welcome to Copyus – Verify your email address',
+    'reg_email_greeting'             => 'Welcome, :name!',
+    'reg_email_thanks'               => 'Thank you for registering at Copyus. Your account has been created and is pending review by our team.',
+    'reg_email_pending'              => 'Once you verify your email address and our team approves your account, you will have full access to the catalogue with prices and can place orders.',
+    'reg_email_verify_instruction'   => 'To continue, click the button below to verify your email address:',
+    'reg_email_verify_btn'           => 'Verify email address',
+    'reg_email_expire'               => 'This verification link will expire in :minutes minutes.',
+    'reg_email_ignore'               => 'If you did not register at Copyus, you may ignore this email.',
+
     'pending_approval'               => 'Your account is pending approval',
     'pending_approval_title'         => 'Request submitted!',
     'pending_approval_message'       => 'Your account is pending review. We will notify you by email when it is approved.',
+    'pending_verify_email_required'  => 'You must verify your email address first',
+    'pending_verify_email_hint'      => 'We sent you an email with a verification link. Click it to activate your account.',
+    'pending_verify_email_btn'       => 'Go to verification page',
+    'pending_step_email'             => 'Verify your email address (check your inbox)',
     'pending_step_1'                 => 'Request received and under review by the Copyus team',
     'pending_step_2'                 => 'Verification of company details',
     'pending_step_3'                 => 'Full access to the catalogue with prices and purchasing',

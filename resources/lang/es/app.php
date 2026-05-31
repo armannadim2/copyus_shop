@@ -78,9 +78,34 @@ return [
 
     // ── Approval Flow ─────────────────────────────────────────
     'prices_hidden'                  => 'Regístrate para ver los precios exclusivos',
+    // ── Email Verification ───────────────────────────────────
+    'verify_email_title'             => 'Verifica tu correo electrónico',
+    'verify_email_heading_1'         => 'Verifica tu',
+    'verify_email_heading_2'         => 'correo.',
+    'verify_email_subheading'        => 'Un paso más para activar tu cuenta',
+    'verify_email_sent_to'           => 'Te hemos enviado un correo a:',
+    'verify_email_instruction'       => 'Haz clic en el botón de verificación del correo para confirmar tu dirección y continuar con el proceso de aprobación de la cuenta.',
+    'verify_email_resend_btn'        => 'Reenviar correo de verificación',
+    'verify_email_spam_hint'         => '¿No encuentras el correo? Revisa la carpeta de spam o correo no deseado.',
+    'verify_email_sent_success'      => 'Se ha enviado un nuevo correo de verificación a tu dirección.',
+
+    // ── Registration Email (sent to user after signup) ────────
+    'reg_email_subject'              => 'Bienvenido/a a Copyus – Verifica tu correo electrónico',
+    'reg_email_greeting'             => '¡Bienvenido/a, :name!',
+    'reg_email_thanks'               => 'Gracias por registrarte en Copyus. Tu cuenta ha sido creada y está pendiente de revisión por parte de nuestro equipo.',
+    'reg_email_pending'              => 'Una vez que verifiques tu correo electrónico y nuestro equipo apruebe tu cuenta, tendrás acceso completo al catálogo con precios y podrás realizar pedidos.',
+    'reg_email_verify_instruction'   => 'Para continuar, haz clic en el botón de abajo para verificar tu dirección de correo electrónico:',
+    'reg_email_verify_btn'           => 'Verificar correo electrónico',
+    'reg_email_expire'               => 'Este enlace de verificación caducará en :minutes minutos.',
+    'reg_email_ignore'               => 'Si no te has registrado en Copyus, puedes ignorar este correo.',
+
     'pending_approval'               => 'Tu cuenta está pendiente de aprobación',
     'pending_approval_title'         => '¡Solicitud enviada!',
     'pending_approval_message'       => 'Tu cuenta está pendiente de revisión. Te notificaremos por correo cuando sea aprobada.',
+    'pending_verify_email_required'  => 'Primero debes verificar tu correo electrónico',
+    'pending_verify_email_hint'      => 'Te hemos enviado un correo con un enlace de verificación. Haz clic en él para activar tu cuenta.',
+    'pending_verify_email_btn'       => 'Ir a la página de verificación',
+    'pending_step_email'             => 'Verifica tu correo electrónico (revisa tu bandeja de entrada)',
     'pending_step_1'                 => 'Solicitud recibida y en revisión por el equipo de Copyus',
     'pending_step_2'                 => 'Verificación de los datos de la empresa',
     'pending_step_3'                 => 'Acceso completo al catálogo con precios y compra',
