@@ -5,43 +5,52 @@
 1. [Introduction](#introduction)
 2. [Getting an Account](#getting-an-account)
 3. [Browsing the Shop](#browsing-the-shop)
-4. [Shopping Cart & Checkout](#shopping-cart--checkout)
-5. [Print-on-Demand](#print-on-demand)
-6. [Orders & Invoices](#orders--invoices)
-7. [Quotations](#quotations)
-8. [B2B Company Accounts](#b2b-company-accounts)
-9. [Wishlist](#wishlist)
-10. [Support Tickets](#support-tickets)
-11. [Your Profile](#your-profile)
-12. [Language Selection](#language-selection)
-13. [Admin Panel](#admin-panel)
+4. [Product Stock States](#product-stock-states)
+5. [Shopping Cart & Checkout](#shopping-cart--checkout)
+6. [Print-on-Demand](#print-on-demand)
+7. [Orders & Invoices](#orders--invoices)
+8. [Quotations](#quotations)
+9. [B2B Company Accounts](#b2b-company-accounts)
+10. [Wishlist](#wishlist)
+11. [Support Tickets](#support-tickets)
+12. [Your Profile](#your-profile)
+13. [Newsletter](#newsletter)
+14. [Language Selection](#language-selection)
+15. [Admin Panel](#admin-panel)
 
 ---
 
 ## Introduction
 
-CopyUS Shop is an online platform for ordering printed products and other customised goods. It is designed for both individual buyers and businesses (B2B). The platform is available in **Catalan**, **Spanish**, and **English**.
+CopyUS Shop is an online platform for ordering printed products, stationery, and other customised goods. It is designed for both individual buyers and businesses (B2B). The platform is available in **Catalan**, **Spanish**, and **English**.
 
 ---
 
 ## Getting an Account
 
-### Regular Account
+### Registering
 
 1. Go to **Register** in the top navigation.
-2. Fill in your name, email address, and a password.
-3. Verify your email address using the link sent to your inbox.
-4. You can now browse, add items to your cart, and place orders.
+2. Fill in your personal details (name, email, password) and company information (company name, CIF/NIF/VAT).
+3. Submit the form.
 
-### B2B Account
+### Email Verification
 
-Business accounts unlock exclusive pricing, quotation workflows, and company management tools.
+After registering you will receive a **welcome email** with a verification link. You must click it before your account can be reviewed.
 
-1. Go to **Register** and choose the **B2B / Company** registration option.
-2. Provide your company details including your fiscal identity (CIF/NIF/VAT).
-3. Submit the form. Your account is placed in **pending** status.
-4. An admin will review your application. You will receive an email when you are approved or rejected.
-5. Once approved, you can access all B2B features.
+- The link expires in **60 minutes**. If it expires, use the **Resend** button on the verify-email page.
+- Check your spam / junk folder if the email doesn't arrive within a few minutes.
+
+### Account Approval
+
+Once your email is verified, your account enters **pending** status. An admin will review your company details.
+
+- You will receive an **approval email** when your account is activated.
+- You will receive a **rejection email** if your application is not accepted, with a reason if provided.
+
+### Forgot Password
+
+On the login page, click **Forgot password?** next to the password field. Enter your email address and you will receive a reset link valid for 60 minutes.
 
 ---
 
@@ -49,7 +58,10 @@ Business accounts unlock exclusive pricing, quotation workflows, and company man
 
 ### Homepage
 
-The homepage showcases featured products and categories. Use the navigation bar to access the full product catalogue, print services, and company information pages.
+The homepage features:
+- A **hero banner** with a dynamic image slider highlighting promotions and news
+- A **welcome popup** on first visit highlighting Digital Printing and Papeleria services
+- Featured products, category quick-links, and print service templates
 
 ### Product Catalogue
 
@@ -63,9 +75,23 @@ Each product page shows:
 - Product images (click to zoom)
 - Description and specifications
 - Available variants (sizes, colours, etc.)
+- Stock status (In Stock or Pre-order)
 - Pricing (visible when `SHOW_PRICES` is enabled or for approved B2B users)
 - Customer reviews and average rating
 - Add to Cart / Add to Wishlist buttons
+
+---
+
+## Product Stock States
+
+Each product has one of two stock states:
+
+| State | Meaning | Delivery |
+|---|---|---|
+| **In Stock** | Available immediately | Standard delivery times |
+| **Pre-order** | Item available soon | Pickup or delivery within **24-48 hours** |
+
+Pre-order items can be added to the cart and ordered normally. A notice is displayed on both the product card and the product detail page indicating the 24-48 h delivery window.
 
 ---
 
@@ -241,6 +267,18 @@ Go to **Dashboard → Profile** to:
 
 ---
 
+## Newsletter
+
+Subscribe to news, exclusive offers, and updates about new products and printing technology.
+
+1. Scroll to the **newsletter section** at the bottom of the homepage.
+2. Enter your email address and click **Subscribe**.
+3. A confirmation message appears immediately — no page reload required.
+
+If you are already subscribed, a notice will tell you so. To unsubscribe, contact the support team.
+
+---
+
 ## Language Selection
 
 CopyUS Shop is available in three languages:
@@ -264,12 +302,24 @@ The admin dashboard shows:
 - New orders and pending quotations
 - Pending B2B user approvals
 - Open support tickets
+- Products by stock status (in stock vs pre-order count)
 - Recent activity feed
+
+### Homepage Slider (Slides Portada)
+
+Manage the rotating banner on the right side of the homepage hero:
+- **Add slides** — upload an image, enter eyebrow text and title in Catalan, Spanish, and English
+- **Reorder** — use the up/down arrows to change slide order
+- **Toggle active** — deactivate a slide without deleting it
+- **Delete** — permanently remove a slide and its image
+
+The slider auto-advances every 5 seconds. If no active slides exist, a default static image is shown.
 
 ### Products
 
 **Manage the product catalogue:**
 - Create, edit, and delete products
+- Set stock status: **In Stock** or **Pre-order** (24-48 h delivery)
 - Add product images, variants, and pricing tiers
 - Set translatable names and descriptions (Catalan, Spanish, English)
 - Bulk import products via Excel upload
@@ -294,8 +344,9 @@ The admin dashboard shows:
 
 ### Users
 
-- View all registered users
-- Approve or reject pending B2B accounts
+- View all registered users and their email verification status
+- **Approve** pending B2B accounts — user receives an approval email automatically
+- **Reject** pending B2B accounts — user receives a rejection email automatically
 - View company associations
 
 ### Print Templates
@@ -304,6 +355,13 @@ The admin dashboard shows:
 - Define customisation options, option values, and compatibility rules
 - Set volume pricing tiers
 - Track and manage print jobs by production status
+
+### Newsletter
+
+- View all subscribers with subscription date, IP address, and status
+- **Filter** by active / inactive or search by email
+- **Export CSV** — download active subscribers as a `.csv` file
+- **Delete** individual subscribers
 
 ### Reports
 
@@ -341,4 +399,4 @@ The bell icon in the admin header shows real-time notifications for:
 - New quotation requests
 - New B2B registration (pending approval)
 - New support tickets
-- Low stock alerts
+- Artwork uploaded for print jobs

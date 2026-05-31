@@ -49,7 +49,15 @@ Optionally seed demo data:
 php artisan db:seed
 ```
 
-### 5. Install and build frontend assets
+### 5. Create the storage symlink
+
+Required for hero slide images and product image uploads:
+
+```bash
+php artisan storage:link
+```
+
+### 6. Install and build frontend assets
 
 ```bash
 npm install
@@ -64,7 +72,7 @@ npm run dev
 
 Keep this terminal open alongside your PHP server.
 
-### 6. Start the development server
+### 7. Start the development server
 
 ```bash
 php artisan serve
@@ -130,13 +138,20 @@ ANTHROPIC_MODEL=claude-haiku-4-5-20251001
 
 ### Mail
 
-In development, emails are written to `storage/logs/laravel.log`:
+The application sends transactional emails for:
+- **Registration** — combined welcome + email verification link
+- **Email verification resend**
+- **Account approved / rejected** by admin
+- **Password reset** link
+- **Admin alerts** (new orders, new users, etc.)
+
+In development, all emails are written to `storage/logs/laravel.log`:
 
 ```env
 MAIL_MAILER=log
 ```
 
-For a real SMTP server (e.g. Mailtrap or Mailgun):
+For a real SMTP server (e.g. Mailtrap, Mailgun, or your host's SMTP):
 
 ```env
 MAIL_MAILER=smtp
@@ -144,9 +159,11 @@ MAIL_HOST=smtp.mailtrap.io
 MAIL_PORT=587
 MAIL_USERNAME=your-username
 MAIL_PASSWORD=your-password
-MAIL_FROM_ADDRESS="noreply@copyus.shop"
+MAIL_FROM_ADDRESS="noreply@copyus.es"
 MAIL_FROM_NAME="${APP_NAME}"
 ```
+
+> **Production note:** The email verification and notification system requires a working mailer. With `MAIL_MAILER=log` users will never receive their verification or approval emails.
 
 ---
 
@@ -164,6 +181,14 @@ php artisan migrate:fresh     # Drop all tables and re-run (destroys data)
 php artisan migrate:fresh --seed  # Fresh migrate + seed demo data
 ```
 
+### Key tables added in recent development
+
+| Table | Purpose |
+|---|---|
+| `hero_slides` | Homepage banner slider content (translatable eyebrow + title) |
+| `newsletter_subscriptions` | Newsletter subscriber emails |
+| `password_reset_tokens` | Password reset tokens (built-in Laravel) |
+
 ### Creating the SQLite file
 
 If you see "database file not found", create it manually:
@@ -178,7 +203,13 @@ New-Item -ItemType File database/database.sqlite
 
 ## Queue Worker
 
-Some features (notifications, abandoned-cart emails) depend on the queue. In development, run:
+The following features depend on the queue driver:
+- Registration confirmation + email verification email
+- Account approved / rejected notification emails
+- Admin notification emails (new orders, new users)
+- Abandoned cart emails (scheduled command)
+
+In development, run:
 
 ```bash
 php artisan queue:work
@@ -189,6 +220,8 @@ To process all pending jobs and stop:
 ```bash
 php artisan queue:work --once
 ```
+
+> If you skip the queue worker, no notification emails will be sent, even if the mailer is configured.
 
 ---
 
@@ -202,10 +235,11 @@ php artisan tinker
 
 ```php
 \App\Models\User::create([
-    'name'     => 'Admin',
-    'email'    => 'admin@example.com',
-    'password' => bcrypt('password'),
-    'role'     => 'admin',
+    'name'              => 'Admin',
+    'email'             => 'admin@example.com',
+    'password'          => bcrypt('password'),
+    'role'              => 'admin',
+    'email_verified_at' => now(),   // skip email verification for admin
 ]);
 ```
 
@@ -226,7 +260,7 @@ Terminal 1: php artisan serve
 Terminal 2: npm run dev
 ```
 
-Or use a tool like `concurrently` (already a dev dependency):
+Or use `concurrently` (already a dev dependency):
 
 ```bash
 npx concurrently "php artisan serve" "npm run dev"
@@ -260,22 +294,22 @@ composer install --no-dev --optimize-autoloader
 # 2. Environment
 cp .env.example .env
 php artisan key:generate
-# Fill in all production values in .env
+# Fill in all production values in .env (especially MAIL_* and DB_*)
 
 # 3. Database
 php artisan migrate --force
 
-# 4. Cache config & routes
+# 4. Storage symlink (for uploaded images)
+php artisan storage:link
+
+# 5. Cache config & routes
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# 5. Build assets
+# 6. Build assets
 npm ci
 npm run build
-
-# 6. Storage symlink
-php artisan storage:link
 
 # 7. Queue worker (use Supervisor or systemd)
 php artisan queue:work --daemon
@@ -292,7 +326,12 @@ Set `APP_ENV=production` and `APP_DEBUG=false` in the production `.env`.
 | `Class not found` errors | Run `composer install` |
 | `Mixed content` / assets 404 | Run `npm run build` |
 | Database not found | Create `database/database.sqlite` then `php artisan migrate` |
-| Notifications not sending | Run `php artisan queue:work` |
+| Images not loading (hero slides, products) | Run `php artisan storage:link` |
+| Emails not being sent | Configure `MAIL_MAILER` in `.env` and run `php artisan queue:work` |
+| Verification email not received | Check `MAIL_MAILER` is not `log`; check spam folder |
+| Notification emails missing | Admin approval/rejection emails use the queue — run `php artisan queue:work` |
 | Permission errors on `storage/` | `chmod -R 775 storage bootstrap/cache` |
-| Translatable field returns `null` | Pass the locale: `->getTranslation('name', 'ca')` |
+| Translatable field returns `null` | Use `->getTranslation('name', 'ca')` for explicit locale |
 | `APP_KEY` missing | Run `php artisan key:generate` |
+| Hero slides not appearing | Check at least one slide is active in `/admin/hero-slides` |
+| Newsletter export empty | Filter by "Actius" — inactive subscribers are excluded from CSV |

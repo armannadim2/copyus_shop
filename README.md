@@ -7,11 +7,16 @@ A B2B e-commerce platform for print-on-demand and custom product ordering, targe
 ## Features
 
 - **Product Catalogue** — variants, bulk pricing tiers, reviews, wishlist
+- **Stock States** — In Stock and Pre-order (24-48 h delivery) per product
 - **Print-on-Demand** — dynamic print builder with customisable options, artwork upload, and volume pricing
 - **B2B Company Accounts** — multi-user companies with role-based access and admin approval workflow
+- **Email Verification** — combined welcome + verify email on registration; approval/rejection emails on admin action
 - **Quotation System** — request and receive itemised custom quotes
 - **Multi-Language** — Catalan, Spanish, and English (via Spatie Translatable)
 - **AI Content Generation** — auto-generate product descriptions and SEO via Google Gemini or Anthropic Claude
+- **Homepage Hero Slider** — dynamic image slider with per-locale text, managed from admin panel
+- **Newsletter Subscriptions** — subscription form with deduplication, admin list, and CSV export
+- **Welcome Popup** — highlights Digital Printing and Papeleria services on first visit
 - **Admin Panel** — full CRUD, user approval, order management, reporting, PDF invoices, Excel exports
 - **Support Tickets** — integrated customer support ticketing
 
@@ -24,7 +29,7 @@ A B2B e-commerce platform for print-on-demand and custom product ordering, targe
 | Framework | Laravel 13 (PHP 8.3+) |
 | Frontend | Blade, Alpine.js 3, TailwindCSS 4, Vite 8 |
 | Database | SQLite (dev) / MySQL (prod) |
-| Auth | Laravel Breeze (extended) |
+| Auth | Laravel Breeze (extended) + MustVerifyEmail |
 | Media | Spatie Laravel MediaLibrary |
 | i18n | Spatie Laravel Translatable |
 | PDF | barryvdh/laravel-dompdf |
@@ -43,6 +48,7 @@ composer install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate
+php artisan storage:link
 npm install && npm run build
 php artisan serve
 ```
@@ -67,9 +73,9 @@ For full setup instructions see [docs/SETUP.md](docs/SETUP.md).
 
 | Role | Access |
 |---|---|
-| Guest | Browse products, request quotes, contact |
-| Regular user | Cart, checkout, orders, support tickets |
-| B2B (pending) | Waiting for admin approval |
+| Guest | Browse products, request quotes, contact, subscribe to newsletter |
+| Registered (unverified) | Must verify email before account review begins |
+| B2B (pending) | Email verified, waiting for admin approval |
 | B2B (approved) | Full B2B features: company management, exclusive pricing, quotations |
 | Admin | Full admin panel access |
 
@@ -80,21 +86,23 @@ For full setup instructions see [docs/SETUP.md](docs/SETUP.md).
 ```
 app/
   Http/Controllers/
-    Admin/        # Admin panel
-    Auth/         # Authentication & B2B approval
+    Admin/        # Admin panel (incl. hero slides, newsletter)
+    Auth/         # Authentication, verification & B2B approval
     Shop/         # Storefront
-  Models/         # 50+ Eloquent models
+  Models/         # 55+ Eloquent models
+  Notifications/  # 17+ notification classes
   Services/       # PrintPriceCalculator, etc.
-  Notifications/  # 15+ notification classes
 resources/
+  lang/ca/ es/ en/  # app, validation, auth, passwords, pagination
   views/
     admin/        # Admin Blade views
     shop/         # Storefront Blade views
+    auth/         # Auth + email verification views
     layouts/      # Shared layouts
 routes/
   web.php         # All application routes
 database/
-  migrations/     # 70+ migrations
+  migrations/     # 75+ migrations
 ```
 
 ---
@@ -109,6 +117,8 @@ SHOW_PRICES=true            # Hide prices from non-B2B guests
 AI_PROVIDER=gemini          # gemini | anthropic
 GEMINI_API_KEY=...
 ANTHROPIC_API_KEY=...
+MAIL_MAILER=smtp            # Required for verification & notification emails
+MAIL_FROM_ADDRESS="noreply@copyus.es"
 ```
 
 ---
