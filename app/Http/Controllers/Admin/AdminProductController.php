@@ -11,6 +11,7 @@ use App\Models\ProductPriceTier;
 use App\Models\ProductTag;
 use App\Models\ProductVariant;
 use App\Models\User;
+use App\Services\ProductWatermarkService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -18,6 +19,8 @@ use Illuminate\Support\Str;
 
 class AdminProductController extends Controller
 {
+    public function __construct(private ProductWatermarkService $watermark) {}
+
     public function index(Request $request)
     {
         $allowed = ['name_ca', 'sku', 'price', 'stock_status', 'is_active', 'created_at'];
@@ -82,7 +85,7 @@ class AdminProductController extends Controller
                 'is_active'          => $request->boolean('is_active', true),
                 'is_featured'        => $request->boolean('is_featured', false),
                 'image'              => $request->hasFile('image')
-                    ? $request->file('image')->store('products', 'public')
+                    ? $this->watermark->storeWithWatermark($request->file('image'), 'products')
                     : null,
                 'name' => [
                     'ca' => $validated['name_ca'],
@@ -152,7 +155,7 @@ class AdminProductController extends Controller
             $imagePath = $product->image;
             if ($request->hasFile('image')) {
                 if ($imagePath) Storage::disk('public')->delete($imagePath);
-                $imagePath = $request->file('image')->store('products', 'public');
+                $imagePath = $this->watermark->storeWithWatermark($request->file('image'), 'products');
             }
             if ($request->boolean('remove_image') && $imagePath) {
                 Storage::disk('public')->delete($imagePath);
@@ -602,7 +605,7 @@ class AdminProductController extends Controller
                         Storage::disk('public')->delete($product->image);
                     }
                     $product->update([
-                        'image' => $file->store('products', 'public'),
+                        'image' => $this->watermark->storeWithWatermark($file, 'products'),
                     ]);
                     $matched++;
                     continue;
@@ -617,7 +620,7 @@ class AdminProductController extends Controller
                     $entry   = $skuMap->get($skuKey);
                     $product = Product::with('images')->find($entry['id']);
                     if ($product) {
-                        $path = $file->store('products/gallery', 'public');
+                        $path = $this->watermark->storeWithWatermark($file, 'products/gallery');
                         $product->images()->create([
                             'path'       => $path,
                             'alt'        => $product->getTranslation('name', 'ca', false) ?: $product->sku,
@@ -738,7 +741,7 @@ class AdminProductController extends Controller
         if ($request->hasFile('gallery')) {
             $sort = $product->images()->max('sort_order') ?? 0;
             foreach ($request->file('gallery') as $file) {
-                $path = $file->store('products/gallery', 'public');
+                $path = $this->watermark->storeWithWatermark($file, 'products/gallery');
                 $product->images()->create([
                     'path'       => $path,
                     'alt'        => $product->getTranslation('name', 'ca'),
@@ -794,7 +797,7 @@ class AdminProductController extends Controller
                     }
                     if ($imageFile) {
                         if ($variant->image) Storage::disk('public')->delete($variant->image);
-                        $attrs['image'] = $imageFile->store('products/variants', 'public');
+                        $attrs['image'] = $this->watermark->storeWithWatermark($imageFile, 'products/variants');
                     }
 
                     $variant->update($attrs);
@@ -814,7 +817,7 @@ class AdminProductController extends Controller
                 ];
 
                 if ($imageFile) {
-                    $attrs['image'] = $imageFile->store('products/variants', 'public');
+                    $attrs['image'] = $this->watermark->storeWithWatermark($imageFile, 'products/variants');
                 }
 
                 $variant       = $product->variants()->create($attrs);

@@ -12,11 +12,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Alumni+Sans:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
 
+    <link rel="icon" href="{{ asset('images/icon.svg') }}" type="image/svg+xml">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/icons/favicon-32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/icons/favicon-16.png') }}">
-
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/icons/apple-touch-icon.png') }}">
-
     <link rel="manifest" href="{{ asset('site.webmanifest') }}">
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])

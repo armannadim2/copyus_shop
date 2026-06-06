@@ -1,0 +1,19 @@
+{
+    "name": "CopyUS Shop",
+    "short_name": "CopyUS",
+    "icons": [
+        {
+            "src": "/images/icons/favicon-32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/icons/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#5f75f4",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}
