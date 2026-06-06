@@ -12,7 +12,7 @@ class ProductWatermarkService
 
     public function __construct()
     {
-        $this->watermarkPath = public_path('images/icon_watermark.png');
+        $this->watermarkPath = public_path('images/icon.png');
     }
 
     public function storeWithWatermark(UploadedFile $file, string $directory): string
@@ -43,6 +43,9 @@ class ProductWatermarkService
             imagedestroy($image);
             return;
         }
+
+        // Paletted (8-bit) PNGs must be truecolor for alpha operations
+        imagepalettetotruecolor($watermark);
 
         $imgW = imagesx($image);
         $imgH = imagesy($image);
