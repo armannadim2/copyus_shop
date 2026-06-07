@@ -4,8 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>@hasSection('full_title')@yield('full_title')@else{{ config('app.name', 'Copyus') }} — @yield('title', __('app.welcome'))@endif</title>
-    @if(trim($__env->yieldContent('meta_description')))
+    @if($__env->hasSection('full_title'))
+    <title>@yield('full_title')</title>
+    @else
+    <title>{{ config('app.name', 'Copyus') }} — @yield('title', __('app.welcome'))</title>
+    @endif
+    @if($__env->hasSection('meta_description'))
     <meta name="description" content="@yield('meta_description')">
     @endif
 
@@ -19,14 +23,14 @@
     {{-- LocalBusiness schema --}}
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
+      "@@context": "https://schema.org",
+      "@@type": "LocalBusiness",
       "name": "Copyus",
       "image": "{{ $appUrl }}/assets/images/logo/FULL%20LOGO%20(Red%20Sun).svg",
       "url": "{{ $appUrl }}",
       "telephone": "+34937409228",
       "address": {
-        "@type": "PostalAddress",
+        "@@type": "PostalAddress",
         "streetAddress": "Parc TecnoCampus Mataró",
         "addressLocality": "Mataró",
         "addressRegion": "Barcelona",
@@ -34,7 +38,7 @@
         "addressCountry": "ES"
       },
       "geo": {
-        "@type": "GeoCoordinates",
+        "@@type": "GeoCoordinates",
         "latitude": 41.5432,
         "longitude": 2.4459
       },

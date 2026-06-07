@@ -265,35 +265,35 @@
  </div>
  </section>
 
- @push('scripts')
- <script type="application/ld+json">
- {
- "@context": "https://schema.org",
- "@type": "FAQPage",
+@endsection
+
+@push('scripts')
+<script type="application/ld+json">
+{
+ "@@context": "https://schema.org",
+ "@@type": "FAQPage",
  "mainEntity": [
  {
- "@type": "Question",
+ "@@type": "Question",
  "name": "{{ addslashes(__('app.services_faq_q1')) }}",
- "acceptedAnswer": { "@type": "Answer", "text": "{{ addslashes(__('app.services_faq_a1')) }}" }
+ "acceptedAnswer": { "@@type": "Answer", "text": "{{ addslashes(__('app.services_faq_a1')) }}" }
  },
  {
- "@type": "Question",
+ "@@type": "Question",
  "name": "{{ addslashes(__('app.services_faq_q2')) }}",
- "acceptedAnswer": { "@type": "Answer", "text": "{{ addslashes(__('app.services_faq_a2')) }}" }
+ "acceptedAnswer": { "@@type": "Answer", "text": "{{ addslashes(__('app.services_faq_a2')) }}" }
  },
  {
- "@type": "Question",
+ "@@type": "Question",
  "name": "{{ addslashes(__('app.services_faq_q3')) }}",
- "acceptedAnswer": { "@type": "Answer", "text": "{{ addslashes(__('app.services_faq_a3')) }}" }
+ "acceptedAnswer": { "@@type": "Answer", "text": "{{ addslashes(__('app.services_faq_a3')) }}" }
  },
  {
- "@type": "Question",
+ "@@type": "Question",
  "name": "{{ addslashes(__('app.services_faq_q4')) }}",
- "acceptedAnswer": { "@type": "Answer", "text": "{{ addslashes(__('app.services_faq_a4')) }}" }
+ "acceptedAnswer": { "@@type": "Answer", "text": "{{ addslashes(__('app.services_faq_a4')) }}" }
  }
  ]
- }
- </script>
- @endpush
-
-@endsection
+}
+</script>
+@endpush
