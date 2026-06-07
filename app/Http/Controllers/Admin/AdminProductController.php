@@ -129,7 +129,7 @@ class AdminProductController extends Controller
             ->with('success', 'Producte creat correctament.');
     }
 
-    public function edit(int $id)
+    public function edit(Request $request, int $id)
     {
         $product = Product::with([
             'images',
@@ -142,8 +142,9 @@ class AdminProductController extends Controller
         $brands     = Brand::where('is_active', true)->ordered()->get();
         $allTags    = ProductTag::orderBy('name')->get();
         $clients    = User::approved()->orderBy('company_name')->get();
+        $page       = $request->integer('page', 1);
 
-        return view('admin.products.edit', compact('product', 'categories', 'brands', 'allTags', 'clients'));
+        return view('admin.products.edit', compact('product', 'categories', 'brands', 'allTags', 'clients', 'page'));
     }
 
     public function update(Request $request, int $id)
@@ -214,7 +215,9 @@ class AdminProductController extends Controller
             $this->syncTags($request, $product);
         });
 
-        return redirect()->route('admin.products.index')
+        $page = $request->integer('_page', 1);
+
+        return redirect()->route('admin.products.index', $page > 1 ? ['page' => $page] : [])
             ->with('success', 'Producte actualitzat correctament.');
     }
 

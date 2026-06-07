@@ -189,7 +189,7 @@
                                 </form>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <a href="{{ route('admin.products.edit', $product->id) }}"
+                                <a href="{{ route('admin.products.edit', $product->id) . (request('page') ? '?page=' . request('page') : '') }}"
                                    class="font-outfit text-sm text-secondary hover:text-primary transition-colors">
                                     Editar →
                                 </a>

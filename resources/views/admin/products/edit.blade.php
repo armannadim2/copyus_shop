@@ -5,7 +5,7 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
     <div class="flex items-center gap-4 mb-8">
-        <a href="{{ route('admin.products.index') }}"
+        <a href="{{ route('admin.products.index') . ($page > 1 ? '?page=' . $page : '') }}"
            class="font-outfit text-sm text-gray-500 hover:text-primary transition-colors">
             ← Productes
         </a>
@@ -38,6 +38,7 @@
           enctype="multipart/form-data"
           class="space-y-6">
         @csrf @method('PUT')
+        <input type="hidden" name="_page" value="{{ $page }}">
 
         @include('admin.products._form')
 
@@ -47,7 +48,7 @@
                            rounded-2xl hover:brightness-110 active:scale-95 transition-all">
                 Guardar canvis
             </button>
-            <a href="{{ route('admin.products.index') }}"
+            <a href="{{ route('admin.products.index') . ($page > 1 ? '?page=' . $page : '') }}"
                class="font-outfit text-sm text-gray-500 px-6 py-3 rounded-2xl
                       border border-gray-200 hover:bg-gray-50 transition-colors">
                 Cancel·lar
