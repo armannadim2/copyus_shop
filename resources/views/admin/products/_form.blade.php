@@ -198,24 +198,23 @@
 
     @php $currentStatus = old('stock_status', $product?->stock_status ?? 'in_stock'); @endphp
 
-    <div class="flex gap-4">
+    <div class="flex gap-4" x-data="{ status: '{{ $currentStatus }}' }">
         {{-- In Stock --}}
         <label class="flex-1 cursor-pointer">
             <input type="radio" name="stock_status" value="in_stock"
-                   @checked($currentStatus === 'in_stock')
-                   class="sr-only peer">
-            <div class="flex items-center gap-3 border-2 rounded-2xl px-5 py-4 transition-all
-                        border-gray-200 peer-checked:border-green-500 peer-checked:bg-green-50">
-                <span class="w-4 h-4 rounded-full border-2 border-gray-300 peer-checked:border-green-500 flex items-center justify-center shrink-0
-                             {{ $currentStatus === 'in_stock' ? 'border-green-500 bg-green-500' : 'border-gray-300' }}">
-                    @if($currentStatus === 'in_stock')
-                        <svg class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                        </svg>
-                    @endif
+                   x-model="status"
+                   class="sr-only">
+            <div class="flex items-center gap-3 border-2 rounded-2xl px-5 py-4 transition-all"
+                 :class="status === 'in_stock' ? 'border-green-500 bg-green-50' : 'border-gray-200'">
+                <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-all"
+                      :class="status === 'in_stock' ? 'border-green-500 bg-green-500' : 'border-gray-300'">
+                    <svg x-show="status === 'in_stock'" class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
                 </span>
                 <div>
-                    <p class="font-outfit text-sm font-semibold {{ $currentStatus === 'in_stock' ? 'text-green-700' : 'text-dark' }}">
+                    <p class="font-outfit text-sm font-semibold transition-colors"
+                       :class="status === 'in_stock' ? 'text-green-700' : 'text-dark'">
                         En estoc
                     </p>
                     <p class="font-outfit text-xs text-gray-400 mt-0.5">Disponible per envio immediat</p>
@@ -226,20 +225,19 @@
         {{-- Pre-order --}}
         <label class="flex-1 cursor-pointer">
             <input type="radio" name="stock_status" value="pre_order"
-                   @checked($currentStatus === 'pre_order')
-                   class="sr-only peer">
-            <div class="flex items-center gap-3 border-2 rounded-2xl px-5 py-4 transition-all
-                        border-gray-200 peer-checked:border-amber-500 peer-checked:bg-amber-50">
-                <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0
-                             {{ $currentStatus === 'pre_order' ? 'border-amber-500 bg-amber-500' : 'border-gray-300' }}">
-                    @if($currentStatus === 'pre_order')
-                        <svg class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                        </svg>
-                    @endif
+                   x-model="status"
+                   class="sr-only">
+            <div class="flex items-center gap-3 border-2 rounded-2xl px-5 py-4 transition-all"
+                 :class="status === 'pre_order' ? 'border-amber-500 bg-amber-50' : 'border-gray-200'">
+                <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-all"
+                      :class="status === 'pre_order' ? 'border-amber-500 bg-amber-500' : 'border-gray-300'">
+                    <svg x-show="status === 'pre_order'" class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
                 </span>
                 <div>
-                    <p class="font-outfit text-sm font-semibold {{ $currentStatus === 'pre_order' ? 'text-amber-700' : 'text-dark' }}">
+                    <p class="font-outfit text-sm font-semibold transition-colors"
+                       :class="status === 'pre_order' ? 'text-amber-700' : 'text-dark'">
                         Pre-comanda
                     </p>
                     <p class="font-outfit text-xs text-gray-400 mt-0.5">Lliurament en 24-48 h</p>

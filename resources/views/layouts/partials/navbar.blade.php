@@ -58,7 +58,7 @@
             {{-- ── Logo ──────────────────────────────────────────────────── --}}
             <a href="{{ route('home') }}" class="shrink-0">
                 <img src="{{ asset('assets/images/logo/' . rawurlencode('FULL LOGO (Red Sun).svg')) }}"
-                     alt="Copyus"
+                     alt="{{ __('app.logo_alt') }}"
                      class="w-auto transition-all duration-300"
                      :style="lightMode ? 'height:64px;filter:none' : 'height:64px;filter:brightness(0) invert(1)'">
             </a>

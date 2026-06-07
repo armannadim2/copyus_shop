@@ -6,7 +6,7 @@
             <div class="md:col-span-4">
                 <a href="{{ route('home') }}" class="inline-block">
                     <img src="{{ asset('images/logo.svg') }}"
-                         alt="Copyus"
+                         alt="{{ __('app.logo_alt') }}"
                          class="h-9 md:h-10 w-auto">
                 </a>
                 <p class="font-outfit font-light text-body-md text-dark/65 mt-5 max-w-xs leading-relaxed">

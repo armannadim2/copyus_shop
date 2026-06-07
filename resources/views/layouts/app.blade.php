@@ -4,7 +4,46 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>{{ config('app.name', 'Copyus') }} — @yield('title', __('app.welcome'))</title>
+    <title>@hasSection('full_title')@yield('full_title')@else{{ config('app.name', 'Copyus') }} — @yield('title', __('app.welcome'))@endif</title>
+    @if(trim($__env->yieldContent('meta_description')))
+    <meta name="description" content="@yield('meta_description')">
+    @endif
+
+    {{-- hreflang --}}
+    @php $appUrl = rtrim(config('app.url'), '/'); @endphp
+    <link rel="alternate" hreflang="ca" href="{{ $appUrl }}" />
+    <link rel="alternate" hreflang="es" href="{{ $appUrl }}/locale/es" />
+    <link rel="alternate" hreflang="en" href="{{ $appUrl }}/locale/en" />
+    <link rel="alternate" hreflang="x-default" href="{{ $appUrl }}" />
+
+    {{-- LocalBusiness schema --}}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Copyus",
+      "image": "{{ $appUrl }}/assets/images/logo/FULL%20LOGO%20(Red%20Sun).svg",
+      "url": "{{ $appUrl }}",
+      "telephone": "+34937409228",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Parc TecnoCampus Mataró",
+        "addressLocality": "Mataró",
+        "addressRegion": "Barcelona",
+        "postalCode": "08302",
+        "addressCountry": "ES"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 41.5432,
+        "longitude": 2.4459
+      },
+      "priceRange": "€€",
+      "description": "Copisteria i impressió digital a Mataró. Flyers, targetes, banners, enquadernació i marxandatge personalitzat.",
+      "areaServed": ["Mataró", "Maresme", "Barcelona"]
+    }
+    </script>
+
     @stack('meta')
 
     {{-- Google Fonts --}}

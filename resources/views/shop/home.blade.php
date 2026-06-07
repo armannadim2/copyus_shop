@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('title', __('app.home_title'))
+@section('full_title', __('app.home_title'))
+@section('meta_description', __('app.home_meta_description'))
 
 @section('content')
 
@@ -311,26 +312,30 @@
                     [
                         'title' => __('app.home_service_corp_title'),
                         'desc'  => __('app.home_service_corp_desc'),
+                        'cta'   => __('app.home_service_corp_cta'),
                         'image' => 'images/corporate_business.png',
-                        'href'  => 'request-quote',
+                        'url'   => route('print.index'),
                     ],
                     [
                         'title' => __('app.home_service_largeformat_title'),
                         'desc'  => __('app.home_service_largeformat_desc'),
+                        'cta'   => __('app.home_service_largeformat_cta'),
                         'image' => 'images/gran_format.png',
-                        'href'  => 'request-quote',
+                        'url'   => route('services') . '#gran-format',
                     ],
                     [
                         'title' => __('app.home_service_merch_title'),
                         'desc'  => __('app.home_service_merch_desc'),
+                        'cta'   => __('app.home_service_merch_cta'),
                         'image' => 'images/merchandising.png',
-                        'href'  => 'request-quote',
+                        'url'   => route('services') . '#marxandatge',
                     ],
                     [
                         'title' => __('app.home_service_editorial_title'),
                         'desc'  => __('app.home_service_editorial_desc'),
+                        'cta'   => __('app.home_service_editorial_cta'),
                         'image' => 'images/editorial.png',
-                        'href'  => 'request-quote',
+                        'url'   => route('services') . '#enquadernacio',
                     ],
                 ];
             @endphp
@@ -354,10 +359,10 @@
                             <p class="font-outfit text-body-md text-gray-500 leading-relaxed mb-4 flex-1">
                                 {{ $svc['desc'] }}
                             </p>
-                            <a href="{{ route($svc['href']) }}"
+                            <a href="{{ $svc['url'] }}"
                                class="inline-flex items-center gap-1.5 font-outfit text-body-md
                                       font-semibold text-primary group-hover:gap-2.5 transition-all">
-                                {{ __('app.home_services_learn_more') }}
+                                {{ $svc['cta'] }}
                             </a>
                         </div>
                     </div>
