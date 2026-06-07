@@ -467,7 +467,7 @@ return [
     'menu_home'                  => 'Inicio',
     'menu_about'                 => 'Quiénes somos',
     'menu_services'              => 'Servicios',
-    'menu_shop'                  => 'Tienda',
+    'menu_shop'                  => 'Papelería',
     'menu_print'                 => '🖨️ Impresión',
     'menu_request_quote'         => 'Pedir presupuesto',
     'menu_contact'               => 'Contacto',

@@ -70,7 +70,7 @@
                         ['label' => __('app.menu_home'),          'href' => route('home'),           'active' => request()->routeIs('home')],
                         ['label' => __('app.menu_about'),         'href' => route('about'),          'active' => request()->routeIs('about')],
                         ['label' => __('app.menu_services'),      'href' => route('services'),       'active' => request()->routeIs('services')],
-                        ['label' => __('app.menu_shop'),          'href' => route('products.index'), 'active' => request()->routeIs('products.*')],
+                        ['label' => __('app.menu_shop'),          'href' => route('papereria'),       'active' => request()->routeIs('papereria')],
                         ['label' => __('app.menu_print'),         'href' => route('print.index'),    'active' => request()->routeIs('print.*')],
                         ['label' => __('app.menu_request_quote'), 'href' => route('request-quote'),  'active' => request()->routeIs('request-quote*')],
                         ['label' => __('app.menu_contact'),       'href' => route('contact'),        'active' => request()->routeIs('contact')],
@@ -628,8 +628,8 @@
                class="mobile-menu-item {{ request()->routeIs('services') ? '!text-primary font-semibold' : '' }}">
                 {{ __('app.menu_services') }}
             </a>
-            <a href="{{ route('products.index') }}"
-               class="mobile-menu-item {{ request()->routeIs('products.*') ? '!text-primary font-semibold' : '' }}">
+            <a href="{{ route('papereria') }}"
+               class="mobile-menu-item {{ request()->routeIs('papereria') ? '!text-primary font-semibold' : '' }}">
                 {{ __('app.menu_shop') }}
             </a>
             <a href="{{ route('request-quote') }}"

@@ -238,7 +238,7 @@
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl
                           font-outfit text-sm text-gray-400
                           hover:bg-white hover:bg-opacity-10 hover:text-white transition-colors">
-                    <span>🌐</span> Veure botiga
+                    <span>🌐</span> Veure papereria
                 </a>
 
                 <form method="POST" action="{{ route('logout') }}">

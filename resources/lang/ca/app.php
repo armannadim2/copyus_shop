@@ -467,7 +467,7 @@ return [
     'menu_home'                  => 'Inici',
     'menu_about'                 => 'Qui som',
     'menu_services'              => 'Serveis',
-    'menu_shop'                  => 'Botiga',
+    'menu_shop'                  => 'Papereria',
     'menu_print'                 => '🖨️ Impressió',
     'menu_request_quote'         => 'Demanar Preu',
     'menu_contact'               => 'Contacte',

@@ -467,7 +467,7 @@ return [
     'menu_home'                  => 'Home',
     'menu_about'                 => 'About us',
     'menu_services'              => 'Services',
-    'menu_shop'                  => 'Shop',
+    'menu_shop'                  => 'Stationery',
     'menu_print'                 => '🖨️ Printing',
     'menu_request_quote'         => 'Request quote',
     'menu_contact'               => 'Contact',

@@ -76,7 +76,7 @@
                         ['label' => __('app.footer_link_print'),       'href' => route('print.index')],
                         ['label' => __('app.footer_link_largeformat'), 'href' => route('request-quote')],
                         ['label' => __('app.footer_link_merch'),       'href' => route('request-quote')],
-                        ['label' => __('app.footer_link_stationery'),  'href' => route('products.index')],
+                        ['label' => __('app.footer_link_stationery'),  'href' => route('papereria')],
                     ] as $link)
                         <li>
                             <a href="{{ $link['href'] }}"
