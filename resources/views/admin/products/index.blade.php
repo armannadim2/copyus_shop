@@ -106,8 +106,7 @@
             'bulkTags'        => $allTags,
         ])
 
-        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div class="overflow-x-auto">
+        <div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
             <table class="w-full min-w-max">
                 <thead class="bg-gray-50 border-b border-gray-100">
                     <tr>
@@ -205,7 +204,6 @@
                     @endforelse
                 </tbody>
             </table>
-            </div>{{-- /overflow-x-auto --}}
         </div>{{-- /card --}}
 
         <div class="mt-4">{{ $products->links() }}</div>
