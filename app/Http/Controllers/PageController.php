@@ -14,6 +14,11 @@ class PageController extends Controller
         return view('pages.services');
     }
 
+    public function papereria()
+    {
+        return view('pages.papereria');
+    }
+
     public function privacy()
     {
         return $this->renderLegal('privacy');

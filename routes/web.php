@@ -57,8 +57,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 // Static corporate pages
-Route::get('/qui-som',  [PageController::class, 'about'])->name('about');
-Route::get('/serveis',  [PageController::class, 'services'])->name('services');
+Route::get('/qui-som',   [PageController::class, 'about'])->name('about');
+Route::get('/serveis',   [PageController::class, 'services'])->name('services');
+Route::get('/papereria', [PageController::class, 'papereria'])->name('papereria');
 
 // Legal pages
 Route::get('/privadesa', [PageController::class, 'privacy'])->name('privacy');

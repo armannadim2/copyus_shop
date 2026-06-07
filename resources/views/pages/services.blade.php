@@ -98,7 +98,7 @@
  'desc'  => __('app.service_stationery_desc'),
  'price' => __('app.service_stationery_price'),
  'cta'   => __('app.service_stationery_cta'),
- 'href'  => 'products.index',
+ 'href'  => 'papereria',
  'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>',
  'color' => 'primary',
  ],
