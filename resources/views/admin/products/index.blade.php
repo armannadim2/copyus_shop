@@ -107,7 +107,8 @@
         ])
 
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <table class="w-full">
+            <div class="overflow-x-auto">
+            <table class="w-full min-w-max">
                 <thead class="bg-gray-50 border-b border-gray-100">
                     <tr>
                         <th class="px-4 py-3 w-8">
@@ -204,7 +205,8 @@
                     @endforelse
                 </tbody>
             </table>
-        </div>
+            </div>{{-- /overflow-x-auto --}}
+        </div>{{-- /card --}}
 
         <div class="mt-4">{{ $products->links() }}</div>
     </div>
