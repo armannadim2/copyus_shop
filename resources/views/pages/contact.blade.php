@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('title', __('app.contact_title'))
+@section('full_title', __('app.contact_full_title'))
+@section('meta_description', __('app.contact_meta_description'))
 
 @section('content')
 

@@ -417,6 +417,8 @@ return [
 
     // ── Print Service ─────────────────────────────────────────────
     'print_page_title'           => 'Printing services',
+    'print_full_title'           => 'Digital Printing in Mataró: Flyers, Business Cards & Posters | Copyus',
+    'print_meta_description'     => 'Configure your print job in minutes. Flyers, business cards, leaflets and posters. In-house production in Mataró · 24h delivery.',
     'print_badge'                => 'Professional printing',
     'print_hero_title'           => 'Your print jobs',
     'print_hero_highlight'       => 'printed to measure',
@@ -479,6 +481,8 @@ return [
 
     // ── About page ────────────────────────────────────────────
     'about_title'                => 'About us',
+    'about_full_title'           => 'About Us — Copyus | Copy Shop & Stationery in Mataró',
+    'about_meta_description'     => 'Meet the Copyus team, your copy shop and stationery at TecnoCampus Mataró. Over 15 years of quality digital printing.',
     'about_badge'                => 'About us · Mataró',
     'about_hero_title_1'         => 'We are the copy shop',
     'about_hero_title_2'         => 'of Tecnocampus.',
@@ -519,7 +523,7 @@ return [
     'services_full_title'        => 'Copy Shop & Stationery in Mataró: Printing, Banners, Office Supplies | Copyus',
     'services_meta_description'  => 'All in one place: digital printing, large format, binding and stationery for businesses and students in Mataró. Quote in 24h · Collect or delivery.',
     'services_badge'             => 'Services · Printing & stationery',
-    'services_hero_title_1'      => 'Digital Printing & Stationery',
+    'services_hero_title_1'      => 'Copy Shop, Digital Printing & Stationery',
     'services_hero_title_2'      => 'in Mataró',
     'services_hero_subtitle'     => 'Flyers, banners, business cards, binding, merchandising and stationery. In-house production at TecnoCampus · Quote in 24h · Pick up or home delivery.',
     'services_btn_configure'     => 'Configure printing',
@@ -618,6 +622,8 @@ return [
 
     // ── Contact page ──────────────────────────────────────────
     'contact_title'              => 'Contact',
+    'contact_full_title'         => 'Contact — Copyus | Copy Shop & Stationery in Mataró',
+    'contact_meta_description'   => 'Get in touch with Copyus. Visit us at TecnoCampus Business Park in Mataró or write to us. Fast response guaranteed.',
     'contact_badge'              => 'Contact',
     'contact_hero_title_1'       => 'Let\'s talk about',
     'contact_hero_title_2'       => 'your project.',
@@ -644,6 +650,8 @@ return [
 
     // ── Request quote page ────────────────────────────────────
     'rq_title'                   => 'Request quote',
+    'rq_full_title'              => 'Request a Print Quote in Mataró | Copyus',
+    'rq_meta_description'        => 'Request a quote for printing, large format, merchandise or stationery. Response within 24h.',
     'rq_badge'                   => 'Request quote',
     'rq_hero_title_1'            => 'Tell us about',
     'rq_hero_title_2'            => 'your project.',

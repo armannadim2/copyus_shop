@@ -417,6 +417,8 @@ return [
 
     // ── Print Service ─────────────────────────────────────────────
     'print_page_title'           => 'Serveis d\'impressió',
+    'print_full_title'           => 'Impressió Digital a Mataró: Flyers, Targetes i Pòsters | Copyus',
+    'print_meta_description'     => 'Configura el teu treball d\'impressió en minuts. Flyers, targetes, díptics i pòsters. Producció pròpia a Mataró · Lliurament 24h.',
     'print_badge'                => 'Impressió professional',
     'print_hero_title'           => 'Els teus treballs',
     'print_hero_highlight'       => 'impresos a mida',
@@ -479,6 +481,8 @@ return [
 
     // ── About page ────────────────────────────────────────────
     'about_title'                => 'Qui som',
+    'about_full_title'           => 'Qui Som — Copyus | Copisteria i Papereria a Mataró',
+    'about_meta_description'     => 'Coneix l\'equip de Copyus, copisteria i papereria al TecnoCampus de Mataró. Més de 15 anys d\'impressió digital de qualitat.',
     'about_badge'                => 'Qui som · Mataró',
     'about_hero_title_1'         => 'Som la copisteria',
     'about_hero_title_2'         => 'del Tecnocampus.',
@@ -519,7 +523,7 @@ return [
     'services_full_title'        => 'Copisteria i Papereria a Mataró: Impressió, Banners, Material d\'Oficina | Copyus',
     'services_meta_description'  => 'Tot en un lloc: impressió digital, gran format, enquadernació i papereria per a empreses i estudiants a Mataró. Pressupost en 24h · Recollida o lliurament.',
     'services_badge'             => 'Serveis · Impressió i papereria',
-    'services_hero_title_1'      => 'Impressió Digital i Papereria',
+    'services_hero_title_1'      => 'Copisteria, Impressió Digital i Papereria',
     'services_hero_title_2'      => 'a Mataró',
     'services_hero_subtitle'     => 'Flyers, banners, targetes, enquadernació, marxandatge i papereria. Producció pròpia al TecnoCampus · Pressupost en 24h · Recollida o lliurament a domicili.',
     'services_btn_configure'     => 'Configurar impressió',
@@ -618,6 +622,8 @@ return [
 
     // ── Contact page ──────────────────────────────────────────
     'contact_title'              => 'Contacte',
+    'contact_full_title'         => 'Contacte — Copyus | Copisteria i Papereria a Mataró',
+    'contact_meta_description'   => 'Posa\'t en contacte amb Copyus. Visita\'ns al Parc TecnoCampus de Mataró o escriu-nos. Resposta ràpida garantida.',
     'contact_badge'              => 'Contacte',
     'contact_hero_title_1'       => 'Parlem del',
     'contact_hero_title_2'       => 'teu projecte.',
@@ -644,6 +650,8 @@ return [
 
     // ── Request quote page ────────────────────────────────────
     'rq_title'                   => 'Demanar pressupost',
+    'rq_full_title'              => 'Demanar Pressupost d\'Impressió a Mataró | Copyus',
+    'rq_meta_description'        => 'Sol·licita un pressupost per a impressió, gran format, marxandatge o papereria. Resposta en menys de 24h.',
     'rq_badge'                   => 'Demanar pressupost',
     'rq_hero_title_1'            => 'Explica\'ns el',
     'rq_hero_title_2'            => 'teu projecte.',
