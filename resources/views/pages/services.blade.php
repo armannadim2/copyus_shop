@@ -279,20 +279,13 @@
 @endsection
 
 @push('scripts')
-@php
-$servicesFaqSchema = [
-    '@context' => 'https://schema.org',
-    '@type'    => 'FAQPage',
-    'mainEntity' => [
-        ['@type' => 'Question', 'name' => __('app.services_faq_q1'), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => __('app.services_faq_a1')]],
-        ['@type' => 'Question', 'name' => __('app.services_faq_q2'), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => __('app.services_faq_a2')]],
-        ['@type' => 'Question', 'name' => __('app.services_faq_q3'), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => __('app.services_faq_a3')]],
-        ['@type' => 'Question', 'name' => __('app.services_faq_q4'), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => __('app.services_faq_a4')]],
-        ['@type' => 'Question', 'name' => __('app.services_faq_q5'), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => __('app.services_faq_a5')]],
-    ],
-];
-@endphp
 <script type="application/ld+json">
-{!! json_encode($servicesFaqSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+{!! json_encode(['@context'=>'https://schema.org','@type'=>'FAQPage','mainEntity'=>[
+    ['@type'=>'Question','name'=>__('app.services_faq_q1'),'acceptedAnswer'=>['@type'=>'Answer','text'=>__('app.services_faq_a1')]],
+    ['@type'=>'Question','name'=>__('app.services_faq_q2'),'acceptedAnswer'=>['@type'=>'Answer','text'=>__('app.services_faq_a2')]],
+    ['@type'=>'Question','name'=>__('app.services_faq_q3'),'acceptedAnswer'=>['@type'=>'Answer','text'=>__('app.services_faq_a3')]],
+    ['@type'=>'Question','name'=>__('app.services_faq_q4'),'acceptedAnswer'=>['@type'=>'Answer','text'=>__('app.services_faq_a4')]],
+    ['@type'=>'Question','name'=>__('app.services_faq_q5'),'acceptedAnswer'=>['@type'=>'Answer','text'=>__('app.services_faq_a5')]],
+]], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!}
 </script>
 @endpush

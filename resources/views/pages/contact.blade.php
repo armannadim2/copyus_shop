@@ -34,7 +34,7 @@
  </section>
 
  {{-- ── Contact info cards ──────────────────────────────────────────────── --}}
- <section class="py-16">
+ <section id="enviaments" class="py-16">
  <div class="section grid md:grid-cols-3 gap-6">
 
  {{-- Phone --}}
@@ -106,7 +106,7 @@
  </section>
 
  {{-- ── Form + Map ──────────────────────────────────────────────────────── --}}
- <section class="py-10 pb-20">
+ <section id="formulari" class="py-10 pb-20">
  <div class="section grid lg:grid-cols-2 gap-10">
 
  {{-- Form --}}

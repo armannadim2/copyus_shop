@@ -2,6 +2,44 @@
 @section('full_title', __('app.home_title'))
 @section('meta_description', __('app.home_meta_description'))
 
+@push('meta')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "PrintShop",
+  "name": "Copyus",
+  "url": "https://copyus.es",
+  "telephone": "+34937409228",
+  "email": "copyus@@copyus.es",
+  "image": "https://copyus.es/assets/images/logo/FULL%20LOGO%20(Red%20Sun).svg",
+  "priceRange": "€€",
+  "address": {
+    "@@type": "PostalAddress",
+    "streetAddress": "Carrer d'Ernest Lluch 32, TCM3 Local 2",
+    "addressLocality": "Mataró",
+    "addressRegion": "Barcelona",
+    "postalCode": "08302",
+    "addressCountry": "ES"
+  },
+  "geo": {
+    "@@type": "GeoCoordinates",
+    "latitude": 41.5396,
+    "longitude": 2.4436
+  },
+  "openingHours": [
+    "Mo-Th 09:00-17:00",
+    "Fr 09:00-14:00"
+  ],
+  "areaServed": "Maresme",
+  "sameAs": [
+    "https://www.facebook.com/profile.php?id=61580435619609",
+    "https://www.instagram.com/copyus.tcm/",
+    "https://www.linkedin.com/company/110057381/"
+  ]
+}
+</script>
+@endpush
+
 @section('content')
 
     {{-- ── Hero ─────────────────────────────────────────────────────────────── --}}

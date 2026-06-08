@@ -296,19 +296,12 @@
 @endsection
 
 @push('scripts')
-@php
-$faqSchema = [
-    '@context' => 'https://schema.org',
-    '@type'    => 'FAQPage',
-    'mainEntity' => [
-        ['@type' => 'Question', 'name' => __('app.papereria_faq_q1'), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => __('app.papereria_faq_a1')]],
-        ['@type' => 'Question', 'name' => __('app.papereria_faq_q2'), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => __('app.papereria_faq_a2')]],
-        ['@type' => 'Question', 'name' => __('app.papereria_faq_q3'), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => __('app.papereria_faq_a3')]],
-        ['@type' => 'Question', 'name' => __('app.papereria_faq_q4'), 'acceptedAnswer' => ['@type' => 'Answer', 'text' => __('app.papereria_faq_a4')]],
-    ],
-];
-@endphp
 <script type="application/ld+json">
-{!! json_encode($faqSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+{!! json_encode(['@context'=>'https://schema.org','@type'=>'FAQPage','mainEntity'=>[
+    ['@type'=>'Question','name'=>__('app.papereria_faq_q1'),'acceptedAnswer'=>['@type'=>'Answer','text'=>__('app.papereria_faq_a1')]],
+    ['@type'=>'Question','name'=>__('app.papereria_faq_q2'),'acceptedAnswer'=>['@type'=>'Answer','text'=>__('app.papereria_faq_a2')]],
+    ['@type'=>'Question','name'=>__('app.papereria_faq_q3'),'acceptedAnswer'=>['@type'=>'Answer','text'=>__('app.papereria_faq_a3')]],
+    ['@type'=>'Question','name'=>__('app.papereria_faq_q4'),'acceptedAnswer'=>['@type'=>'Answer','text'=>__('app.papereria_faq_a4')]],
+]], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) !!}
 </script>
 @endpush

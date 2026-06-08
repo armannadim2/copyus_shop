@@ -74,8 +74,8 @@
                 <ul class="space-y-3">
                     @foreach([
                         ['label' => __('app.footer_link_print'),       'href' => route('print.index')],
-                        ['label' => __('app.footer_link_largeformat'), 'href' => route('request-quote')],
-                        ['label' => __('app.footer_link_merch'),       'href' => route('request-quote')],
+                        ['label' => __('app.footer_link_largeformat'), 'href' => route('services') . '#gran-format'],
+                        ['label' => __('app.footer_link_merch'),       'href' => route('services') . '#marxandatge'],
                         ['label' => __('app.footer_link_stationery'),  'href' => route('papereria')],
                     ] as $link)
                         <li>
@@ -96,14 +96,14 @@
                 </h6>
                 <ul class="space-y-3">
                     <li>
-                        <a href="{{ route('contact') }}"
+                        <a href="{{ route('contact') . '#formulari' }}"
                            class="font-outfit font-light text-body-md text-dark/65
                                   hover:text-primary transition-colors">
                             {{ __('app.footer_help_center') }}
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('contact') }}"
+                        <a href="{{ route('contact') . '#enviaments' }}"
                            class="font-outfit font-light text-body-md text-dark/65
                                   hover:text-primary transition-colors">
                             {{ __('app.footer_shipping_policy') }}

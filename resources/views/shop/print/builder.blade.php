@@ -1,5 +1,30 @@
 @extends('layouts.app')
-@section('title', $template->getTranslation('name', app()->getLocale()))
+
+@php
+    $locale       = app()->getLocale();
+    $templateName = $template->getTranslation('name', $locale);
+
+    // Spec hint: lowest active quantity tier → "Des de 100 ut"
+    $minTier  = $template->quantityTiers->first();
+    $specHint = $minTier
+        ? 'Des de ' . number_format((int) $minTier->min_quantity, 0, ',', '.') . ' ut'
+        : null;
+    $seoTitle = $templateName . ' a Mataró'
+              . ($specHint ? ' · ' . $specHint : '')
+              . ' | Copyus';
+
+    // Meta description: strip HTML from description, truncate, append geo/time keywords
+    $rawDesc  = trim(strip_tags($template->getTranslation('description', $locale) ?? ''));
+    $suffix   = ' · Mataró i Maresme. Lliurament 24h.';
+    $maxBody  = 160 - mb_strlen($suffix);
+    $body     = $rawDesc
+        ? (mb_strlen($rawDesc) > $maxBody ? mb_substr($rawDesc, 0, $maxBody) . '…' : $rawDesc)
+        : 'Impressió professional a Mataró i Maresme. Producció pròpia.';
+    $metaDesc = $body . $suffix;
+@endphp
+
+@section('full_title', $seoTitle)
+@section('meta_description', $metaDesc)
 
 @section('content')
 
