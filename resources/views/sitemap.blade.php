@@ -87,7 +87,7 @@
     @foreach ($printTemplates as $template)
     <url>
         <loc>{{ $base }}/impressio/{{ $template->slug }}</loc>
-        <lastmod>{{ $template->updated_at->toAtomString() }}</lastmod>
+        <lastmod>{{ ($template->updated_at ?? now())->toAtomString() }}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
@@ -98,7 +98,7 @@
     @foreach ($categories as $category)
     <url>
         <loc>{{ $base }}/categories/{{ $category->slug }}</loc>
-        <lastmod>{{ $category->updated_at->toAtomString() }}</lastmod>
+        <lastmod>{{ ($category->updated_at ?? now())->toAtomString() }}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
     </url>
@@ -109,7 +109,7 @@
     @foreach ($products as $product)
     <url>
         <loc>{{ $base }}/products/{{ $product->slug }}</loc>
-        <lastmod>{{ $product->updated_at->toAtomString() }}</lastmod>
+        <lastmod>{{ ($product->updated_at ?? now())->toAtomString() }}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
     </url>
