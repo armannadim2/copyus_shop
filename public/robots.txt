@@ -1,2 +1,38 @@
 User-agent: *
-Disallow:
+
+# Auth & account pages
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /verify-email
+Disallow: /pending
+Disallow: /rejected
+
+# Locale switcher (redirect only, not content)
+Disallow: /locale/
+
+# Authenticated user areas
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /cart
+Disallow: /orders
+Disallow: /wishlist
+Disallow: /adreces
+Disallow: /empresa
+Disallow: /pressupostos
+Disallow: /configuracions-guardades
+Disallow: /factures
+Disallow: /impressio/els-meus-treballs
+Disallow: /tickets
+
+# Admin panel
+Disallow: /admin
+
+# Search (no standalone SEO value)
+Disallow: /search
+
+# Allow all public pages
+Allow: /
+
+Sitemap: https://copyus.es/sitemap.xml

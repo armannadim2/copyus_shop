@@ -13,12 +13,17 @@
     <meta name="description" content="@yield('meta_description')">
     @endif
 
-    {{-- hreflang --}}
-    @php $appUrl = rtrim(config('app.url'), '/'); @endphp
-    <link rel="alternate" hreflang="ca" href="{{ $appUrl }}" />
-    <link rel="alternate" hreflang="es" href="{{ $appUrl }}/locale/es" />
-    <link rel="alternate" hreflang="en" href="{{ $appUrl }}/locale/en" />
-    <link rel="alternate" hreflang="x-default" href="{{ $appUrl }}" />
+    {{-- Canonical + hreflang --}}
+    {{-- Single-URL locale architecture: all variants share the same URL. --}}
+    @php
+        $appUrl      = rtrim(config('app.url'), '/');
+        $canonicalUrl = url()->current();
+    @endphp
+    <link rel="canonical" href="{{ $canonicalUrl }}" />
+    <link rel="alternate" hreflang="ca"     href="{{ $canonicalUrl }}" />
+    <link rel="alternate" hreflang="es-ES"  href="{{ $canonicalUrl }}" />
+    <link rel="alternate" hreflang="en"     href="{{ $canonicalUrl }}" />
+    <link rel="alternate" hreflang="x-default" href="{{ $canonicalUrl }}" />
 
     {{-- LocalBusiness schema --}}
     <script type="application/ld+json">
@@ -106,6 +111,52 @@
       }
     }
     </script>
+
+    {{-- BreadcrumbList schema — auto-generated from current route --}}
+    @php
+        use Illuminate\Support\Facades\Route as CurrentRoute;
+        $crumbRoute = CurrentRoute::currentRouteName() ?? '';
+        $crumbBase  = [
+            '@type'    => 'ListItem',
+            'position' => 1,
+            'name'     => 'Copyus',
+            'item'     => url('/'),
+        ];
+        $crumbPageMap = [
+            'services'          => ['Serveis', null],
+            'papereria'         => ['Papereria', null],
+            'about'             => ['Qui som', null],
+            'contact'           => ['Contacte', null],
+            'request-quote'     => ['Demanar pressupost', null],
+            'print.index'       => ['Impressió digital', null],
+            'products.index'    => ['Catàleg', null],
+            'products.category' => ['Catàleg', null],
+        ];
+        $crumbItems = [$crumbBase];
+        if (isset($crumbPageMap[$crumbRoute])) {
+            $crumbItems[] = ['@type' => 'ListItem', 'position' => 2,
+                             'name' => $crumbPageMap[$crumbRoute][0], 'item' => url()->current()];
+        } elseif ($crumbRoute === 'products.show' && isset($product)) {
+            $crumbItems[] = ['@type' => 'ListItem', 'position' => 2,
+                             'name' => 'Catàleg', 'item' => route('products.index')];
+            $crumbItems[] = ['@type' => 'ListItem', 'position' => 3,
+                             'name' => $product->getTranslation('name', app()->getLocale()), 'item' => url()->current()];
+        } elseif ($crumbRoute === 'print.builder' && isset($template)) {
+            $crumbItems[] = ['@type' => 'ListItem', 'position' => 2,
+                             'name' => 'Impressió digital', 'item' => route('print.index')];
+            $crumbItems[] = ['@type' => 'ListItem', 'position' => 3,
+                             'name' => $template->getTranslation('name', app()->getLocale()), 'item' => url()->current()];
+        }
+    @endphp
+    @if(count($crumbItems) > 1)
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "BreadcrumbList",
+      "itemListElement": {!! json_encode($crumbItems, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+    }
+    </script>
+    @endif
 
     @stack('meta')
 

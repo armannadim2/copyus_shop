@@ -42,6 +42,7 @@ use App\Http\Controllers\Admin\AdminCompanyController;
 use App\Http\Controllers\Admin\AdminTicketController;
 use App\Http\Controllers\Admin\AdminNewsletterController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,6 +50,9 @@ use Illuminate\Support\Facades\Route;
 | Public Routes — No auth required
 |--------------------------------------------------------------------------
 */
+
+// Sitemap
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');

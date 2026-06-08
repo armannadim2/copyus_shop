@@ -14,8 +14,6 @@
 @if($seoKeywords)
 <meta name="keywords" content="{{ $seoKeywords }}">
 @endif
-<link rel="canonical" href="{{ $canonical }}">
-
 {{-- Open Graph --}}
 <meta property="og:type"        content="product">
 <meta property="og:url"         content="{{ $canonical }}">
