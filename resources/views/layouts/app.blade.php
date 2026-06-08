@@ -29,7 +29,7 @@
       "image": "{{ $appUrl }}/assets/images/logo/FULL%20LOGO%20(Red%20Sun).svg",
       "url": "{{ $appUrl }}",
       "telephone": "+34937409228",
-      "email": "copyus@copyus.es",
+      "email": "copyus@@copyus.es",
       "address": {
         "@@type": "PostalAddress",
         "streetAddress": "Avinguda Ernest Lluch 32, TecnoCampus Mataró - TCM3, Local 2",
