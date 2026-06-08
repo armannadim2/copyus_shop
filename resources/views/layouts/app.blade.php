@@ -32,7 +32,7 @@
       "email": "copyus@copyus.es",
       "address": {
         "@@type": "PostalAddress",
-        "streetAddress": "Parc TecnoCampus Mataró, TCM3, Local 2",
+        "streetAddress": "Avinguda Ernest Lluch 32, TecnoCampus Mataró - TCM3, Local 2",
         "addressLocality": "Mataró",
         "addressRegion": "Barcelona",
         "postalCode": "08302",

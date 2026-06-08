@@ -190,6 +190,44 @@
         </div>
     </section>
 
+    {{-- ── FAQ ────────────────────────────────────────────────────────────────── --}}
+    <section class="py-20 bg-light">
+        <div class="section max-w-3xl mx-auto">
+            <h2 class="font-alumni text-h2 text-dark mb-10">
+                {{ __('app.papereria_faq_title') }}
+            </h2>
+
+            <div class="space-y-4" x-data="{ open: null }">
+                @foreach([
+                    ['q' => __('app.papereria_faq_q1'), 'a' => __('app.papereria_faq_a1')],
+                    ['q' => __('app.papereria_faq_q2'), 'a' => __('app.papereria_faq_a2')],
+                    ['q' => __('app.papereria_faq_q3'), 'a' => __('app.papereria_faq_a3')],
+                    ['q' => __('app.papereria_faq_q4'), 'a' => __('app.papereria_faq_a4')],
+                ] as $i => $faq)
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <button type="button"
+                            class="w-full flex items-center justify-between px-6 py-5 text-left"
+                            @click="open = open === {{ $i }} ? null : {{ $i }}">
+                        <span class="font-outfit text-body-md font-semibold text-dark">
+                            {{ $faq['q'] }}
+                        </span>
+                        <svg class="w-5 h-5 text-primary shrink-0 transition-transform"
+                             :class="open === {{ $i }} ? 'rotate-180' : ''"
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div x-show="open === {{ $i }}" x-collapse class="px-6 pb-5">
+                        <p class="font-outfit text-body-md text-gray-500 leading-relaxed">
+                            {{ $faq['a'] }}
+                        </p>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     {{-- ── Internal links ───────────────────────────────────────────────────── --}}
     <section class="py-16 bg-light border-t border-gray-100">
         <div class="section">
@@ -256,3 +294,34 @@
     </section>
 
 @endsection
+
+@push('scripts')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@@type": "Question",
+      "name": "{{ addslashes(__('app.papereria_faq_q1')) }}",
+      "acceptedAnswer": { "@@type": "Answer", "text": "{{ addslashes(__('app.papereria_faq_a1')) }}" }
+    },
+    {
+      "@@type": "Question",
+      "name": "{{ addslashes(__('app.papereria_faq_q2')) }}",
+      "acceptedAnswer": { "@@type": "Answer", "text": "{{ addslashes(__('app.papereria_faq_a2')) }}" }
+    },
+    {
+      "@@type": "Question",
+      "name": "{{ addslashes(__('app.papereria_faq_q3')) }}",
+      "acceptedAnswer": { "@@type": "Answer", "text": "{{ addslashes(__('app.papereria_faq_a3')) }}" }
+    },
+    {
+      "@@type": "Question",
+      "name": "{{ addslashes(__('app.papereria_faq_q4')) }}",
+      "acceptedAnswer": { "@@type": "Answer", "text": "{{ addslashes(__('app.papereria_faq_a4')) }}" }
+    }
+  ]
+}
+</script>
+@endpush
