@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
@@ -87,6 +88,18 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CategorySeeder::class);
 
+        // ── Brands ─────────────────────────────────────────────
+        $brandNames = ['BIC', 'Staedtler', 'Navigator', 'Leuchtturm', 'Leitz', 'Esselte', 'Rapid', 'Maped', 'Scotch'];
+        $brands = [];
+        foreach ($brandNames as $i => $name) {
+            $brands[$name] = Brand::create([
+                'name'       => $name,
+                'slug'       => \Illuminate\Support\Str::slug($name),
+                'sort_order' => $i + 1,
+                'is_active'  => true,
+            ]);
+        }
+
         // ── Sample Products ────────────────────────────────────
         $cat1 = Category::where('slug', 'writing-and-correction')->first();
         $cat2 = Category::where('slug', 'paper-and-notebooks')->first();
@@ -104,10 +117,10 @@ class DatabaseSeeder extends Seeder
                 'slug'               => 'boligraf-bic-cristal-negre',
                 'price'              => 0.35,
                 'vat_rate'           => 21.00,
-                'stock'              => 5000,
+                'stock_status'       => 'in_stock',
                 'min_order_quantity' => 50,
                 'unit'               => 'unitat',
-                'brand'              => 'BIC',
+                'brand_id'           => $brands['BIC']->id,
                 'is_featured'        => true,
             ],
             [
@@ -119,10 +132,10 @@ class DatabaseSeeder extends Seeder
                 'slug'               => 'llapis-staedtler-hb-caixa-12',
                 'price'              => 3.20,
                 'vat_rate'           => 21.00,
-                'stock'              => 1200,
+                'stock_status'       => 'in_stock',
                 'min_order_quantity' => 10,
                 'unit'               => 'caixa',
-                'brand'              => 'Staedtler',
+                'brand_id'           => $brands['Staedtler']->id,
                 'is_featured'        => false,
             ],
             // Paper & Notebooks (continued)
@@ -135,10 +148,10 @@ class DatabaseSeeder extends Seeder
                 'slug'               => 'paper-a4-80gr-resma-500',
                 'price'              => 4.90,
                 'vat_rate'           => 21.00,
-                'stock'              => 3000,
+                'stock_status'       => 'in_stock',
                 'min_order_quantity' => 5,
                 'unit'               => 'resma',
-                'brand'              => 'Navigator',
+                'brand_id'           => $brands['Navigator']->id,
                 'is_featured'        => true,
             ],
             [
@@ -150,10 +163,10 @@ class DatabaseSeeder extends Seeder
                 'slug'               => 'quadern-a5-tapa-dura-ratllat',
                 'price'              => 6.75,
                 'vat_rate'           => 21.00,
-                'stock'              => 800,
+                'stock_status'       => 'in_stock',
                 'min_order_quantity' => 5,
                 'unit'               => 'unitat',
-                'brand'              => 'Leuchtturm',
+                'brand_id'           => $brands['Leuchtturm']->id,
                 'is_featured'        => true,
             ],
             // Binders & Folders
@@ -166,10 +179,10 @@ class DatabaseSeeder extends Seeder
                 'slug'               => 'arxivador-a4-llom-8cm-negre',
                 'price'              => 2.85,
                 'vat_rate'           => 21.00,
-                'stock'              => 2000,
+                'stock_status'       => 'in_stock',
                 'min_order_quantity' => 10,
                 'unit'               => 'unitat',
-                'brand'              => 'Leitz',
+                'brand_id'           => $brands['Leitz']->id,
                 'is_featured'        => false,
             ],
             [
@@ -181,10 +194,10 @@ class DatabaseSeeder extends Seeder
                 'slug'               => 'carpeta-pressio-a4-transparent-pack-10',
                 'price'              => 5.40,
                 'vat_rate'           => 21.00,
-                'stock'              => 1500,
+                'stock_status'       => 'in_stock',
                 'min_order_quantity' => 5,
                 'unit'               => 'pack',
-                'brand'              => 'Esselte',
+                'brand_id'           => $brands['Esselte']->id,
                 'is_featured'        => false,
             ],
             // Office Supplies
@@ -197,10 +210,10 @@ class DatabaseSeeder extends Seeder
                 'slug'               => 'grapes-rapid-26-6-caixa-1000',
                 'price'              => 1.95,
                 'vat_rate'           => 21.00,
-                'stock'              => 4000,
+                'stock_status'       => 'in_stock',
                 'min_order_quantity' => 20,
                 'unit'               => 'caixa',
-                'brand'              => 'Rapid',
+                'brand_id'           => $brands['Rapid']->id,
                 'is_featured'        => false,
             ],
             [
@@ -212,10 +225,10 @@ class DatabaseSeeder extends Seeder
                 'slug'               => 'tisores-oficina-21cm-inoxidable',
                 'price'              => 4.50,
                 'vat_rate'           => 21.00,
-                'stock'              => 600,
+                'stock_status'       => 'in_stock',
                 'min_order_quantity' => 5,
                 'unit'               => 'unitat',
-                'brand'              => 'Maped',
+                'brand_id'           => $brands['Maped']->id,
                 'is_featured'        => false,
             ],
             [
@@ -227,10 +240,10 @@ class DatabaseSeeder extends Seeder
                 'slug'               => 'cinta-adhesiva-scotch-19mm-33m-pack-8',
                 'price'              => 7.20,
                 'vat_rate'           => 21.00,
-                'stock'              => 900,
+                'stock_status'       => 'in_stock',
                 'min_order_quantity' => 5,
                 'unit'               => 'pack',
-                'brand'              => 'Scotch',
+                'brand_id'           => $brands['Scotch']->id,
                 'is_featured'        => true,
             ],
         ];

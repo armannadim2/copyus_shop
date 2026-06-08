@@ -15,16 +15,30 @@ return new class extends Migration
         });
 
         // Copy best available translation into the new column
-        DB::statement("
-            UPDATE brands
-            SET name_text = COALESCE(
-                NULLIF(JSON_UNQUOTE(JSON_EXTRACT(name, '$.ca')), 'null'),
-                NULLIF(JSON_UNQUOTE(JSON_EXTRACT(name, '$.es')), 'null'),
-                NULLIF(JSON_UNQUOTE(JSON_EXTRACT(name, '$.en')), 'null'),
-                ''
-            )
-            WHERE name IS NOT NULL
-        ");
+        // SQLite's JSON_EXTRACT already returns unquoted strings; MySQL needs JSON_UNQUOTE
+        if (DB::getDriverName() === 'sqlite') {
+            DB::statement("
+                UPDATE brands
+                SET name_text = COALESCE(
+                    NULLIF(JSON_EXTRACT(name, '$.ca'), 'null'),
+                    NULLIF(JSON_EXTRACT(name, '$.es'), 'null'),
+                    NULLIF(JSON_EXTRACT(name, '$.en'), 'null'),
+                    ''
+                )
+                WHERE name IS NOT NULL
+            ");
+        } else {
+            DB::statement("
+                UPDATE brands
+                SET name_text = COALESCE(
+                    NULLIF(JSON_UNQUOTE(JSON_EXTRACT(name, '$.ca')), 'null'),
+                    NULLIF(JSON_UNQUOTE(JSON_EXTRACT(name, '$.es')), 'null'),
+                    NULLIF(JSON_UNQUOTE(JSON_EXTRACT(name, '$.en')), 'null'),
+                    ''
+                )
+                WHERE name IS NOT NULL
+            ");
+        }
 
         // Drop the JSON column then rename the new one
         Schema::table('brands', function (Blueprint $table) {
