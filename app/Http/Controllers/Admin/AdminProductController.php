@@ -31,10 +31,13 @@ class AdminProductController extends Controller
             ->when(
                 $request->search,
                 fn($q, $s) =>
-                $q->where('sku', 'like', "%$s%")
-                    ->orWhere('supplier', 'like', "%$s%")
-                    ->orWhereJsonContains('name->ca', $s)
-                    ->orWhereHas('brand', fn($bq) => $bq->where('name', 'like', "%$s%"))
+                $q->where(function ($q) use ($s) {
+                    $q->where('sku', 'like', "%$s%")
+                        ->orWhere('supplier', 'like', "%$s%")
+                        ->orWhere('name->ca', 'like', "%$s%")
+                        ->orWhere('name->es', 'like', "%$s%")
+                        ->orWhereHas('brand', fn($bq) => $bq->where('name', 'like', "%$s%"));
+                })
             )
             ->when($request->category_id, fn($q, $c) => $q->where('category_id', $c))
             ->when($request->status === 'active',   fn($q) => $q->where('is_active', true))

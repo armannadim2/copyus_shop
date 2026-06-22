@@ -16,4 +16,16 @@ return [
 
     'show_prices' => env('SHOW_PRICES', true),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Notification Email
+    |--------------------------------------------------------------------------
+    |
+    | This address receives admin alert emails (new registrations, orders…).
+    | Override with ADMIN_NOTIFICATION_EMAIL in .env for other environments.
+    |
+    */
+
+    'admin_notification_email' => env('ADMIN_NOTIFICATION_EMAIL', 'nadim@copyus.es'),
+
 ];

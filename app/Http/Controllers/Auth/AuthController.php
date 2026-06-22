@@ -9,6 +9,7 @@ use App\Rules\FiscalIdentity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
@@ -128,7 +129,11 @@ class AuthController extends Controller
         // Send combined welcome + email verification email to the new user
         $user->sendEmailVerificationNotification();
 
-        // Notify admins of new registration
+        // Notify the configured admin email directly
+        Notification::route('mail', config('shop.admin_notification_email'))
+            ->notify(new NewUserRegisteredNotification($user));
+
+        // Also notify DB admin users (for in-app dashboard notifications)
         User::admins()->get()
             ->each(fn($admin) => $admin->notify(new NewUserRegisteredNotification($user)));
 
