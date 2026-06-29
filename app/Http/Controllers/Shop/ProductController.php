@@ -44,6 +44,8 @@ class ProductController extends Controller
             ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
             ->first();
 
+        $sort = $request->get('sort', 'newest');
+
         $products = Product::with('category')
             ->active()
             ->when(
@@ -64,6 +66,11 @@ class ProductController extends Controller
             ->when($request->price_max,  fn($q, $max) => $q->where('price', '<=', $max))
             ->when($request->brand,      fn($q, $brands) => $q->whereIn('brand_id', (array) $brands))
             ->when($request->seasonal,   fn($q) => $q->where('is_seasonal', true))
+            ->when($sort === 'price_asc',  fn($q) => $q->orderBy('price', 'asc'))
+            ->when($sort === 'price_desc', fn($q) => $q->orderBy('price', 'desc'))
+            ->when($sort === 'name_asc',   fn($q) => $q->orderBy('name', 'asc'))
+            ->when($sort === 'name_desc',  fn($q) => $q->orderBy('name', 'desc'))
+            ->when(!in_array($sort, ['price_asc','price_desc','name_asc','name_desc']), fn($q) => $q->orderByDesc('created_at'))
             ->paginate(24)
             ->withQueryString();
 
@@ -184,6 +191,8 @@ class ProductController extends Controller
             ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
             ->first();
 
+        $sort = request('sort', 'newest');
+
         $products = Product::with('category')
             ->active()
             ->whereIn('category_id', $categoryIds)
@@ -192,7 +201,13 @@ class ProductController extends Controller
             ->when(request('price_max'), fn($q, $max) => $q->where('price', '<=', $max))
             ->when(request('brand'),     fn($q, $brands) => $q->whereIn('brand_id', (array) $brands))
             ->when(request('seasonal'),  fn($q) => $q->where('is_seasonal', true))
-            ->paginate(24);
+            ->when($sort === 'price_asc',  fn($q) => $q->orderBy('price', 'asc'))
+            ->when($sort === 'price_desc', fn($q) => $q->orderBy('price', 'desc'))
+            ->when($sort === 'name_asc',   fn($q) => $q->orderBy('name', 'asc'))
+            ->when($sort === 'name_desc',  fn($q) => $q->orderBy('name', 'desc'))
+            ->when(!in_array($sort, ['price_asc','price_desc','name_asc','name_desc']), fn($q) => $q->orderByDesc('created_at'))
+            ->paginate(24)
+            ->withQueryString();
 
         $activeSlug = $slug;
         [$categories, $openIds] = $this->buildCategoryTree($activeSlug);

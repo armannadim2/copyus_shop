@@ -330,12 +330,18 @@
         </aside>
 
         {{-- Main Content --}}
-        <div class="flex-1">
+        <div class="flex-1" x-data="{
+            view: localStorage.getItem('productView') || 'grid',
+            setView(v) { this.view = v; localStorage.setItem('productView', v); }
+        }">
 
             {{-- Search Bar --}}
-            <form method="GET" action="{{ route('products.index') }}" class="flex gap-3 mb-6">
+            <form method="GET" action="{{ route('products.index') }}" class="flex gap-3 mb-4">
                 @if(request('category'))
                     <input type="hidden" name="category" value="{{ request('category') }}" />
+                @endif
+                @if(request('sort'))
+                    <input type="hidden" name="sort" value="{{ request('sort') }}" />
                 @endif
                 <input type="text" name="search"
                        value="{{ request('search') }}"
@@ -350,7 +356,69 @@
                 </button>
             </form>
 
-            {{-- Product Grid --}}
+            {{-- Toolbar: Sort + View Toggle --}}
+            <div class="flex items-center justify-between gap-3 mb-6 bg-white rounded-xl border border-gray-100 px-4 py-2.5">
+                {{-- Sort --}}
+                <form method="GET" action="{{ route('products.index') }}" class="flex items-center gap-2">
+                    @if(request('category'))
+                        <input type="hidden" name="category" value="{{ request('category') }}" />
+                    @endif
+                    @if(request('search'))
+                        <input type="hidden" name="search" value="{{ request('search') }}" />
+                    @endif
+                    @if(request('in_stock'))
+                        <input type="hidden" name="in_stock" value="{{ request('in_stock') }}" />
+                    @endif
+                    @if(request('price_min'))
+                        <input type="hidden" name="price_min" value="{{ request('price_min') }}" />
+                    @endif
+                    @if(request('price_max'))
+                        <input type="hidden" name="price_max" value="{{ request('price_max') }}" />
+                    @endif
+                    @foreach((array) request('brand', []) as $b)
+                        <input type="hidden" name="brand[]" value="{{ $b }}" />
+                    @endforeach
+                    @if(request('seasonal'))
+                        <input type="hidden" name="seasonal" value="{{ request('seasonal') }}" />
+                    @endif
+
+                    <label class="font-outfit text-xs text-gray-400 whitespace-nowrap">
+                        {{ __('app.sort_by') }}:
+                    </label>
+                    <select name="sort" onchange="this.form.submit()"
+                            class="font-outfit text-sm text-dark border border-gray-200 rounded-lg
+                                   px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary
+                                   bg-white cursor-pointer">
+                        <option value="newest"     {{ request('sort','newest') === 'newest'     ? 'selected' : '' }}>{{ __('app.sort_newest') }}</option>
+                        <option value="name_asc"   {{ request('sort') === 'name_asc'   ? 'selected' : '' }}>{{ __('app.sort_name_asc') }}</option>
+                        <option value="name_desc"  {{ request('sort') === 'name_desc'  ? 'selected' : '' }}>{{ __('app.sort_name_desc') }}</option>
+                        <option value="price_asc"  {{ request('sort') === 'price_asc'  ? 'selected' : '' }}>{{ __('app.sort_price_asc') }}</option>
+                        <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>{{ __('app.sort_price_desc') }}</option>
+                    </select>
+                </form>
+
+                {{-- View Toggle --}}
+                <div class="flex items-center gap-1">
+                    <button @click="setView('grid')"
+                            :class="view === 'grid' ? 'bg-primary text-white' : 'text-gray-400 hover:text-dark'"
+                            class="p-1.5 rounded-lg transition-all" title="Vista en graella">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                        </svg>
+                    </button>
+                    <button @click="setView('list')"
+                            :class="view === 'list' ? 'bg-primary text-white' : 'text-gray-400 hover:text-dark'"
+                            class="p-1.5 rounded-lg transition-all" title="Vista en llista">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            {{-- Product Grid / List --}}
             @if($products->isEmpty())
                 <div class="text-center py-20">
                     <p class="text-5xl mb-4">📦</p>
@@ -359,7 +427,9 @@
                     </p>
                 </div>
             @else
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div :class="view === 'grid'
+                        ? 'grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6'
+                        : 'flex flex-col gap-4'">
                     @foreach($products as $product)
                         @php
                             $locale     = app()->getLocale();
@@ -370,42 +440,32 @@
                             $productUrl = route('products.show', $product->slug);
                         @endphp
 
-                        <div x-data class="bg-white rounded-2xl shadow-sm hover:shadow-md
+                        {{-- GRID card --}}
+                        <div x-data x-show="view === 'grid'"
+                             class="bg-white rounded-2xl shadow-sm hover:shadow-md
                                     transition-shadow overflow-hidden group flex flex-col">
 
-                            {{-- Product Image --}}
                             <div class="relative h-44 bg-light flex items-center justify-center overflow-hidden">
                                 @if($product->image)
-                                    <img src="{{ $imageUrl }}"
-                                         alt="{{ $name }}"
-                                         loading="lazy"
-                                         class="w-full h-full object-cover
-                                                group-hover:scale-105 transition-transform duration-300" />
+                                    <img src="{{ $imageUrl }}" alt="{{ $name }}" loading="lazy"
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                 @else
                                     <span class="text-5xl">📦</span>
                                 @endif
-
-                                {{-- Quick View overlay button --}}
-                                <button
-                                    @click="$dispatch('quickview', {
-                                        id:          {{ $product->id }},
-                                        name:        {{ Js::from($name) }},
-                                        description: {{ Js::from($desc) }},
-                                        category:    {{ Js::from($category) }},
-                                        sku:         {{ Js::from($product->sku) }},
-                                        brand:       {{ Js::from($product->brand?->name) }},
-                                        image:       {{ Js::from($imageUrl) }},
-                                        url:         {{ Js::from($productUrl) }},
-                                        stock_status: {{ Js::from($product->stock_status) }},
-                                        min_qty:     {{ $product->min_order_quantity }},
-                                        unit:        {{ Js::from($product->unit) }},
-                                        price:       {{ Js::from(number_format($product->price, 2, '.', '')) }},
-                                        price_vat:   {{ Js::from(number_format($product->price_with_vat, 2, ',', '.')) }}
-                                    })"
-                                    title="{{ __('app.quick_view') }}"
-                                    class="absolute inset-0 w-full h-full flex items-center justify-center
-                                           bg-dark/0 hover:bg-dark/30 transition-all duration-200
-                                           opacity-0 group-hover:opacity-100">
+                                <button @click="$dispatch('quickview', {
+                                            id: {{ $product->id }}, name: {{ Js::from($name) }},
+                                            description: {{ Js::from($desc) }}, category: {{ Js::from($category) }},
+                                            sku: {{ Js::from($product->sku) }}, brand: {{ Js::from($product->brand?->name) }},
+                                            image: {{ Js::from($imageUrl) }}, url: {{ Js::from($productUrl) }},
+                                            stock_status: {{ Js::from($product->stock_status) }},
+                                            min_qty: {{ $product->min_order_quantity }}, unit: {{ Js::from($product->unit) }},
+                                            price: {{ Js::from(number_format($product->price, 2, '.', '')) }},
+                                            price_vat: {{ Js::from(number_format($product->price_with_vat, 2, ',', '.')) }}
+                                        })"
+                                        title="{{ __('app.quick_view') }}"
+                                        class="absolute inset-0 w-full h-full flex items-center justify-center
+                                               bg-dark/0 hover:bg-dark/30 transition-all duration-200
+                                               opacity-0 group-hover:opacity-100">
                                     <span class="flex items-center gap-1.5 bg-white/90 text-dark
                                                  font-outfit text-xs font-medium px-3 py-1.5 rounded-full
                                                  shadow-sm backdrop-blur-sm">
@@ -418,155 +478,174 @@
                                 </button>
                             </div>
 
-                            {{-- Product Info --}}
                             <div class="p-5 flex flex-col flex-1">
-                                {{-- Category Badge --}}
-                                <span class="inline-block bg-light text-secondary font-alumni
-                                             text-body-sm px-2 py-0.5 rounded-full mb-2 w-fit">
+                                <span class="inline-block bg-light text-secondary font-alumni text-body-sm px-2 py-0.5 rounded-full mb-2 w-fit">
                                     {{ $category }}
                                 </span>
-
-                                {{-- Name --}}
-                                <h3 class="font-alumni text-h6 text-dark leading-tight mb-1 line-clamp-2">
-                                    {{ $name }}
-                                </h3>
-
-                                {{-- SKU & Brand --}}
+                                <h3 class="font-alumni text-h6 text-dark leading-tight mb-1 line-clamp-2">{{ $name }}</h3>
                                 <p class="font-outfit text-body-sm text-gray-400 mb-3">
                                     @if($product->brand){{ $product->brand->name }} · @endif{{ $product->sku }}
                                 </p>
-
-                                {{-- Stock Badge --}}
                                 <div class="mb-3">
                                     @if($product->stock_status === 'pre_order')
-                                        <span class="inline-flex items-center gap-1 font-outfit
-                                                     text-body-sm text-amber-700 bg-amber-50
-                                                     px-2 py-0.5 rounded-full">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                            </svg>
+                                        <span class="inline-flex items-center gap-1 font-outfit text-body-sm text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                             {{ __('app.pre_order') }}
                                         </span>
-                                        <p class="font-outfit text-xs text-amber-700 mt-1.5 leading-snug">
-                                            {{ __('app.pre_order_banner') }}
-                                        </p>
+                                        <p class="font-outfit text-xs text-amber-700 mt-1.5 leading-snug">{{ __('app.pre_order_banner') }}</p>
                                     @else
-                                        <span class="inline-flex items-center gap-1 font-outfit
-                                                     text-body-sm text-green-700 bg-green-50
-                                                     px-2 py-0.5 rounded-full">
-                                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                            </svg>
+                                        <span class="inline-flex items-center gap-1 font-outfit text-body-sm text-green-700 bg-green-50 px-2 py-0.5 rounded-full">
+                                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                                             {{ __('app.in_stock') }}
                                         </span>
                                     @endif
                                 </div>
-
-                                {{-- Price --}}
                                 <div class="mb-4 flex-1">
                                     @if(config('shop.show_prices'))
                                         @auth
                                             @if(auth()->user()->canSeePrices())
-                                                <p class="font-alumni text-h5 text-primary">
-                                                    {{ number_format($product->price_with_vat, 2, ',', '.') }} €
-                                                </p>
-                                                <p class="font-outfit text-body-sm text-gray-400">
-                                                    {{ __('app.price_without_vat') }}:
-                                                    {{ number_format($product->price, 2, ',', '.') }} €
-                                                </p>
-                                                <p class="font-outfit text-body-sm text-gray-400">
-                                                    {{ __('app.min_order') }}: {{ $product->min_order_quantity }} {{ $product->unit }}
-                                                </p>
+                                                <p class="font-alumni text-h5 text-primary">{{ number_format($product->price_with_vat, 2, ',', '.') }} €</p>
+                                                <p class="font-outfit text-body-sm text-gray-400">{{ __('app.price_without_vat') }}: {{ number_format($product->price, 2, ',', '.') }} €</p>
+                                                <p class="font-outfit text-body-sm text-gray-400">{{ __('app.min_order') }}: {{ $product->min_order_quantity }} {{ $product->unit }}</p>
                                             @endif
                                         @else
                                             <div class="bg-light rounded-lg px-3 py-2">
                                                 <p class="font-outfit text-body-sm text-gray-500 flex items-center gap-1.5">
-                                                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                                                    </svg>
+                                                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                                                     {{ __('app.register_to_see_price') }}
                                                 </p>
                                             </div>
                                         @endauth
                                     @endif
                                 </div>
-
-                                {{-- Actions: View · Quotation · Cart --}}
                                 <div class="flex gap-2">
-
-                                    {{-- View --}}
-                                    <a href="{{ $productUrl }}"
-                                       title="{{ __('app.view') }}"
-                                       class="flex items-center justify-center gap-1.5 flex-1
-                                              border-2 border-dark/20 text-dark font-outfit text-xs font-medium
-                                              py-2 rounded-xl hover:border-primary hover:text-primary
-                                              transition-all duration-200">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                        </svg>
+                                    <a href="{{ $productUrl }}" title="{{ __('app.view') }}"
+                                       class="flex items-center justify-center gap-1.5 flex-1 border-2 border-dark/20 text-dark font-outfit text-xs font-medium py-2 rounded-xl hover:border-primary hover:text-primary transition-all duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                         {{ __('app.view') }}
                                     </a>
-
                                     @auth
                                         @php $inWl = isset($wishlistIds) && $wishlistIds->has($product->id); @endphp
-
-                                        {{-- Wishlist --}}
                                         <form method="POST" action="{{ route('wishlist.toggle', $product->id) }}">
                                             @csrf
-                                            <button type="submit"
-                                                    title="{{ $inWl ? __('app.remove_from_wishlist') : __('app.add_to_wishlist') }}"
-                                                    class="flex items-center justify-center w-10 h-10 rounded-xl border-2 transition-all duration-200
-                                                           {{ $inWl ? 'border-red-400 text-red-500 bg-red-50' : 'border-gray-200 text-gray-300 hover:border-red-300 hover:text-red-400' }}">
-                                                <svg class="w-4 h-4" fill="{{ $inWl ? 'currentColor' : 'none' }}"
-                                                     stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                                </svg>
+                                            <button type="submit" title="{{ $inWl ? __('app.remove_from_wishlist') : __('app.add_to_wishlist') }}"
+                                                    class="flex items-center justify-center w-10 h-10 rounded-xl border-2 transition-all duration-200 {{ $inWl ? 'border-red-400 text-red-500 bg-red-50' : 'border-gray-200 text-gray-300 hover:border-red-300 hover:text-red-400' }}">
+                                                <svg class="w-4 h-4" fill="{{ $inWl ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
                                             </button>
                                         </form>
-
                                         @if(auth()->user()->canSeePrices())
-
-                                            {{-- Add to Quotation --}}
                                             <form method="POST" action="{{ route('quotations.add') }}">
                                                 @csrf
                                                 <input type="hidden" name="product_id" value="{{ $product->id }}" />
                                                 <input type="hidden" name="quantity" value="{{ $product->min_order_quantity }}" />
-                                                <button type="submit"
-                                                        title="{{ __('app.add_to_quotation') }}"
-                                                        class="flex items-center justify-center w-10 h-10 rounded-xl
-                                                               border-2 border-secondary/40 text-secondary
-                                                               hover:border-secondary hover:bg-secondary hover:text-white
-                                                               transition-all duration-200">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                                    </svg>
+                                                <button type="submit" title="{{ __('app.add_to_quotation') }}"
+                                                        class="flex items-center justify-center w-10 h-10 rounded-xl border-2 border-secondary/40 text-secondary hover:border-secondary hover:bg-secondary hover:text-white transition-all duration-200">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                                 </button>
                                             </form>
-
-                                            {{-- Add to Cart --}}
                                             <form method="POST" action="{{ route('cart.add') }}">
                                                 @csrf
                                                 <input type="hidden" name="product_id" value="{{ $product->id }}" />
                                                 <input type="hidden" name="quantity" value="{{ $product->min_order_quantity }}" />
-                                                <button type="submit"
-                                                        title="{{ __('app.add_to_cart') }}"
-                                                        class="flex items-center justify-center w-10 h-10 rounded-xl
-                                                               bg-primary text-white hover:brightness-110
-                                                               active:scale-95 transition-all duration-200">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                                    </svg>
+                                                <button type="submit" title="{{ __('app.add_to_cart') }}"
+                                                        class="flex items-center justify-center w-10 h-10 rounded-xl bg-primary text-white hover:brightness-110 active:scale-95 transition-all duration-200">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                                                 </button>
                                             </form>
-
                                         @endif
                                     @endauth
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- LIST row --}}
+                        <div x-show="view === 'list'"
+                             class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group flex flex-row gap-0">
+
+                            {{-- Thumbnail --}}
+                            <div class="relative w-36 sm:w-48 flex-shrink-0 bg-light flex items-center justify-center overflow-hidden">
+                                @if($product->image)
+                                    <img src="{{ $imageUrl }}" alt="{{ $name }}" loading="lazy"
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                @else
+                                    <span class="text-4xl">📦</span>
+                                @endif
+                            </div>
+
+                            {{-- Info --}}
+                            <div class="p-4 sm:p-5 flex flex-col sm:flex-row flex-1 gap-4 min-w-0">
+                                <div class="flex flex-col flex-1 min-w-0">
+                                    <span class="inline-block bg-light text-secondary font-alumni text-body-sm px-2 py-0.5 rounded-full mb-1 w-fit">
+                                        {{ $category }}
+                                    </span>
+                                    <h3 class="font-alumni text-h6 text-dark leading-tight mb-0.5 line-clamp-1">{{ $name }}</h3>
+                                    <p class="font-outfit text-body-sm text-gray-400 mb-2">
+                                        @if($product->brand){{ $product->brand->name }} · @endif{{ $product->sku }}
+                                    </p>
+                                    @if($product->stock_status === 'pre_order')
+                                        <span class="inline-flex items-center gap-1 font-outfit text-body-sm text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full w-fit">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            {{ __('app.pre_order') }}
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 font-outfit text-body-sm text-green-700 bg-green-50 px-2 py-0.5 rounded-full w-fit">
+                                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                                            {{ __('app.in_stock') }}
+                                        </span>
+                                    @endif
+                                </div>
+
+                                {{-- Price + Actions --}}
+                                <div class="flex flex-col items-start sm:items-end justify-between gap-3 flex-shrink-0">
+                                    <div class="text-left sm:text-right">
+                                        @if(config('shop.show_prices'))
+                                            @auth
+                                                @if(auth()->user()->canSeePrices())
+                                                    <p class="font-alumni text-h5 text-primary">{{ number_format($product->price_with_vat, 2, ',', '.') }} €</p>
+                                                    <p class="font-outfit text-body-sm text-gray-400">{{ __('app.min_order') }}: {{ $product->min_order_quantity }} {{ $product->unit }}</p>
+                                                @endif
+                                            @else
+                                                <p class="font-outfit text-xs text-gray-400">{{ __('app.register_to_see_price') }}</p>
+                                            @endauth
+                                        @endif
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <a href="{{ $productUrl }}" title="{{ __('app.view') }}"
+                                           class="flex items-center justify-center gap-1.5 border-2 border-dark/20 text-dark font-outfit text-xs font-medium px-3 py-2 rounded-xl hover:border-primary hover:text-primary transition-all duration-200">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                            {{ __('app.view') }}
+                                        </a>
+                                        @auth
+                                            @php $inWl = isset($wishlistIds) && $wishlistIds->has($product->id); @endphp
+                                            <form method="POST" action="{{ route('wishlist.toggle', $product->id) }}">
+                                                @csrf
+                                                <button type="submit" title="{{ $inWl ? __('app.remove_from_wishlist') : __('app.add_to_wishlist') }}"
+                                                        class="flex items-center justify-center w-9 h-9 rounded-xl border-2 transition-all duration-200 {{ $inWl ? 'border-red-400 text-red-500 bg-red-50' : 'border-gray-200 text-gray-300 hover:border-red-300 hover:text-red-400' }}">
+                                                    <svg class="w-4 h-4" fill="{{ $inWl ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                                                </button>
+                                            </form>
+                                            @if(auth()->user()->canSeePrices())
+                                                <form method="POST" action="{{ route('quotations.add') }}">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{ $product->id }}" />
+                                                    <input type="hidden" name="quantity" value="{{ $product->min_order_quantity }}" />
+                                                    <button type="submit" title="{{ __('app.add_to_quotation') }}"
+                                                            class="flex items-center justify-center w-9 h-9 rounded-xl border-2 border-secondary/40 text-secondary hover:border-secondary hover:bg-secondary hover:text-white transition-all duration-200">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ route('cart.add') }}">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{ $product->id }}" />
+                                                    <input type="hidden" name="quantity" value="{{ $product->min_order_quantity }}" />
+                                                    <button type="submit" title="{{ __('app.add_to_cart') }}"
+                                                            class="flex items-center justify-center w-9 h-9 rounded-xl bg-primary text-white hover:brightness-110 active:scale-95 transition-all duration-200">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @endauth
+                                    </div>
                                 </div>
                             </div>
                         </div>
